@@ -1,0 +1,6 @@
+.directory
+.idea
+input_folder/
+results_folder/
+*.pyc
+classification_charts/
