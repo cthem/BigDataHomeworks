@@ -3,20 +3,18 @@ import os
 import utils
 
 
-def question_1b(output_folder, trips_list):
+def question_1b(output_file, trips_list):
     '''
     Runs the second subquestion
     :param output_folder:
     :param trips_list:
     :return:
     '''
-    print("Total num of trips in trips.csv file: %d" % len(trips_list))
+    print("Number of trips in the input file: %d" % len(trips_list))
     trips_list = filter_trips(trips_list)
-    print("Final num of trips to be writtern in tripsClean.csv: %d" % len(trips_list))
-    output_file = os.path.join(output_folder, "tripsClean.csv")
-    pickle_file = os.path.join(output_folder, "tripsClean.pickle")
-    utils.write_trips_to_file(output_file, trips_list)
-    utils.write_trips_using_pickle(pickle_file, trips_list)
+    print("Number of clean trips: %d" % len(trips_list))
+    utils.write_trips(output_file, trips_list)
+    utils.serialize_trips(output_file + ".pickle", trips_list)
     return trips_list
 
 

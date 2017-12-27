@@ -1,3 +1,4 @@
+import utils
 def question_1a(input_file, output_file):
     '''
     Runs the first subquestion
@@ -5,33 +6,11 @@ def question_1a(input_file, output_file):
     :param output_file: The processed file with the trips
     :return:
     '''
-    line_objects = read_train_file(input_file)
+    line_objects = utils.read_trips_file(input_file)
     map_per_vid = get_data_per_vehicle_id(line_objects)
     map_per_vid = get_data_per_vehicle_and_journey_id(map_per_vid)
     trips_list = write_trips(output_file, map_per_vid)
     return trips_list
-
-
-def read_train_file(train_file):
-    '''
-    Reads the training file
-    :param train_file:
-    :return:
-    '''
-    line_objects = []
-    with open(train_file, "r") as f:
-        next(f)
-        for line in f:
-            line_contents = line.strip().split(',')
-            obj = {}
-            obj["jid"] = line_contents[0]
-            obj["vid"] = line_contents[1]
-            obj["ts"] = line_contents[2]
-            obj["lon"] = line_contents[3]
-            obj["lat"] = line_contents[4]
-            line_objects.append(obj)
-    return line_objects
-
 
 def get_data_per_vehicle_id(line_objects):
     '''

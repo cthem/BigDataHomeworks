@@ -1,4 +1,4 @@
-import FirstQuestion.CleanData as clean
+import question1.CleanData as clean
 import os
 import datetime
 import utils
