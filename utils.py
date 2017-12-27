@@ -8,6 +8,7 @@ import datetime
 import pickle
 
 
+
 def tic():
     '''
     Get timestamp
@@ -47,7 +48,11 @@ def write_trips(output_file, trips_list):
     '''
     with open(output_file, "w") as f:
         for trip in trips_list:
-            trip_str = str(trip)
+            # make csv
+            header = [str(t) for t in trip[:2]]
+            coords = [str(t) for coord_tuple in trip[2:] for t in coord_tuple]
+            trip_str = ",".join(header + coords)
+            # write it
             f.write(trip_str+"\n")
 
 def serialize_trips(output_file, trips_list):
@@ -60,9 +65,34 @@ def serialize_trips(output_file, trips_list):
     with open(output_file, "wb") as f:
         pickle.dump(trips_list, f)
 
+def read_trips(filepath):
+    '''
+    Read a trips file, csv or pickle
+    :param filepath:
+    :return:
+    '''
+    if filepath.endswith(".pickle"):
+        with open(filepath, "rb") as f:
+            trips = pickle.load(f)
+    else:
+        trips=[]
+        with open(filepath, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                trip = []
+                elems = line.split(",")
+                trip.extend([float(elems[0]), elems[1]])
+                elems = elems[2:]
+                for i in range(0, len(elems), 3):
+                    vals = list(map(float,elems[i:i+3]))
+                    trip.append(vals)
+                trips.append(trip)
+    return trips
 # Functions used for trips visualization
 #######################################
-def read_trips_file(filepath):
+def read_train_set(filepath):
     '''
     Reads the training file
     :param filepath:
@@ -82,32 +112,26 @@ def read_trips_file(filepath):
             line_objects.append(obj)
     return line_objects
 
-def create_list_tuples(trips_list):
-    '''
-    Create trip tuples from the default format
-    :param trips_list:
-    :return:
-    '''
-    trips_list = trips_list[2:]
-    new_list_tuples = []
-    for item in trips_list:
-        new_list_tuples.append((item[1], item[2]))
-    return new_list_tuples
-
-def idx_to_lonlat(idx, trip):
+def idx_to_lonlat(trip, idx = None, format = "tuple"):
     '''
     Get the longitudes and latitudes coresponding to the input points of the input trip
-    :param idx: the lonlat indexes to get
+    :param idx: the lonlat indexes to get. if None, get all
     :param trip: the trip to get stuff from
+    :param format: tuple: ([],[]), tuples: [(),(),()...]
     :return: a (Lo, La) tuple, where Lo,La are lists of floats.
     '''
+    if idx is None:
+        idx = list(range(len(trip[2:])))
     if type(idx) != list:
         idx = [idx]
     lats, lons = [], []
     for i in idx:
         lons.append(trip[2+i][1])
         lats.append(trip[2+i][2])
-    return (lons, lats)
+    if format == "tuple":
+        return (lons, lats)
+    elif format == "tuples":
+        return list(zip(lons,lats))
 
 def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     '''
@@ -118,28 +142,15 @@ def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     :param colors: list of colors characters, one per L_i. If none, defaults to blue.
     :return:
     '''
-    max_lat, max_lon = -1,-1
-    min_lat, min_lon = 1000, 1000
-    for lonlats_tuple in lonlats_tuplelists:
-        if not lonlats_tuple[0]:
-            continue
-        longitude_list = lonlats_tuple[0]
-        latitude_list = lonlats_tuple[1]
-        if max(longitude_list) > max_lon:
-            max_lon = max(longitude_list)
-        if max(latitude_list) > max_lat:
-            max_lat = max(latitude_list)
-
-        if min(longitude_list) < min_lon:
-            min_lon = min(longitude_list)
-        if min(latitude_list) < min_lat:
-            min_lat = min(latitude_list)
-
-    delta_latlon = max_lat - min_lat , max_lon - min_lon
-    center = (min_lat + delta_latlon[0]/2, min_lon + delta_latlon[1]/2)
+    flattened = [l for l in lonlats_tuplelists if l]
+    max_lonlat = [max(t) for tt in flattened for t in tt]
+    min_lonlat = [min(t) for tt in flattened for t in tt]
+    delta_lonlat = [mx-mn for (mx,mn) in zip(max_lonlat, min_lonlat)]
+    center_lonlat = [min_lonlat[i] + delta_lonlat[i] for i in range(2)]
     zoom = 14
-    #print("center:",center,"delta:",delta_latlon,"zoom",zoom)
-    gmap = gmplot.GoogleMapPlotter(center[0], center[1], zoom)
+    #print("points:",lonlats_tuplelists)
+    #print("center:",center_lonlat,"delta:",delta_lonlat,"zoom",zoom)
+    gmap = gmplot.GoogleMapPlotter(center_lonlat[1], center_lonlat[0], zoom)
     if colors is None:
         colors = ['b' for _ in lonlats_tuplelists]
     for idx,pts in enumerate(lonlats_tuplelists):
@@ -165,12 +176,19 @@ def html_to_png(html_path, png_path):
 
 def visualize_paths(all_pts, colors, labels, file_name):
     '''
-    Visualize paths in gmplot.
-    :param all_pts:
-    :param colors:
+    Generic geocoordinate multi-plot visualization function with gmplot.
+    :param all_pts: list of geocoordinate points
+    :param colors: list of list of colors
     :param labels:
     :param file_name:
     :return:
+
+     all_pts is a list [P1,P2,...]. Each Pi corresponds to a figure.
+         Pi is a list of [K1,K2...]. Each Ki corresponds to a line segment.
+         Ki is a tuple (Lons,Lats), Lons ( resp., Lats) is a list of longitudes (resp., latitudes).
+     colors is a list [c1, c2]. Each ci corresponts to a list of colors, corresponding to the line segments Ki.
+     labels is a list of strings, one per figure
+
     '''
     img_names = []
     base_file_name = file_name
@@ -178,7 +196,7 @@ def visualize_paths(all_pts, colors, labels, file_name):
     print("Producing html and png files...")
     for i, pts in enumerate(all_pts):
         # produce the html of the trip
-        file_name = base_file_name + str(i) + ".html"
+        file_name = base_file_name + str(i+1) + ".html"
         write_group_gml(pts, file_name, colors[i])
         image_filename = file_name + ".jpg"
         # keep track of the image filenames to read them later
@@ -206,8 +224,10 @@ def visualize_paths(all_pts, colors, labels, file_name):
             # delete the image
             os.remove(img_names[imgidx])
             imgidx += 1
-            # col.set_title("...")
-    pylab.savefig(file_name + ".plot.jpg", dpi=300)
+            if imgidx >= len(img_names):
+                break
+    pylab.savefig(base_file_name + ".nnplot.jpg", dpi=300)
+    plt.close()
 
 def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     '''

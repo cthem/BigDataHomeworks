@@ -4,10 +4,12 @@ import os
 
 
 def subquestion_b(trips_list, number_of_cells, output_folder):
+    # specify files
     output_file = os.path.join(output_folder, "tripFeatures.csv")
     pickle_file = os.path.join(output_folder, "tripFeatures.pickle")
+    # use a given data collection to judge min/max data points
     max_lat, max_lon, min_lat, min_lon = find_min_max_latlong(trips_list)
-    rows,columns,cell_names = create_grid(number_of_cells,max_lat,max_lon,min_lat,min_lon)
+    rows,columns,cell_names = create_grid(number_of_cells,max_lat,max_lon,min_lat,min_lon, output_folder=output_folder)
     replace_points(trips_list, rows, columns, cell_names, output_file, pickle_file)
     return pickle_file
 
@@ -29,13 +31,13 @@ def find_min_max_latlong(trips_list):
     return max_lat, max_lon, min_lat, min_lon
 
 
-def create_grid(number_of_cells, max_lat,max_lon,min_lat,min_lon):
+def create_grid(number_of_cells, max_lat,max_lon,min_lat,min_lon, output_folder):
     cell_lat_dist, cell_lon_dist = get_distance_per_cell(number_of_cells, min_lat, min_lon, max_lat, max_lon)
     rows = create_grid_lines(number_of_cells[0], min_lat, cell_lat_dist)
     columns=create_grid_lines(number_of_cells[1], min_lon, cell_lon_dist)
     cell_names = create_cell_names(number_of_cells)
 
-    visualize_grid(rows,columns,min_lat,min_lon,max_lat,max_lon)
+    visualize_grid(rows,columns,min_lat,min_lon,max_lat,max_lon, output_folder=output_folder)
     return rows,columns,cell_names
 
 
@@ -69,7 +71,7 @@ def create_cell_names(number_of_cells):
 def replace_points(trips_list, rows, columns, cell_names, output_file, pickle_file):
     new_trips_list = []
     for trip in trips_list:
-        trip_lonlat = utils.create_list_tuples(trip)
+        trip_lonlat = utils.idx_to_lonlat(trip, format = "tuples")
         new_trips_list.append([])
         new_trips_list[-1].append(trip[0])
         new_trips_list[-1].append(trip[1])
@@ -83,8 +85,8 @@ def replace_points(trips_list, rows, columns, cell_names, output_file, pickle_fi
             new_names.append(cell_name)
             #print("Point ",lonlat,"mapped to",cell_name)
         new_trips_list[-1].append(new_names)
-    utils.write_trips_to_file(output_file, new_trips_list)
-    utils.write_trips_using_pickle(pickle_file, new_trips_list)
+    utils.write_trips(output_file, new_trips_list)
+    utils.serialize_trips(pickle_file, new_trips_list)
 
 def find_index(points_list, point):
     count = 0
@@ -96,26 +98,26 @@ def find_index(points_list, point):
 
 
 # Auxiliary function, visualizes the grid created above
-def visualize_grid(rows, columns, min_lat=None, min_lon=None, max_lat=None, max_lon=None, points = [], cells = []):
+def visualize_grid(rows, columns, min_lat=None, min_lon=None, max_lat=None, max_lon=None, points = [], cells = [], output_folder=""):
     # visualize
     min_lat = min(rows) if min_lat is None else min_lat
     min_lon = min(columns) if min_lon is None else min_lon
     max_lat = max(rows) if max_lat is None else max_lat
     max_lon = max(columns) if max_lon is None else max_lon
 
-    if False:
-        plt.plot([min_lat, max_lat], [min_lon, min_lon], 'k');
-        plt.plot([min_lat, max_lat], [max_lon, max_lon], 'k');
-        plt.plot([min_lat, min_lat], [min_lon, max_lon], 'k');
-        plt.plot([max_lat, max_lat], [min_lon, max_lon], 'k');
-        for x in rows:
-            plt.plot([x, x], [min_lon, max_lon], 'r');
-        for y in columns:
-            plt.plot([min_lat, max_lat], [y, y], 'b');
-        for p in points:
-            plt.plot(p[1],p[0],".k")
-        for p in cells:
-            plt.plot(p[1],p[0],"*g")
-        plt.xlabel("lat")
-        plt.ylabel("lon")
-        plt.show();
+    fig = plt.figure()
+    plt.plot([min_lat, max_lat], [min_lon, min_lon], 'k');
+    plt.plot([min_lat, max_lat], [max_lon, max_lon], 'k');
+    plt.plot([min_lat, min_lat], [min_lon, max_lon], 'k');
+    plt.plot([max_lat, max_lat], [min_lon, max_lon], 'k');
+    for x in rows:
+        plt.plot([x, x], [min_lon, max_lon], 'r');
+    for y in columns:
+        plt.plot([min_lat, max_lat], [y, y], 'b');
+    for p in points:
+        plt.plot(p[1],p[0],".k")
+    for p in cells:
+        plt.plot(p[1],p[0],"*g")
+    plt.xlabel("lat")
+    plt.ylabel("lon")
+    plt.savefig(os.path.join(output_folder, "grid.png"), dpi = fig.dpi)

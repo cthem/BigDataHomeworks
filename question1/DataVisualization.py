@@ -21,7 +21,6 @@ def question_1c(output_folder, trips_list):
         trip = trips_list[i]
         file_name = output_file_base + str(i) + ".html"
         # get point coordinates lon-lat
-        num_coords = len(trip[2:])
-        points_lonlat = [utils.idx_to_lonlat(list(range(num_coords)), trip)]
+        points_lonlat = [utils.idx_to_lonlat(trip)]
         # produce output htmls
         utils.write_group_gml(points_lonlat, file_name)

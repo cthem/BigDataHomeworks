@@ -20,14 +20,14 @@ def question_1(input_file, output_file, output_folder, maps_folder):
     print(">>> Running question 1b - visualizing the training data")
     visual.question_1c(maps_folder, trips_list)
 
-def question_2(output_folder, test_file1, test_file2, trips_list):
+def question_2(train_file, test_files, output_folder):
     # Question 2
     # Read the training data
-    trips_list = utils.read_trips_file(train_file)
+    trips_list = utils.read_trips(train_file)
     print(">>> Running question 2a1 - Nearest neighbours computation")
-    nn.question_a1(output_folder, test_file1, trips_list)
+    #nn.question_a1(output_folder, test_files[0], trips_list)
     print(">>> Running question 2a2 - Nearest subroutes computation")
-    ns.question_a2(output_folder, test_file2, trips_list)
+    #ns.question_a2(output_folder, test_files[1], trips_list)
     print(">>> Running question 2b - Cell grid quantization")
     cellgrid = (4, 3)
     print("Using cell grid:", cellgrid)
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     ############
 
     # prepare files
-    test_files = [ os.path.join(input_folder, "train_set_a%d.csv" % t) for t in [1,2]]
+    test_files = [ os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
 
     # run
-    # question_2(test_files, train_file)
+    question_2(output_file_clean, test_files, output_folder)
