@@ -29,7 +29,7 @@ def find_nearest_neighbours_for_test_trip(test_trip, trips_list):
     for trip in trips_list:
         trip_lonlat = utils.create_list_tuples(trip)
         distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat)
-        nearest_neighbours.append((trip[1], distance))
+        nearest_neighbours.append((trip[0], distance))
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])
     nearest_neighbours = nearest_neighbours[:5]
     return nearest_neighbours
@@ -53,6 +53,7 @@ def calculate_dynamic_time_warping(latlons1, latlons2):
 
 def get_updated_trips_list(trips_list, nearest_neighbours):
     '''
+    This function keeps the 5 nearest neighbours in the format of the trips_list
     :param trips_list: all the trips from the training set
     :param nearest_neighbours: the 5 nearest neighbours
     :return: trips_list containing only the 5 nearest neighbours
@@ -60,7 +61,7 @@ def get_updated_trips_list(trips_list, nearest_neighbours):
     new_trips_list=[]
     for trip in trips_list:
         for neighbour in nearest_neighbours:
-            if trip[1] == neighbour[0]:
+            if trip[0] == neighbour[0]:
                 new_trips_list.append(trip)
     return new_trips_list
 

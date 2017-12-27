@@ -4,6 +4,12 @@ import utils
 
 
 def question_1b(output_folder, trips_list):
+    '''
+    Runs the second subquestion
+    :param output_folder:
+    :param trips_list:
+    :return:
+    '''
     print("Total num of trips in trips.csv file: %d" % len(trips_list))
     trips_list = filter_trips(trips_list)
     print("Final num of trips to be writtern in tripsClean.csv: %d" % len(trips_list))
@@ -15,6 +21,11 @@ def question_1b(output_folder, trips_list):
 
 
 def filter_trips(trips_list):
+    '''
+    Removes too long or too short trips
+    :param trips_list:
+    :return:
+    '''
     trips_too_small, trips_too_big = [], []
     for trip in trips_list:
         total_dist = caluclate_total_distance_per_trip(trip)
@@ -32,6 +43,11 @@ def filter_trips(trips_list):
 
 
 def caluclate_total_distance_per_trip(trip):
+    '''
+    Calculates the total distance of a trip
+    :param trip:
+    :return:
+    '''
     total_distance = 0
     lonlatlist = trip[2:]
     for i in range(len(lonlatlist)-1):
@@ -55,6 +71,11 @@ def calculate_lonlat_distance(point1, point2):
 
 
 def calculate_max_dist(trip):
+    '''
+    Calculates the max distance between two points
+    :param trip:
+    :return:
+    '''
     lonlatlist = trip[2:]
     max_dist=2
     for i in range(len(lonlatlist) - 1):

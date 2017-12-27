@@ -73,6 +73,12 @@ def get_data_per_vehicle_and_journey_id(map_per_vid):
 
 
 def write_trips(filename, map_per_vid):
+    '''
+    Writes trips in the output file
+    :param filename: the name of the file
+    :param map_per_vid: the map with all the data
+    :return: the list with all the data (this list is written in the file)
+    '''
     sorted_trips = []
     with open(filename, "w") as f:
         count = 0
@@ -88,7 +94,3 @@ def write_trips(filename, map_per_vid):
                 f.write(str_to_write)
                 count += 1
     return sorted_trips
-
-
-
-

@@ -95,7 +95,7 @@ def write_group_gml(points, outpath, colors):
 
     mean_lat /= llen
     mean_lon /= llen
-    gmap = gmplot.GoogleMapPlotter(mean_lat, mean_lon, 15)
+    gmap = gmplot.GoogleMapPlotter(mean_lat, mean_lon, 14)
     for idx,pts in enumerate(points):
         # expects input in lats, longs
         gmap.plot(pts[1], pts[0], colors[idx], edge_width=5)
