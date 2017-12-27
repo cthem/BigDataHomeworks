@@ -4,3 +4,4 @@ input_folder/
 results_folder/
 *.pyc
 classification_charts/
+test_clean_trips.csv
