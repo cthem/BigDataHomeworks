@@ -10,7 +10,6 @@ import question2.JourneyClassification as jc
 import utils
 
 
-
 def question_1(input_file, output_file, output_folder, maps_folder):
     # Question 1
     print(">>> Running question 1a - parsing the training data")
@@ -20,12 +19,13 @@ def question_1(input_file, output_file, output_folder, maps_folder):
     print(">>> Running question 1b - visualizing the training data")
     visual.question_1c(maps_folder, trips_list)
 
-def question_2(train_file, test_files, output_folder):
+
+def question_2(train_file, test_files, output_folder, maps_folder):
     # Question 2
     # Read the training data
     trips_list = utils.read_trips(train_file)
     print(">>> Running question 2a1 - Nearest neighbours computation")
-    #nn.question_a1(output_folder, test_files[0], trips_list)
+    nn.question_a1(maps_folder, test_files[0], trips_list)
     print(">>> Running question 2a2 - Nearest subroutes computation")
     ns.question_a2(output_folder, test_files[1], trips_list)
     print(">>> Running question 2b - Cell grid quantization")
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     ############
 
     # prepare files
-    train_file = os.path.join(input_folder, "train_set.csv")
+    train_file = os.path.join(input_folder, "train_set_dev.csv")
     output_file = os.path.join(output_folder, "trips.csv")
     output_file_clean = os.path.join(output_folder, "trips_clean.csv")
     maps_folder = os.path.join(output_folder, "gmplots")
@@ -78,4 +78,4 @@ if __name__ == '__main__':
     test_files = [ os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
 
     # run
-    question_2(output_file_clean, test_files, output_folder)
+    question_2(output_file_clean, test_files, output_folder, maps_folder)

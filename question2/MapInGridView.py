@@ -83,10 +83,11 @@ def replace_points(trips_list, rows, columns, cell_names, output_file, pickle_fi
             lon_idx = find_index(columns, lon)
             cell_name = 'C'+cell_names[lat_idx][lon_idx]
             new_names.append(cell_name)
-            #print("Point ",lonlat,"mapped to",cell_name)
+            # print("Point ",lonlat,"mapped to",cell_name)
         new_trips_list[-1].append(new_names)
     utils.write_trips(output_file, new_trips_list)
     utils.serialize_trips(pickle_file, new_trips_list)
+
 
 def find_index(points_list, point):
     count = 0

@@ -36,7 +36,9 @@ def calcluate_nearest_neighbours(test_trip, trips_list):
         # get candidate coordinate list
         trip_lonlat = utils.idx_to_lonlat(trip, format="tuples")
         # calcluate distance
+        print("Calculate distance for trip: %d" % trip[0])
         distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat)
+        print("Add new nearest neighbour")
         nearest_neighbours.append((trip[0], distance))
     # sort the list to increasing distance
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])

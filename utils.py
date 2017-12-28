@@ -90,6 +90,8 @@ def read_trips(filepath):
                     trip.append(vals)
                 trips.append(trip)
     return trips
+
+
 # Functions used for trips visualization
 #######################################
 def read_train_set(filepath):
@@ -112,6 +114,7 @@ def read_train_set(filepath):
             line_objects.append(obj)
     return line_objects
 
+
 def idx_to_lonlat(trip, idx = None, format = "tuple"):
     '''
     Get the longitudes and latitudes coresponding to the input points of the input trip
@@ -133,6 +136,7 @@ def idx_to_lonlat(trip, idx = None, format = "tuple"):
     elif format == "tuples":
         return list(zip(lons,lats))
 
+
 def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     '''
      Make a color plot a collection of points.
@@ -148,8 +152,8 @@ def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     delta_lonlat = [mx-mn for (mx,mn) in zip(max_lonlat, min_lonlat)]
     center_lonlat = [min_lonlat[i] + delta_lonlat[i] for i in range(2)]
     zoom = 14
-    #print("points:",lonlats_tuplelists)
-    #print("center:",center_lonlat,"delta:",delta_lonlat,"zoom",zoom)
+    # print("points:",lonlats_tuplelists)
+    # print("center:",center_lonlat,"delta:",delta_lonlat,"zoom",zoom)
     gmap = gmplot.GoogleMapPlotter(center_lonlat[1], center_lonlat[0], zoom)
     if colors is None:
         colors = ['b' for _ in lonlats_tuplelists]
@@ -158,6 +162,7 @@ def write_group_gml(lonlats_tuplelists, outpath, colors=None):
         gmap.plot(pts[1], pts[0], colors[idx], edge_width=5)
     print("Writing plot", outpath)
     gmap.draw(outpath)
+
 
 def html_to_png(html_path, png_path):
     '''
@@ -229,6 +234,7 @@ def visualize_point_sequences(all_pts, colors, labels, file_name):
     pylab.savefig(base_file_name + ".nnplot.jpg", dpi=300)
     plt.close()
 
+
 def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     '''
     Function to create and show/save a pylab barchart
@@ -260,6 +266,7 @@ def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     else:
         plt.savefig(save, dpi=fig.dpi)
     plt.close()
+
 
 if __name__ == '__main__':
    pts = [([25,26.4,25.1],[26,26.1,26.8])]
