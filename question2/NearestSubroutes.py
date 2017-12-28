@@ -150,5 +150,7 @@ def preprocessing_for_visualisation(test_trip, max_subseqs, trips_list, file_nam
         points.append(pts)
         # as said above, the color sequence is blue, red, blue
         colors.append(cols)
+        print("Added pts:", pts)
+        print("Added cols:", cols)
     # send the whole parameter bundle to be drawn
-    utils.visualize_paths(points, colors, labels, file_name)
+    utils.visualize_point_sequences(points, colors, labels, file_name)

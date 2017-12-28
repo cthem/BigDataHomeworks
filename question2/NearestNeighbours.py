@@ -99,4 +99,4 @@ def preprocessing_for_visualization(test_trip, nearest_neighbours, trips_list, o
     # set all colors to blue
     colors = [['b'] for _ in range(len(nearest_neighbours) + 1)]
     # visualize!
-    utils.visualize_paths(points, colors, labels, outfile_name)
+    utils.visualize_point_sequences(points, colors, labels, outfile_name)

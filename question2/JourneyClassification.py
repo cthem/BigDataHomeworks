@@ -28,7 +28,7 @@ def preprocess_data(data):
         targets_nums.append(num_ids[t])
     return data, targets_nums
 
-def question_c(file):
+def question_c(file, output_folder):
     # get the data ready
     trips_list = get_grid_trips(file)
     kf = KFold(n_splits=10)
@@ -41,8 +41,6 @@ def question_c(file):
     classifiers = ["knn", "logreg", "randfor"]
     accuracies = {}
     # classify
-    output_dir = "classification_charts"
-    os.makedirs(output_dir, exist_ok=True)
     for classifier in classifiers:
         print("Testing classifier [%s]" % classifier)
         # train & test each classifier
@@ -61,7 +59,7 @@ def question_c(file):
                 res = randfor_classification(train, val)
             accuracies[classifier].append(res)
         titlestr = "%s, overall accuracy: %2.4f" % (classifier, np.mean(accuracies[classifier]))
-        utils.barchart(list(range(1, 11)), accuracies[classifier],title=titlestr, ylabel="accuracy",save=os.path.join(output_dir,classifier))
+        utils.barchart(list(range(1, 11)), accuracies[classifier],title=titlestr, ylabel="accuracy",save=os.path.join(output_folder,classifier))
 
 
 def get_grid_trips(file):

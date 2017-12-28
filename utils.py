@@ -174,7 +174,7 @@ def html_to_png(html_path, png_path):
         print(ex)
         exit(1)
 
-def visualize_paths(all_pts, colors, labels, file_name):
+def visualize_point_sequences(all_pts, colors, labels, file_name):
     '''
     Generic geocoordinate multi-plot visualization function with gmplot.
     :param all_pts: list of geocoordinate points

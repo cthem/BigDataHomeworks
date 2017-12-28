@@ -27,13 +27,13 @@ def question_2(train_file, test_files, output_folder):
     print(">>> Running question 2a1 - Nearest neighbours computation")
     #nn.question_a1(output_folder, test_files[0], trips_list)
     print(">>> Running question 2a2 - Nearest subroutes computation")
-    #ns.question_a2(output_folder, test_files[1], trips_list)
+    ns.question_a2(output_folder, test_files[1], trips_list)
     print(">>> Running question 2b - Cell grid quantization")
     cellgrid = (4, 3)
     print("Using cell grid:", cellgrid)
     features_file = gv.subquestion_b(trips_list, cellgrid, output_folder)
     print(">>> Running question 2c - Classification")
-    jc.question_c(features_file)
+    jc.question_c(features_file, output_folder)
 
 
 def check_dependencies():
