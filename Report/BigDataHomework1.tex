@@ -85,7 +85,7 @@
 	\section{Introduction}
     This is the report related to the Python project for the course "Large-Scale Data Analysis Techniques". In the below sections, the implemented logic will be explicitly analyzed. The project is divided in two parts: in the first part the goals are: to preprocess and clean the given data as well as to visualize five of the given trips in the train\_set file. In the second part, the tasks are: to find for all test trips the k nearest neabours from the given train trips, to find the train trips with the longest similar subroute for each test trip, to use 10-fold cross validation to the training data and classify them with three different methods (k-nearest neighbours, logistic regression and random forest) and finally to choose one of the above classification methods and improve the result.
     
-    In the Main.py file, it is required to provide the path to the output folder as well as the input file with the training data. Afterwards, three folders are created to keep the images with the trips' visualizations for questions 1c, 2a1 and 2a2 and then the functions implementing the project's tasks are called.
+    In the Main.py file, it is required to provide the path to the input folder (containing the training and test files) and the output folder where all results will be stored. In this folder an additional directory is created, in order to keep all maps extracted from this application. There are two ways in order to run this project, either add these folders in the edit configurations choice from the menu, or use the run.sh in order to provide these args. Finally, the dependencies are checked and the folders and files are prepared before starting to run the application.
     
 	\section{Exercise 1}
 	In this section, further details are provided related to the preprocessing and cleaning of the training data as well as to the trip's visualization. All files implementing the requirements of this part are in the folder FirstQuestion.
@@ -105,7 +105,7 @@
 	Finally, the cleaned trips are kept in a list under the same format that was used in Question A and they are extracted in the file cleanTrips.csv, but also in the file tripsClean.pickle which keeps the data structure used. The functions for the data export are in the file utils.py (write\_trips\_to\_file and write\_trips\_using\_pickle).
 	
 	\subsection{Question C}
-	This task is implemented in the file DataVisualization.py and the created output is stored in the folder Question1C. The requirement is to visualize five of the given train trips. For this purporse, a new trips list is creating containing five trips, excluding all trips with null journey\_id. Afterwards, the data\_visualization function is called, and a points list is created having two tuples with all the longitudes and latitudes(function idx\_to\_lonlat in the utils.py). 
+	This task is implemented in the file DataVisualization.py and the created output is stored in the output folder in the gmplots directory. The requirement is to visualize five of the given train trips. For this purporse, a new trips list is creating containing five trips, excluding all trips with null journey\_id. Afterwards, the data\_visualization function is called, and a points list is created having two tuples with all the longitudes and latitudes(function idx\_to\_lonlat in the utils.py). 
 	
 	Finally, the function write\_group\_gml from the utils.py file is called. In this function, it is calculated the mean for both longitudes and latitudes and then gmplot is uded so as to visualize the selected trips. Below, there is an example of a trip shown on map is presented:
 	
@@ -120,7 +120,7 @@
 	The files implementing the requirements of this part are in the folder SecondQuestion.
 	
 	\subsection{Question A1}
-	For this part a test file is given (test\_set\_a1.csv) containing additional trips. For each of these trips, the k nearest neighbours are targeted (in this exercise k=5) and an image file is produced, showing all six trips (the test trip and the trips from the training file) on six different maps. Under each map, the neighbour index, the journey\_id, the dynamic time warping and the time needed to process the neighbours of this test trip in millisec.
+	For this part a test file is given (test\_set\_a1.csv, included in the input folder) containing additional trips. For each of these trips, the k nearest neighbours are targeted (in this exercise k=5) and an image file is produced, showing all six trips (the test trip and the trips from the training file) on six different maps. Under each map, the neighbour index, the journey\_id, the dynamic time warping and the time needed to process the neighbours of this test trip in millisec.
 	
 	The code for this question is in the file NearestNeighbours.py. Firstly, all test trips in the test file are extracted and stored in the same data structure as the trip list that contains the training dataset. Subsequently, for each test trip all nearest neighbours are calculated in the function find\_nearest\_neighbours\_for\_test\_trip, keeping the time needed in a variable. At the beginning of the trips processing, the tic method from utils.py file is used (finds the current time in millisec using the datetime.datetime.now() method). After having found the nearest neighbours for the given test trip, the method tictoc() is called, returning the required time. In order to find the nearest neighbours, the following process is implemented: For the test trip and all the training trips, the longitudes and latitudes are stored in tuples which are provided to the function calculate\_dynamic\_time\_warping in order to find the distance between two points. The calculated distances are stored in a list, which finally is sorted in ascending order and only the five nearest neighbours are kept.
 	
@@ -166,7 +166,20 @@
 	\newpage
 	\addcontentsline{toc}{section}{References}
 	\begin{thebibliography}{30}
-		\bibitem{first} 
+		\bibitem{knn}SciKit Learn: Nearest Neighbors \\
+		 \url{http://scikit-learn.org/stable/modules/neighbors.html}
+		 \bibitem{logreg} SciKit Learn: Logistic Regression \\
+		 \url{http://scikit-learn.org/stable/modules/linear_model.html#logistic-regression}
+		 \bibitem{ranfor} SciKit Learn: Random Forest \\
+		 \url{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier}
+		 \bibitem{accuracy} SciKit Learn: Accuracy \\
+		 \url{http://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score}
+		 \bibitem{knn2}A Complete Guide to K-Nearest-Neighbors with Applications in Python and R \\
+		 \url{https://kevinzakka.github.io/2016/07/13/k-nearest-neighbor/}
+		 \bibitem{dwt} Dynamic time warping \\
+		 \url{https://en.wikipedia.org/wiki/Dynamic_time_warping}
+		 \bibitem{lcss} Longest common subsequence problem \\
+		 \url{https://en.wikipedia.org/wiki/Longest_common_subsequence_problem}
     \end{thebibliography}
 	
 \end{document}
