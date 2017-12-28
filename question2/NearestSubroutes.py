@@ -1,6 +1,5 @@
 import question1.CleanData as clean
 import os
-import datetime
 import utils
 
 
@@ -72,8 +71,8 @@ def calc_lcss(t1, t2):
                         seqs.append(t2[j-z+1:j+1])
                         idxs.append(list(range(j-z+1,j+1)))
             else:
-                #print(i,j,"-",p1,p2)
-                #for ll in L: print(ll)
+                # print(i,j,"-",p1,p2)
+                # for ll in L: print(ll)
                 L[i][j] = 0
     return seqs, list(idxs)
 

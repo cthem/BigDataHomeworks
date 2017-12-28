@@ -28,6 +28,7 @@ def preprocess_data(data):
         targets_nums.append(num_ids[t])
     return data, targets_nums
 
+
 def question_c(file):
     # get the data ready
     trips_list = get_grid_trips(file)

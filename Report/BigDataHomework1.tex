@@ -140,22 +140,26 @@
 	\subsection{Question A2}
 	Following the same logic as above, the given test file(test\_set\_a2.csv) is parsed storing the data in the usual format and the function find\_similar\_subroots\_per\_test\_trip is used to determine the nearest sub-routes for each test trip.
 	
-	Similarly to the above question, the points are stored as tuples and the required time is calculated using the relevant methods from the utils.py file. To begin with, the method calc\_lcss is called
-	\todo{describe calc and update lcss}
+	Similarly to the above question, the points are stored as tuples and the required time is calculated using the relevant methods from the utils.py file. To begin with, the method calc\_lcss is called. In this function, the list of lonlat coordinate tuples are given as input. We keep all similar point values and indexes in two lists while iterating the two given lists. The distance between two points is calculated using the method calculate\_lonlat\_distance in the CleanData.py file. Based on the exercise requirements, two points are considered as equals if their distance is less than 200 metres. Therefore, if the points are equal, and the indexes are the first point of one of the given lists the cell is marked to unit cost and a new similar sequence is started. Otherwise, we continue to an existing similar sequence, increasing by 1 its length. \todo{explain z variable} On the other hand, if points are not equal, then a new subsequence should start, and therefore L[i][j] is set to zero.
 	
-	Finally, a similar data preprocessing is followed before visualize the data. This time the points are separated so as to show which of them belong to the nearest subroute and color them with red color. The function for the visualization is the same that was used for the question 2A1.
+	Having now found the longest subsequences, we sort the indexes based on the length of the subsequences and we call the update\_current\_maxsubseq in order to update our result comparing previous subsequences. First of all, the new sequences found are iterated, checking if the length of the subsequence list has reached the given number (in our case 5). If there is still space to add the subsequence, then it is added, otherwise we check if the new subsequence is longer from those kept in the list and therefore it should replace it.
+	
+	Finally, a similar data preprocessing is followed before visualize the data. This time the points are separated so as to show which of them belong to the nearest sub-route and color them with red color. The function for the visualization is the same that was used for the question 2A1.
 	
 	\subsection{Question B}
 	The purpose of this task was to export features for classification for the training dataset. In short, a grid should be created and the points of each trip trace should be replaced by a specific square of the grid. The output file where the exported features are stored is the tripFeatures.csv and the tripFeatures.pickle, which was used in order to keep the final data structure with the features.
 	
 	In order to be able to draw the grid, it was necessary to find the min and max longitudes and latitudes (function: find\_min\_max\_latlong). Having now this information, the next function called is the create\_grid giving as input the number\_of\_cells and the result of the previous method. The distance per cell in the grid is calculated as the difference between the max and the min lat/long divided by the total number of cells. The next step is to create the lines of the rows and the columns and then to provide a name for each cell.
-	\todo{explain the replacepoints}
 	
-	Finally, the method visualize\_grid is called.
-	\todo{explain the function}
+	Afterwards, all points in the trip list should be replaced by the cell names that each point corresponds to. This logic is implemented in the method replace\_points. For each trip in the list, all coordinates are transformed in tuples format and using the find\_index function a name is mapped to this point. After having replaced all points with their new names, this list is exported in .csv and .pickle format. In order to be able to easily check the created grid, the method visualize\_grid is implemented so as to plot the grid. 
 	
 	\subsection{Question C}
+	The file corresponding to this question is the JourneyClassification.py. First of all, the data structure is loaded from the .pickle file, created in above question as we have already mentioned. In the requirements of this question it is mentioned to use 10-fold cross validation, therefore the KFold class is used providing the required folds number. Then it is used in order to split our list to the training and test datasets.
+	\todo{explain preprocessdata function}
 	
+	It worths to be mentioned here, that method asarrays from numpy was used to the necessary for this question lists. In addition, a list with the names of the three classifiers is created and for each of them, the relevant function is called in order to train the classifier and then count the accuracy. 
+	
+	In this question, the scikit learn library was used. Firstly, for the knn classifier the class KNeighborsClassifier was used, and more specifically the fit and predict methods. In order to calculate the accuracy of the classifiers we have used the accuracy\_score method (this result is return from each classification function in the JourneyClassification.py). The same logic is followed for the other two classifiers(logistic regression and random forest). What should be mentioned, though, is that the LogisticRegression class implements the predict\_proba method, which returns a list with probabilities and argmax from numpy was used in order to determine the result with the max probability.
 	
 	\subsubsection{Beat ​ ​the ​ ​Benchmark}
 	
