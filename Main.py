@@ -1,54 +1,33 @@
 import sys, os, pkgutil
-import FirstQuestion.Preprocessing as prep
-import FirstQuestion.CleanData as clean
-import FirstQuestion.DataVisualization as visual
+import question1.Preprocessing as prep
+import question1.CleanData as clean
+import question1.DataVisualization as visual
 
-import SecondQuestion.NearestNeighbours as nn
-import SecondQuestion.NearestSubroutes as ns
-import SecondQuestion.MapInGridView as gv
-import SecondQuestion.JourneyClassification as jc
-
-
-def main(output_folder, input_file):
-    # Prepare files and folders
-    output_file, test_file1, test_file2 = create_files_folders(output_folder, input_file)
-    trips_list = question_1(input_file, output_file, output_folder)
-    question_2(output_folder, test_file1, test_file2, trips_list)
+import question2.NearestNeighbours as nn
+import question2.NearestSubroutes as ns
+import question2.MapInGridView as gv
+import question2.JourneyClassification as jc
+import utils
 
 
-def create_files_folders(output_folder, input_file):
-    # question 1
-    output_file = "%s/trips.csv" % output_folder
-    os.makedirs("%s/Question1C" % output_folder, exist_ok=True)
-    # question 2
-    # test_file1 = "test_set_a1.csv"
-    # test_file2 = "test_set_a2.csv"
-    # TODO correct the test files
-    test_file1 = input_file
-    test_file2 = input_file
-    os.makedirs("%s/Question2A1" % output_folder, exist_ok=True)
-    os.makedirs("%s/Question2A2" % output_folder, exist_ok=True)
 
-    return output_file, test_file1, test_file2
-
-
-def question_1(input_file, output_file, output_folder):
+def question_1(input_file, output_file, output_folder, maps_folder):
     # Question 1
     print(">>> Running question 1a - parsing the training data")
     trips_list = prep.question_1a(input_file, output_file)
     print(">>> Running question 1b - cleaning the training data")
     trips_list = clean.question_1b(output_folder, trips_list)
     print(">>> Running question 1b - visualizing the training data")
-    visual.question_1c(output_folder, trips_list)
-    return trips_list
+    visual.question_1c(maps_folder, trips_list)
 
-
-def question_2(output_folder, test_file1, test_file2, trips_list):
+def question_2(train_file, test_files, output_folder):
     # Question 2
+    # Read the training data
+    trips_list = utils.read_trips(train_file)
     print(">>> Running question 2a1 - Nearest neighbours computation")
-    nn.question_a1(output_folder, test_file1, trips_list)
+    #nn.question_a1(output_folder, test_files[0], trips_list)
     print(">>> Running question 2a2 - Nearest subroutes computation")
-    ns.question_a2(output_folder, test_file2, trips_list)
+    #ns.question_a2(output_folder, test_files[1], trips_list)
     print(">>> Running question 2b - Cell grid quantization")
     cellgrid = (4, 3)
     print("Using cell grid:", cellgrid)
@@ -71,9 +50,32 @@ def check_dependencies():
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: %s outputfolder inputcsv" % sys.argv[0])
+        print("Usage: %s inputfolder outputfolder" % sys.argv[0])
         exit(1)
     check_dependencies()
-    args = sys.argv[1:]
-    print("Running %s with arguments: %s" % (sys.argv[0], args))
-    main(*args)
+    print("Running %s with arguments: %s" % (os.path.basename(sys.argv[0]), sys.argv))
+    input_folder  = sys.argv[1]
+    output_folder = sys.argv[2]
+
+    # question 1
+    ############
+
+    # prepare files
+    train_file = os.path.join(input_folder, "train_set.csv")
+    output_file = os.path.join(output_folder, "trips.csv")
+    output_file_clean = os.path.join(output_folder, "trips_clean.csv")
+    maps_folder = os.path.join(output_folder, "gmplots")
+    os.makedirs(output_folder, exist_ok=True)
+    os.makedirs(maps_folder, exist_ok=True)
+
+    # run
+    question_1(train_file, output_file, output_file_clean, maps_folder)
+
+    # question 2
+    ############
+
+    # prepare files
+    test_files = [ os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
+
+    # run
+    question_2(output_file_clean, test_files, output_folder)

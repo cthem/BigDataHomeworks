@@ -3,20 +3,18 @@ import os
 import utils
 
 
-def question_1b(output_folder, trips_list):
+def question_1b(output_file, trips_list):
     '''
     Runs the second subquestion
     :param output_folder:
     :param trips_list:
     :return:
     '''
-    print("Total num of trips in trips.csv file: %d" % len(trips_list))
+    print("Number of trips in the input file: %d" % len(trips_list))
     trips_list = filter_trips(trips_list)
-    print("Final num of trips to be writtern in tripsClean.csv: %d" % len(trips_list))
-    output_file = os.path.join(output_folder, "tripsClean.csv")
-    pickle_file = os.path.join(output_folder, "tripsClean.pickle")
-    utils.write_trips_to_file(output_file, trips_list)
-    utils.write_trips_using_pickle(pickle_file, trips_list)
+    print("Number of clean trips: %d" % len(trips_list))
+    utils.write_trips(output_file, trips_list)
+    utils.serialize_trips(output_file + ".pickle", trips_list)
     return trips_list
 
 
@@ -58,16 +56,19 @@ def caluclate_total_distance_per_trip(trip):
 
 def calculate_lonlat_distance(point1, point2):
     """
-    Uses the haversine formula
+    Calculates the distance in meters between two points (lon, lat) using the haversine formula.
     """
-    # print(point1, point2)
+    # to rad
     point1 = [radians(point1[0]), radians(point1[1])]
     point2 = [radians(point2[0]), radians(point2[1])]
-    R = 6371.0
-    a = sin((point2[1]-point1[1])/2)**2 + cos(point1[1]) * cos(point2[1]) * sin((point2[0]-point1[0])/2)**2
+    delta_lat = point2[1] - point1[1]
+    delta_lon = point2[0] - point1[0]
+    earth_radius = 6371.0
+    a = sin(delta_lat/2)**2 + cos(point1[1]) * cos(point2[1]) * sin(delta_lon/2)**2
     c = 2 * atan2(sqrt(a), sqrt(1-a))
-    d = R * c
-    return d
+    d = earth_radius * c
+    # return to meters
+    return d * 1000
 
 
 def calculate_max_dist(trip):
