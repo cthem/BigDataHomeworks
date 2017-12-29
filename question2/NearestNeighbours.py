@@ -4,6 +4,8 @@ import utils
 from multiprocessing.pool import ThreadPool
 
 
+# TODO check time
+# TODO check for threads in plots
 def question_a1(output_folder, test_file, trips_list):
     print("WARNING: Reading training file part because test file is not supplied.")
     test_trip_list = trips_list[:5]

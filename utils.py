@@ -9,13 +9,13 @@ import pickle
 import json
 
 
-
 def tic():
     '''
     Get timestamp
     :return:
     '''
     return datetime.datetime.now()
+
 
 def tictoc(previous_tic):
     '''
@@ -39,6 +39,7 @@ def tictoc(previous_tic):
     if days:
         msg = "%d days! " % days + msg
     return msg
+
 
 def write_trips(output_file, trips_list):
     '''
@@ -74,6 +75,7 @@ def serialize_trips(output_file, trips_list):
     with open(output_file, "wb") as f:
         pickle.dump(trips_list, f)
 
+
 def read_trips(filepath):
     '''
     Read a trips file, csv or pickle
@@ -105,6 +107,7 @@ def read_trips(filepath):
                 obj["points"] = points
                 trips.append(obj)
     return trips
+
 
 # Functions used for trips visualization
 #######################################
@@ -196,6 +199,7 @@ def html_to_png(html_path, png_path):
         print(ex)
         exit(1)
 
+
 def get_lonlat_tuple(points):
     '''
     :param points: [(lon1,lat1), (lon2,lat2),...]
@@ -203,6 +207,8 @@ def get_lonlat_tuple(points):
     '''
     return ([l[0] for l in points], [l[1] for l in points])
 
+
+# TODO check, problem with maps in result, wrong zoom
 def visualize_point_sequences(all_pts, colors, labels, file_name):
     '''
     Generic geocoordinate multi-plot visualization function with gmplot.

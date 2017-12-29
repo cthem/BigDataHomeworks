@@ -5,6 +5,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
 import utils
 
 
@@ -93,6 +94,8 @@ def knn_classification(train, val, targets, k):
     knn_classifier = KNeighborsClassifier(n_neighbors=k)
     knn_classifier.fit(train[0], train[1])
     res = knn_classifier.predict(val[0])
+    # TODO fix the below
+    # print(classification_report(res, np.array(twenty_train.target)[test_index], target_names=twenty_train.target_names))
     return accuracy_score(res, val[1])
 
 
