@@ -1,6 +1,7 @@
 import question1.CleanData as clean
 import os
 import utils
+from multiprocessing.pool import ThreadPool
 
 
 def question_a2(output_folder, test_file, trips_list):
@@ -18,13 +19,16 @@ def find_similar_subroots_per_test_trip(test_trip, trips_list, k):
     test_lonlat = test_trip['points']
     # keep track of the current common subsequences
     max_subseqs = []
+    pool = ThreadPool(processes=10)
     # iterate over the candidates
     for tripidx, trip in enumerate(trips_list):
         # get coordinates
         trip_lonlat = trip['points']
         timestart = utils.tic()
         # compute common subsequences between the test trip and the current candidate
-        subseqs, subseqs_idx = calc_lcss(test_lonlat, trip_lonlat)
+        async_result = pool.apply_async(calc_lcss, (test_lonlat, trip_lonlat))
+        subseqs, subseqs_idx = async_result.get()
+        # subseqs, subseqs_idx = calc_lcss(test_lonlat, trip_lonlat)
         elapsed = utils.tictoc(timestart)
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key = lambda x : len(x), reverse=True)

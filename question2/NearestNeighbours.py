@@ -1,6 +1,7 @@
 import question1.CleanData as clean
 import os
 import utils
+from multiprocessing.pool import ThreadPool
 
 
 def question_a1(output_folder, test_file, trips_list):
@@ -32,17 +33,21 @@ def calculate_nns(test_trip, trips_list):
     # get test coordinate list
     test_lonlat = test_trip["points"]
     nearest_neighbours = []
+    pool = ThreadPool(processes=10)
     for i, trip in enumerate(trips_list):
         # get candidate coordinate list
         trip_lonlat = trip["points"]
         # calcluate distance
-        distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat)
+        async_result = pool.apply_async(calculate_dynamic_time_warping, (test_lonlat, trip_lonlat))
+        distance = async_result.get()
+        # distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat)
         print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, i+1, len(trips_list), str(trip['id'])))
         nearest_neighbours.append((trip['id'], distance))
     # sort the list to increasing distance
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])
     # return the top 5
     return nearest_neighbours[:5]
+
 
 def calculate_dynamic_time_warping(latlons1, latlons2):
     '''
@@ -53,9 +58,12 @@ def calculate_dynamic_time_warping(latlons1, latlons2):
     '''
     dtw = [ [float('Inf') for _ in range(len(latlons2)+1)] for _ in range(len(latlons1)+1)]
     dtw[0][0] = 0
+    pool = ThreadPool(processes=10)
     for i in range(1,1+len(latlons1)):
         for j in range(1,1+len(latlons2)):
-            cost = clean.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
+            async_result = pool.apply_async(clean.calculate_lonlat_distance, (latlons1[i-1], latlons2[j-1]))
+            cost = async_result.get()
+            # cost = clean.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
             dtw[i][j] = cost + min(dtw[i-1][j], dtw[i][j-1], dtw[i-1][j-1])
     return dtw[-1][-1]
 
