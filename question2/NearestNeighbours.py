@@ -45,6 +45,9 @@ def calculate_nns(test_trip, trips_list):
         # distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat)
         print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, i+1, len(trips_list), str(trip['id'])))
         nearest_neighbours.append((trip['id'], distance))
+
+    pool.close()
+    pool.join()
     # sort the list to increasing distance
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])
     # return the top 5
@@ -67,6 +70,8 @@ def calculate_dynamic_time_warping(latlons1, latlons2):
             cost = async_result.get()
             # cost = clean.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
             dtw[i][j] = cost + min(dtw[i-1][j], dtw[i][j-1], dtw[i-1][j-1])
+    pool.close()
+    pool.join()
     return dtw[-1][-1]
 
 def get_trip_from_id(trips_list, nearest_neighbours):

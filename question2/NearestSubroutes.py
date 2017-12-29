@@ -35,6 +35,8 @@ def find_similar_subroots_per_test_trip(test_trip, trips_list, k):
         # update the list of the longest subsequences
         max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, tripidx)
     print("Got %d common subsequences" % len(max_subseqs))
+    pool.close()
+    pool.join()
     if len(max_subseqs) != k:
         print("WARNING: Specified %d subseqs!" % k)
     return max_subseqs
