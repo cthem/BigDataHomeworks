@@ -12,16 +12,16 @@ def question_a1(output_folder, test_file, trips_list):
         # prepare to count time
         millis_start = utils.tic()
         # compute nearest neighbours
-        nearest_neighbours = calcluate_nearest_neighbours(test_trip, trips_list)
+        nns_ids_distances = calculate_nns(test_trip, trips_list)
         # get time elapsed
         elapsed = utils.tictoc(millis_start)
-        # get the whole data of the returned trips
-        neighbour_trips = get_trip_from_id(trips_list, nearest_neighbours)
+        # get the whole data of the returned trips, add distances
+        neighbour_trips = [n for n in trips_list if n['id'] in [t[0] for t in nns_ids_distances]]
         # visualize
-        preprocessing_for_visualization(test_trip, nearest_neighbours, neighbour_trips, outfile_name, elapsed, i)
+        preprocessing_for_visualization(test_trip, nns_ids_distances, neighbour_trips, outfile_name, elapsed, i)
 
 
-def calcluate_nearest_neighbours(test_trip, trips_list):
+def calculate_nns(test_trip, trips_list):
 
     '''
     :param test_trip: a trip row
@@ -30,21 +30,19 @@ def calcluate_nearest_neighbours(test_trip, trips_list):
     '''
 
     # get test coordinate list
-    test_lonlat = utils.idx_to_lonlat(test_trip, format="tuples")
+    test_lonlat = test_trip["points"]
     nearest_neighbours = []
-    for trip in trips_list:
+    for i, trip in enumerate(trips_list):
         # get candidate coordinate list
-        trip_lonlat = utils.idx_to_lonlat(trip, format="tuples")
+        trip_lonlat = trip["points"]
         # calcluate distance
-        print("Calculate distance for trip: %d" % trip[0])
         distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat)
-        print("Add new nearest neighbour")
-        nearest_neighbours.append((trip[0], distance))
+        print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, i+1, len(trips_list), str(trip['id'])))
+        nearest_neighbours.append((trip['id'], distance))
     # sort the list to increasing distance
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])
     # return the top 5
     return nearest_neighbours[:5]
-
 
 def calculate_dynamic_time_warping(latlons1, latlons2):
     '''
@@ -61,7 +59,6 @@ def calculate_dynamic_time_warping(latlons1, latlons2):
             dtw[i][j] = cost + min(dtw[i-1][j], dtw[i][j-1], dtw[i-1][j-1])
     return dtw[-1][-1]
 
-
 def get_trip_from_id(trips_list, nearest_neighbours):
     '''
     This function keeps the 5 nearest neighbours in the format of the trips_list
@@ -76,8 +73,7 @@ def get_trip_from_id(trips_list, nearest_neighbours):
                 new_trips_list.append(trip)
     return new_trips_list
 
-
-def preprocessing_for_visualization(test_trip, nearest_neighbours, trips_list, outfile_name, elapsed, i):
+def preprocessing_for_visualization(test_trip, nns_ids_distances, trips_list, outfile_name, elapsed, i):
     '''
     :param test_trip: the given test trip from the test file
     :param nearest_neighbours: the 5 nearest neighbours of this test trip, in format id, distance
@@ -90,15 +86,19 @@ def preprocessing_for_visualization(test_trip, nearest_neighbours, trips_list, o
     # create lists of stuff to show, to contain both test and neighbour data
     points, labels= [], []
     # add tuple of longitudes, latitudes and visualization params for the test trip
-    points.append([utils.idx_to_lonlat(test_trip)])
+    # list of lists because multi-color gml visualizer expects such
+    points.append([utils.get_lonlat_tuple(test_trip['points'])])
     labels.append("test trip: %d" % i)
     # loop over neighbours
     for j, trip in enumerate(trips_list):
         # add the neighbour points and params
-        points.append([utils.idx_to_lonlat(trip)])
-        str = ["neighbour %d" % j, "jid: %s" % trip[1], "DWT: %d" % nearest_neighbours[j][1], "Delta-t: %s " % elapsed]
+        points.append([utils.get_lonlat_tuple(trip['points'])])
+        str = ["neighbour %d" % j, "jid: %s" % trip['jid'], "DWT: %d" % nns_ids_distances[j][1], "Delta-t: %s " % elapsed]
         labels.append("\n".join(str))
     # set all colors to blue
-    colors = [['b'] for _ in range(len(nearest_neighbours) + 1)]
+    colors = [['b'] for _ in range(len(nns_ids_distances) + 1)]
     # visualize!
+    print("Points:")
+    for pts in points:
+        print(pts)
     utils.visualize_point_sequences(points, colors, labels, outfile_name)

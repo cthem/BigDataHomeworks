@@ -15,13 +15,13 @@ def question_a2(output_folder, test_file, trips_list):
 
 
 def find_similar_subroots_per_test_trip(test_trip, trips_list, k):
-    test_lonlat = utils.idx_to_lonlat(test_trip, format="tuples")
+    test_lonlat = test_trip['points']
     # keep track of the current common subsequences
     max_subseqs = []
     # iterate over the candidates
     for tripidx, trip in enumerate(trips_list):
         # get coordinates
-        trip_lonlat = utils.idx_to_lonlat(trip, format="tuples")
+        trip_lonlat = trip['points']
         timestart = utils.tic()
         # compute common subsequences between the test trip and the current candidate
         subseqs, subseqs_idx = calc_lcss(test_lonlat, trip_lonlat)
@@ -113,8 +113,8 @@ def update_current_maxsubseq(current, new_seqs, k, elapsed, tripidx):
 
 def preprocessing_for_visualisation(test_trip, max_subseqs, trips_list, file_name):
     # initialize to the test trip data
-    labels = ["test trip: %d" % test_trip[0]]  # test jid
-    points = [[utils.idx_to_lonlat(test_trip)]]
+    labels = ["test trip: %s" % test_trip['jid']]  # test jid
+    points = [[utils.get_lonlat_tuple(test_trip['points'])]]
     colors = [['b']]
 
     for j, sseq in enumerate(max_subseqs):
@@ -122,7 +122,7 @@ def preprocessing_for_visualisation(test_trip, max_subseqs, trips_list, file_nam
         # trip jid
         trip = trips_list[sseq[2]]
         # label
-        str = ["neighbour %d" % j, "jid: %s" % trip[1], "Matching pts: %d" % len(sseq[0]), "Delta-t: %s " % sseq[1]]
+        str = ["neighbour %d" % j, "jid: %s" % trip['jid'], "Matching pts: %d" % len(sseq[0]), "Delta-t: %s " % sseq[1]]
         labels.append("\n".join(str))
 
         # get the indexes of common points
@@ -130,17 +130,20 @@ def preprocessing_for_visualisation(test_trip, max_subseqs, trips_list, file_nam
 
         # color matching points in red. Remaining points are drawn in blue.
         # get the points from the beginning up to the match
-        b1 = utils.idx_to_lonlat(idx=list(range(0, point_idxs[0])), trip=trip)
+        b1 = trip['points'][0:point_idxs[0]+1]
+        b1 = utils.get_lonlat_tuple(b1)
         if b1[0]:
             pts.append(b1)
             cols.append('b')
         # get the matching points
-        r = utils.idx_to_lonlat(idx=point_idxs, trip=trip)
+        r = trip['points'][point_idxs[0]:point_idxs[-1]+1]
+        r = utils.get_lonlat_tuple(r)
         if r[0]:
             pts.append(r)
             cols.append('r')
         # get the points from the last matching point, to the end of the points
-        b2 = utils.idx_to_lonlat(idx=list(range(point_idxs[-1], len(trip[2:]) - 1)), trip=trip)
+        b2 = trip['points'][point_idxs[-1]:]
+        b2 = utils.get_lonlat_tuple(b2)
         if b2[0]:
             pts.append(b2)
             cols.append('b')

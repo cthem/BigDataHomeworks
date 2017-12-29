@@ -6,6 +6,7 @@ import pylab
 from scipy.misc import imread
 import datetime
 import pickle
+import json
 
 
 
@@ -46,14 +47,22 @@ def write_trips(output_file, trips_list):
     :param trips_list:
     :return:
     '''
-    with open(output_file, "w") as f:
-        for trip in trips_list:
-            # make csv
-            header = [str(t) for t in trip[:2]]
-            coords = [str(t) for coord_tuple in trip[2:] for t in coord_tuple]
-            trip_str = ",".join(header + coords)
-            # write it
-            f.write(trip_str+"\n")
+    # write list primitives
+    if type(trips_list[0]) == list:
+        with open(output_file, "w") as f:
+            for trip in trips_list:
+                # make csv
+                header = [str(t) for t in trip[:2]]
+                coords = [str(t) for coord_tuple in trip[2:] for t in coord_tuple]
+                trip_str = ",".join(header + coords)
+                # write it
+                f.write(trip_str+"\n")
+    # write list of objects
+    if type(trips_list[0]) == dict:
+        # use json
+        with open(output_file, "w") as f:
+            json.dump(trips_list, f)
+
 
 def serialize_trips(output_file, trips_list):
     '''
@@ -75,22 +84,27 @@ def read_trips(filepath):
         with open(filepath, "rb") as f:
             trips = pickle.load(f)
     else:
+        # read the lines
         trips=[]
         with open(filepath, "r") as f:
             for line in f:
                 line = line.strip()
                 if not line:
                     continue
-                trip = []
                 elems = line.split(",")
-                trip.extend([float(elems[0]), elems[1]])
+                obj={}
+                obj["id"] = elems[0]
+                obj["jid"] = elems[1]
                 elems = elems[2:]
+                timestamps, points = [], []
                 for i in range(0, len(elems), 3):
-                    vals = list(map(float,elems[i:i+3]))
-                    trip.append(vals)
-                trips.append(trip)
+                    vals = elems[i:i+3]
+                    timestamps.append(float(vals[0]))
+                    points.append((float(vals[1]),float(vals[2])))
+                obj["timestamps"] = timestamps
+                obj["points"] = points
+                trips.append(obj)
     return trips
-
 
 # Functions used for trips visualization
 #######################################
@@ -100,6 +114,7 @@ def read_train_set(filepath):
     :param filepath:
     :return:
     '''
+    print("Reading file", filepath)
     line_objects = []
     with open(filepath, "r") as f:
         next(f)
@@ -140,15 +155,17 @@ def idx_to_lonlat(trip, idx = None, format = "tuple"):
 def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     '''
      Make a color plot a collection of points.
-    :param points:  list of lists [L1, L2, ...]. Each Li contains a tuple ([lon1,lon2,...], [lat,lat2,...]), and should be
+    :param points:  list of tuples [T1, T2, ...]. Each Ti is a tuple ([lon1,lon2,...], [lat,lat2,...]), and should be
     associated with a color
     :param outpath: output dir
     :param colors: list of colors characters, one per L_i. If none, defaults to blue.
     :return:
     '''
-    flattened = [l for l in lonlats_tuplelists if l]
-    max_lonlat = [max(t) for tt in flattened for t in tt]
-    min_lonlat = [min(t) for tt in flattened for t in tt]
+    flattened = [l for tup in lonlats_tuplelists for l in tup]
+    maxs = [max(t) for t in flattened ]
+    mins = [min(t) for t in flattened ]
+    max_lonlat = max(maxs[0::2]), max(maxs[1::2])
+    min_lonlat = min(mins[0::2]), min(mins[1::2])
     delta_lonlat = [mx-mn for (mx,mn) in zip(max_lonlat, min_lonlat)]
     center_lonlat = [min_lonlat[i] + delta_lonlat[i] for i in range(2)]
     zoom = 14
@@ -178,6 +195,13 @@ def html_to_png(html_path, png_path):
         print("Failed to run command %s" % " ".join(cmd))
         print(ex)
         exit(1)
+
+def get_lonlat_tuple(points):
+    '''
+    :param points: [(lon1,lat1), (lon2,lat2),...]
+    :return: ([lon1,lon2,...],[lat1,lat2,...])
+    '''
+    return ([l[0] for l in points], [l[1] for l in points])
 
 def visualize_point_sequences(all_pts, colors, labels, file_name):
     '''

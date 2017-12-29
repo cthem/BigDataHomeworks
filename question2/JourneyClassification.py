@@ -8,24 +8,44 @@ from sklearn.metrics import accuracy_score
 import utils
 
 
-def preprocess_data(data):
-    targets = [d[1] for d in data]
-    data = [d[2] for d in data]
+def preprocess_data(data_orig):
+    '''
+    Prepare data for classification
+    :param data:
+    :return:
+    '''
+    # get journey ids
+    targets = [d['jid'] for d in data_orig]
+    # get features
+    data = [d['points'] for d in data_orig]
 
+    # get maximum length of feature lists
     maxlen = len(max(data, key=lambda x : len(x)))
+    # convert string to numerics
     data = [[int(d[1:]) for d in dlist] for dlist in data]
 
+    # pad to the maximum length
     for i, datum in enumerate(data):
         if len(datum) < maxlen:
             data[i] = datum + [3 for _ in range(maxlen - len(datum))]
 
-    # map journey ids to numbers
+    # convert journey ids to numbers
     num_ids = {}
     targets_nums = []
     for t in targets:
         if t not in num_ids:
             num_ids[t] = len(num_ids)
         targets_nums.append(num_ids[t])
+    # count occurences
+    hist = []
+    for jid in num_ids:
+        occurences = sum([1 if t == jid else 0 for t in targets])
+        hist.append((jid, occurences))
+
+    sorted(hist, key = lambda x : x[1])
+    print("Most frequent 5 jids:")
+    for (jid, occ) in hist[:5]:
+        print(jid,":",occ)
     return data, targets_nums
 
 def question_c(file, output_folder):

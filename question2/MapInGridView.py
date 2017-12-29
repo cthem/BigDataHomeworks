@@ -15,19 +15,13 @@ def subquestion_b(trips_list, number_of_cells, output_folder):
 
 
 def find_min_max_latlong(trips_list):
-    max_lat=trips_list[0][2][2]
-    max_lon=trips_list[0][2][1]
-    min_lat=trips_list[0][2][2]
-    min_lon=trips_list[0][2][1]
+    max_lat, max_lon = -1000, -1000
+    min_lat, min_lon = 1000, 1000
     for trip in trips_list:
-        if trip[2][1]>max_lon:
-            max_lon=trip[2][1]
-        if trip[2][1]<min_lon:
-            min_lon=trip[2][1]
-        if trip[2][2]>max_lat:
-            max_lat=trip[2][2]
-        if trip[2][2]<min_lat:
-            min_lat=trip[2][2]
+        max_lon = max([t[0] for t in trip['points']] + [max_lon])
+        min_lon = min([t[0] for t in trip['points']] + [min_lon])
+        max_lat = max([t[1] for t in trip['points']] + [max_lat])
+        min_lat = min([t[1] for t in trip['points']] + [min_lat])
     return max_lat, max_lon, min_lat, min_lon
 
 
@@ -71,20 +65,19 @@ def create_cell_names(number_of_cells):
 def replace_points(trips_list, rows, columns, cell_names, output_file, pickle_file):
     new_trips_list = []
     for trip in trips_list:
-        trip_lonlat = utils.idx_to_lonlat(trip, format = "tuples")
-        new_trips_list.append([])
-        new_trips_list[-1].append(trip[0])
-        new_trips_list[-1].append(trip[1])
-        new_names=[]
-        for lonlat in trip_lonlat:
+        newtrip = {}
+        newtrip['id'] = trip['id']
+        newtrip['jid'] = trip['jid']
+        newtrip['timestamps'] = trip['timestamps']
+        newtrip['points'] = []
+        for lonlat in trip['points']:
             lon = lonlat[0]  # for columns
             lat = lonlat[1]  # for rows
             lat_idx = find_index(rows, lat)
             lon_idx = find_index(columns, lon)
             cell_name = 'C'+cell_names[lat_idx][lon_idx]
-            new_names.append(cell_name)
-            # print("Point ",lonlat,"mapped to",cell_name)
-        new_trips_list[-1].append(new_names)
+            newtrip['points'].append(cell_name)
+        new_trips_list.append(newtrip)
     utils.write_trips(output_file, new_trips_list)
     utils.serialize_trips(pickle_file, new_trips_list)
 
@@ -122,3 +115,4 @@ def visualize_grid(rows, columns, min_lat=None, min_lon=None, max_lat=None, max_
     plt.xlabel("lat")
     plt.ylabel("lon")
     plt.savefig(os.path.join(output_folder, "grid.png"), dpi = fig.dpi)
+    plt.close()
