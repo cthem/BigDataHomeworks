@@ -24,23 +24,26 @@ def filter_trips(trips_list):
     :param trips_list:
     :return:
     '''
-    trips_too_small, trips_too_big = [], []
+
+    trips_too_small, trips_too_big, nulls = [], [], []
     for trip in trips_list:
-        total_dist = caluclate_total_distance_per_trip(trip)
+        total_dist = calculate_total_distance_per_trip(trip)
         # too small journey check
         if total_dist < 2:
             trips_too_small.append(trip)
             trips_list.remove(trip)
+            continue
         max_dist = calculate_max_dist(trip)
         if max_dist > 2:
             trips_too_big.append(trip)
             trips_list.remove(trip)
+            continue
     print("Total trips deleted due to total distance less than 2km: %d" % len(trips_too_small))
     print("Total trips deleted due to max distance between two points more than 2km: %d" % len(trips_too_big))
     return trips_list
 
 
-def caluclate_total_distance_per_trip(trip):
+def calculate_total_distance_per_trip(trip):
     '''
     Calculates the total distance of a trip
     :param trip:

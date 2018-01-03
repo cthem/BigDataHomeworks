@@ -8,6 +8,7 @@ import question2.NearestSubroutes as ns
 import question2.MapInGridView as gv
 import question2.JourneyClassification as jc
 import utils
+import random
 
 
 def question_1(input_file, output_file, output_folder, maps_folder):
@@ -21,12 +22,12 @@ def question_1(input_file, output_file, output_folder, maps_folder):
     print("Finished question1")
 
 
-def question_2(train_file, test_files, output_folder, maps_folder):
+def question_2(train_file, test_files, output_folder, maps_folder, paropts):
     # Question 2
     # Read the training data
     trips_list = utils.read_trips(train_file)
     print(">>> Running question 2a1 - Nearest neighbours computation")
-    nn.question_a1(maps_folder, test_files[0], trips_list)
+    nn.question_a1(maps_folder, test_files[0], trips_list, paropts)
     print(">>> Running question 2a2 - Nearest subroutes computation")
     ns.question_a2(maps_folder, test_files[1], trips_list)
     print(">>> Running question 2b - Cell grid quantization")
@@ -58,6 +59,11 @@ if __name__ == '__main__':
     input_folder  = os.path.abspath(sys.argv[1])
     output_folder = os.path.abspath(sys.argv[2])
 
+    rand_seed = 123123
+    random.seed(rand_seed)
+
+    paropts = ("processes",8)
+
     # question 1
     ############
 
@@ -79,4 +85,4 @@ if __name__ == '__main__':
     test_files = [ os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
 
     # run
-    question_2(output_file_clean, test_files, output_folder, maps_folder)
+    question_2(output_file_clean, test_files, output_folder, maps_folder, paropts)

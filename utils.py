@@ -64,6 +64,16 @@ def write_trips(output_file, trips_list):
         with open(output_file, "w") as f:
             json.dump(trips_list, f)
 
+def sublist(llist, slen):
+    '''
+    return llist divided to sublists of at most slen
+    :param llist:
+    :param sublist_length:
+    :param only_num:
+    :return:
+    '''
+    divs = range(0, len(llist), slen)
+    return [ llist[i:i+slen] for i in divs]
 
 def serialize_trips(output_file, trips_list):
     '''
@@ -74,7 +84,6 @@ def serialize_trips(output_file, trips_list):
     '''
     with open(output_file, "wb") as f:
         pickle.dump(trips_list, f)
-
 
 def read_trips(filepath):
     '''
@@ -117,7 +126,8 @@ def read_train_set(filepath):
     :param filepath:
     :return:
     '''
-    print("Reading file", filepath)
+    print("Reading training file ignoring null jids", filepath)
+    num_nulls, num_empties = 0, 0
     line_objects = []
     with open(filepath, "r") as f:
         next(f)
@@ -125,11 +135,21 @@ def read_train_set(filepath):
             line_contents = line.strip().split(',')
             obj = {}
             obj["jid"] = line_contents[0]
+            # drop nulls and empties
+            if obj["jid"] == "null":
+                num_nulls += 1
+                continue
+            # drop nulls and empties
+            if obj["jid"] == "":
+                num_empties += 1
+                continue
             obj["vid"] = line_contents[1]
             obj["ts"] = line_contents[2]
             obj["lon"] = line_contents[3]
             obj["lat"] = line_contents[4]
             line_objects.append(obj)
+    print("Discarded %d null journey id entries" % num_nulls)
+    print("Discarded %d empty journey id entries" % num_empties)
     return line_objects
 
 
