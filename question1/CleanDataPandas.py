@@ -6,7 +6,6 @@ def filter_trips_pandas(output_file, df):
     for index, row in df.iterrows():
         jounreyId = row["journeyId"]
         points = row["points"]
-        points = eval(points)
         total_dist = calculate_total_distance_per_trip_pandas(points)
         if total_dist < 2000:
             trips_too_small.append(jounreyId)

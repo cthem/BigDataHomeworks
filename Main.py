@@ -7,6 +7,7 @@ import question1.DataVisualization as visual
 import question1.DataVisualizationPandas as dvp
 
 import question2.NearestNeighbours as nn
+import question2.NearestNeighboursPandas as nnp
 import question2.NearestSubroutes as ns
 import question2.MapInGridView as gv
 import question2.JourneyClassification as jc
@@ -14,7 +15,7 @@ import utils
 import random
 
 
-def question_1(input_file, output_file, output_file_clean, maps_folder, pandas_option):
+def question_1(input_file, output_file, output_file_clean, maps_folder, pandas_option=True):
     # Question 1
     if pandas_option:
         print(">>> Running question 1a - parsing the training data")
@@ -33,8 +34,10 @@ def question_1(input_file, output_file, output_file_clean, maps_folder, pandas_o
     print("Finished question1")
 
 
-def question_2(train_file, test_files, output_folder, maps_folder, paropts):
+def question_2(train_file, test_files, output_folder, maps_folder, paropts, pandas_option=True):
     # Question 2
+    if pandas_option:
+        nnp.question_a1(output_folder, train_file, test_files[0], paropts)
     # Read the training data
     trips_list = utils.read_trips(train_file)
     print(">>> Running question 2a1 - Nearest neighbours computation")
@@ -86,9 +89,8 @@ if __name__ == '__main__':
     os.makedirs(output_folder, exist_ok=True)
     os.makedirs(maps_folder, exist_ok=True)
 
-    pandas_option=True
     # run
-    question_1(train_file, output_file, output_file_clean, maps_folder, pandas_option)
+    question_1(train_file, output_file, output_file_clean, maps_folder, pandas_option= True)
 
     # question 2
     ############
