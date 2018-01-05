@@ -118,8 +118,6 @@ def read_trips(filepath):
     return trips
 
 
-# Functions used for trips visualization
-#######################################
 def read_train_set(filepath):
     '''
     Reads the training file

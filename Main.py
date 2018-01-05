@@ -1,7 +1,10 @@
 import sys, os, pkgutil
 import question1.Preprocessing as prep
+import question1.PandasPreprocessing as pdp
 import question1.CleanData as clean
+import question1.CleanDataPandas as cdp
 import question1.DataVisualization as visual
+import question1.DataVisualizationPandas as dvp
 
 import question2.NearestNeighbours as nn
 import question2.NearestSubroutes as ns
@@ -11,14 +14,22 @@ import utils
 import random
 
 
-def question_1(input_file, output_file, output_folder, maps_folder):
+def question_1(input_file, output_file, output_file_clean, maps_folder, pandas_option):
     # Question 1
-    print(">>> Running question 1a - parsing the training data")
-    trips_list = prep.question_1a(input_file, output_file)
-    print(">>> Running question 1b - cleaning the training data")
-    trips_list = clean.question_1b(output_folder, trips_list)
-    print(">>> Running question 1b - visualizing the training data")
-    visual.question_1c(maps_folder, trips_list)
+    if pandas_option:
+        print(">>> Running question 1a - parsing the training data")
+        trips_list, df = pdp.create_trips_file(input_file, output_file)
+        print(">>> Running question 1b - cleaning the training data")
+        trips_list, df = cdp.filter_trips_pandas(output_file_clean, df)
+        print(">>> Running question 1c - visualizing the training data")
+        dvp.visualize_trips(maps_folder, df)
+    else:
+        print(">>> Running question 1a - parsing the training data")
+        trips_list = prep.question_1a(input_file, output_file)
+        print(">>> Running question 1b - cleaning the training data")
+        trips_list = clean.question_1b(output_file_clean, trips_list)
+        print(">>> Running question 1c - visualizing the training data")
+        visual.question_1c(maps_folder, trips_list)
     print("Finished question1")
 
 
@@ -62,21 +73,22 @@ if __name__ == '__main__':
     rand_seed = 123123
     random.seed(rand_seed)
 
-    paropts = ("processes",8)
+    paropts = None
 
     # question 1
     ############
 
     # prepare files
-    train_file = os.path.join(input_folder, "train_set.csv")
+    train_file = os.path.join(input_folder, "train_set_dev.csv")
     output_file = os.path.join(output_folder, "trips.csv")
     output_file_clean = os.path.join(output_folder, "trips_clean.csv")
     maps_folder = os.path.join(output_folder, "gmplots")
     os.makedirs(output_folder, exist_ok=True)
     os.makedirs(maps_folder, exist_ok=True)
 
+    pandas_option=True
     # run
-    # question_1(train_file, output_file, output_file_clean, maps_folder)
+    question_1(train_file, output_file, output_file_clean, maps_folder, pandas_option)
 
     # question 2
     ############

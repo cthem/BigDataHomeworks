@@ -1,5 +1,4 @@
 from math import sin, cos, sqrt, atan2, radians
-import os
 import utils
 
 
@@ -10,6 +9,7 @@ def question_1b(output_file, trips_list):
     :param trips_list:
     :return:
     '''
+
     print("Number of trips in the input file: %d" % len(trips_list))
     trips_list = filter_trips(trips_list)
     print("Number of clean trips: %d" % len(trips_list))

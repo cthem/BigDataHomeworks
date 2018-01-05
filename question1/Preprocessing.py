@@ -1,18 +1,22 @@
 import utils
 
+
 def question_1a(input_file, output_file):
     '''
     Runs the first subquestion
     :param input_file: The training file
     :param output_file: The processed file with the trips
+    :param read_option: file will be read using pandas or not
     :return:
     '''
+
     line_objects = utils.read_train_set(input_file)
     map_per_vid = get_data_per_vehicle_id(line_objects)
     map_per_vidjid = get_data_per_vehicle_and_journey_id(map_per_vid)
     trips_list = write_trips(output_file, map_per_vidjid)
     print("Done with question 1!")
     return trips_list
+
 
 def get_data_per_vehicle_id(line_objects):
     '''
@@ -29,6 +33,7 @@ def get_data_per_vehicle_id(line_objects):
         obj_without_vid = {key: obj[key] for key in obj if key != "vid"}
         map_per_vid[vid].append(obj_without_vid)
     return map_per_vid
+
 
 def get_data_per_vehicle_and_journey_id(map_per_vid):
     '''
@@ -59,6 +64,7 @@ def get_data_per_vehicle_and_journey_id(map_per_vid):
         # assign jid-points map to this vehicle id
         map_per_vid[vehicle_id] = map_per_jid
     return map_per_vid
+
 
 def write_trips(filename, map_per_vid):
     '''

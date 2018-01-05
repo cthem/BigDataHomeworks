@@ -3,13 +3,9 @@ import os
 import utils
 from multiprocessing.pool import Pool, ThreadPool
 import threading
-import itertools
 from dtw import dtw as libdtw
 
 
-
-# TODO check time
-# TODO check for threads in plots
 def question_a1(output_folder, test_file, trips_list, paropts):
     print("WARNING: Reading training file part because test file is not supplied.")
     test_trip_list = trips_list[:5]
@@ -19,7 +15,7 @@ def question_a1(output_folder, test_file, trips_list, paropts):
         # prepare to count time
         millis_start = utils.tic()
         # compute nearest neighbours
-        #parallelize = None
+        # parallelize = None
         nns_ids_distances = calculate_nns(test_trip, trips_list, paropts = paropts)
         # get time elapsed
         elapsed = utils.tictoc(millis_start)
@@ -27,7 +23,6 @@ def question_a1(output_folder, test_file, trips_list, paropts):
         neighbour_trips = [n for n in trips_list if n['id'] in [t[0] for t in nns_ids_distances]]
         # visualize
         preprocessing_for_visualization(test_trip, nns_ids_distances, neighbour_trips, outfile_name, elapsed, i)
-
 
 
 def calculate_nns(test_trip, trips_list, paropts = None, ret_container = None):
@@ -62,11 +57,11 @@ def calculate_nns(test_trip, trips_list, paropts = None, ret_container = None):
             pool = ThreadPool(processes=numpar)
             tasks = [[] for _ in trips]
             for i,tlist in enumerate(trips):
-                #print(len(tlist),tlist)
+                # print(len(tlist),tlist)
                 async_result = pool.apply_async(calculate_dists, (test_lonlat, tlist))
                 tasks[i] = async_result
-                #distances = async_result.get()
-                #rres[i] = distances
+                # distances = async_result.get()
+                # rres[i] = distances
             pool.close()
             pool.join()
             print("Joined.")
@@ -110,6 +105,7 @@ def calculate_nns(test_trip, trips_list, paropts = None, ret_container = None):
         print(neigh)
     return nearest_neighbours[:5]
 
+
 def calculate_dists(test_lonlat, trips_list, ret_container = None, paropts = None):
 
     if ret_container is not None:
@@ -150,7 +146,7 @@ def calculate_dynamic_time_warping(latlons1, latlons2, paropts = None, impl = "d
 
         for i in range(1,1+len(latlons1)):
             for j in range(1,1+len(latlons2)):
-                #cost = clean.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
+                # cost = clean.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
                 if not (i-1,j-1) in idxs:
                     a=2
                 cost = dists[idxs[(i-1,j-1)]]
@@ -159,21 +155,17 @@ def calculate_dynamic_time_warping(latlons1, latlons2, paropts = None, impl = "d
     elif impl == "diy_initial":
         dtw = [[float('Inf') for _ in range(len(latlons2) + 1)] for _ in range(len(latlons1) + 1)]
         dtw[0][0] = 0
-        #pool = ThreadPool(processes=10)
         for i in range(1, 1 + len(latlons1)):
             for j in range(1, 1 + len(latlons2)):
-                #async_result = pool.apply_async(clean.calculate_lonlat_distance, (latlons1[i - 1], latlons2[j - 1]))
-                #cost = async_result.get()
                 cost = clean.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
                 dtw[i][j] = cost + min(dtw[i - 1][j], dtw[i][j - 1], dtw[i - 1][j - 1])
-        #pool.close()
-        #pool.join()
         return dtw[-1][-1]
 
     elif impl == "lib":
         # https://github.com/pierre-rouanet/dtw/blob/master/examples/simple%20example.ipynb
         ret = libdtw(latlons1, latlons2, lambda x,y : clean.calculate_lonlat_distance(x,y))
         return ret[0]
+
 
 def compute_dists(points_list, paropts):
     reslist = [-1 for _ in points_list]
