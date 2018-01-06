@@ -15,7 +15,7 @@ def question_1(input_file, output_file, output_file_clean, maps_folder):
     print("Finished question1")
 
 
-def question_2(train_file, test_files, output_folder, maps_folder, class_folder, paropts):
+def question_2(train_file, test_files, test_file, output_folder, maps_folder, class_folder, paropts):
     # Question 2
     print(">>> Running question 2a1 - Nearest neighbours computation")
     # qp2.question_a1(maps_folder, train_file, test_files[0], paropts)
@@ -26,7 +26,7 @@ def question_2(train_file, test_files, output_folder, maps_folder, class_folder,
     print("Using cell grid:", cellgrid)
     features_file = qp2.question_b(train_file, cellgrid, output_folder)
     print(">>> Running question 2c - Classification")
-    qp2.question_c(features_file, class_folder)
+    qp2.question_c(features_file, test_file, class_folder)
 
 
 def check_dependencies():
@@ -75,7 +75,8 @@ if __name__ == '__main__':
     ############
 
     # prepare files
-    test_files = [ os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
+    test_file = [os.path.join(input_folder, "test_set.csv")]
+    test_files = [os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
 
     # run
-    question_2(output_file_clean, test_files, output_folder, maps_folder, class_folder, paropts)
+    question_2(output_file_clean, test_files, test_file, output_folder, maps_folder, class_folder, paropts)

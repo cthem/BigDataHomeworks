@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -75,5 +76,7 @@ def randfor_classification(train, val, targets):
     return accuracy_score(res, val[1])
 
 
-def improve_classification():
-    pass
+# test file in the same format as the features file
+def improve_classification(features_file, test_file, output_folder, classifier):
+    train_df = pd.read_csv(features_file)
+    test_df = pd.read_csv(test_file)

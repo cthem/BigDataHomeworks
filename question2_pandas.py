@@ -49,7 +49,7 @@ def question_b(train_file, number_of_cells, output_folder):
     return output_file
 
 
-def question_c(features_file, output_folder):
+def question_c(features_file, test_file, output_folder):
     feature_df = pd.read_csv(features_file)
     kf = KFold(n_splits=10)
     grid_features, targets = jcp.preprocess_data(feature_df)
@@ -81,3 +81,4 @@ def question_c(features_file, output_folder):
         titlestr = "%s, overall accuracy: %2.4f" % (classifier, np.mean(accuracies[classifier]))
         up.barchart(list(range(1, 11)), accuracies[classifier], title=titlestr, ylabel="accuracy",
                        save=os.path.join(output_folder, classifier))
+        jcp.improve_classification(features_file, test_file, output_folder, classifiers[0])
