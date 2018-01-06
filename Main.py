@@ -11,6 +11,7 @@ import question2.NearestNeighboursPandas as nnp
 import question2.NearestSubroutes as ns
 import question2.NearestSubroutsPandas as nsp
 import question2.MapInGridView as gv
+import question2.MapInGridViewPandas as gvp
 import question2.JourneyClassification as jc
 import utils
 import random
@@ -41,10 +42,11 @@ def question_2(train_file, test_files, output_folder, maps_folder, paropts, pand
         print(">>> Running question 2a1 - Nearest neighbours computation")
         # nnp.question_a1(output_folder, train_file, test_files[0], paropts)
         print(">>> Running question 2a2 - Nearest subroutes computation")
-        nsp.question_a2(maps_folder, test_files[1], train_file)
+        # nsp.question_a2(maps_folder, test_files[1], train_file)
         print(">>> Running question 2b - Cell grid quantization")
         cellgrid = (4, 3)
         print("Using cell grid:", cellgrid)
+        gvp.question_b(train_file, cellgrid, output_folder)
         print(">>> Running question 2c - Classification")
     else:
         # Read the training data
