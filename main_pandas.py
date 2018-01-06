@@ -20,7 +20,7 @@ def question_2(train_file, test_files, test_file, output_folder, maps_folder, cl
     print(">>> Running question 2a1 - Nearest neighbours computation")
     # qp2.question_a1(maps_folder, train_file, test_files[0], paropts)
     print(">>> Running question 2a2 - Nearest subroutes computation")
-    qp2.question_a2(maps_folder, test_files[1], train_file)
+    # qp2.question_a2(maps_folder, test_files[1], train_file)
     print(">>> Running question 2b - Cell grid quantization")
     cellgrid = (10, 10)
     print("Using cell grid:", cellgrid)
@@ -81,3 +81,4 @@ if __name__ == '__main__':
 
     # run
     question_2(output_file_clean, test_files, test_file, output_folder, maps_folder, class_folder, paropts)
+

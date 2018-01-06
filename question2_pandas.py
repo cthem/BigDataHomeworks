@@ -54,31 +54,47 @@ def question_c(features_file, test_file, output_folder):
     kf = KFold(n_splits=10)
     grid_features, targets = jcp.preprocess_data(feature_df)
     folds_idxs = list(kf.split(grid_features))
-    folds_idxs = list(kf.split(grid_features))
     trips_array = np.asarray(grid_features)
     targets = np.asarray(targets)
 
     classifiers = ["knn", "logreg", "randfor"]
+    # train/val accuracies
     accuracies = {}
+    mean_accuracies = {}
     # classify
     for classifier in classifiers:
+        accuracies[classifier] = []
+        print()
         print("Testing classifier [%s]" % classifier)
         # train & test each classifier
         # for each fold
-        accuracies[classifier] = []
         for i, (train_idx, val_idx) in enumerate(folds_idxs):
             print("\tClassifing fold %d/%d" % (i + 1, len(folds_idxs)))
             train = (trips_array[train_idx], targets[train_idx])
             val = (trips_array[val_idx], targets[val_idx])
             if classifier == "knn":
                 k = 5
-                res = jcp.knn_classification(train, val, targets, k)
+                accTrain, accVal = jcp.knn_classification(train, val, targets, k)
             elif classifier == "logreg":
-                res = jcp.logreg_classification(train, val, targets)
+                accTrain, accVal = jcp.logreg_classification(train, val, targets)
             elif classifier == "randfor":
-                res = jcp.randfor_classification(train, val, targets)
-            accuracies[classifier].append(res)
-        titlestr = "%s, overall accuracy: %2.4f" % (classifier, np.mean(accuracies[classifier]))
-        up.barchart(list(range(1, 11)), accuracies[classifier], title=titlestr, ylabel="accuracy",
+                accTrain, accVal = jcp.randfor_classification(train, val, targets)
+            accuracies[classifier].append((accTrain, accVal))
+
+        # accuracy across all folds
+        mean_accuracies[classifier] = [np.mean([x[0] for x in accuracies[classifier]]), \
+                                       np.mean([x[1] for x in accuracies[classifier]])]
+        titlestr = "%s, overall accuracy train/val: %s" % (classifier, str(mean_accuracies[classifier]))
+        up.barchart(list(range(1, 11)), accuracies[classifier], title=titlestr, ylabel="accuracy", legend=["train","val"],
                        save=os.path.join(output_folder, classifier))
-        jcp.improve_classification(features_file, test_file, output_folder, classifiers[0])
+
+    # print mean accuracy per classifier
+    for classifier in accuracies:
+        print(classifier, "accuracy train/val:", mean_accuracies[classifier])
+
+    print("Improving classification")
+    accuracies_impr = {}
+    jcp.improve_classification(features_file, test_file, output_folder, classifiers[0])
+    # print updated accuracies
+    for classifier in accuracies_impr:
+        print(classifier, "accuracy:", accuracies_impr[classifier])

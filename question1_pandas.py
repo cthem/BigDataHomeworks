@@ -11,14 +11,15 @@ import utils_pandas as up
 def create_trips_file(input_file, output_file):
     print("Reading training file with pandas ignoring null jids", input_file)
     df = pd.read_csv(input_file)
-    df = df[pd.notnull(df['journeyPatternId'])].reindex()
+    print("Read %d lines." % len(df))
+    # remove potential NaNs and "null" jids
+    df = df[pd.notnull(df['journeyPatternId'])]
+    df = df[df['journeyPatternId'] != "null"].reindex()
     timestamps = df.groupby(["vehicleID", "journeyPatternId"])["timestamp"].apply(list)
     lons = df.groupby(["vehicleID", "journeyPatternId"])["longitude"].apply(list)
     lats = df.groupby(["vehicleID", "journeyPatternId"])["latitude"].apply(list)
     df = pd.concat([timestamps, lons, lats], axis=1, ignore_index=False)
-    print("File read")
     print("Start processing data")
-
     for index, row in df.iterrows():
         tslist, lonslist, latslist = [], [], []
         tslist = row["timestamp"]
@@ -81,6 +82,7 @@ def filter_trips_pandas(output_file, df):
             continue
     print("Total trips deleted due to total distance less than 2km: %d" % len(trips_too_small))
     print("Total trips deleted due to max distance between two points more than 2km: %d" % len(trips_too_big))
+    print("Writing",len(df),"cleaned trips to", output_file)
     df.to_csv(output_file)
     trips_list = df.to_dict(orient='dict')
     return trips_list, df

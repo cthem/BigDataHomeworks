@@ -192,7 +192,7 @@ def visualize_point_sequences(all_pts, colors, labels, file_name):
     plt.close()
 
 
-def barchart(xvalues, yvalues, title="",ylabel="", save=None):
+def barchart(xvalues, yvalues, title="",ylabel="", legend = None, save=None, colors="rbgyckm"):
     '''
     Function to create and show/save a pylab barchart
     :param xvalues:
@@ -202,7 +202,12 @@ def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     :param save:
     :return:
     '''
+    numy = len(yvalues[0])
     barwidth = 0.2
+    if not legend:
+        legend = ["legend" + str(i) for i in numy]
+    while numy > len(colors):
+        colors += colors
     fig = plt.figure(figsize=(12.0, 5.0))
     ax = plt.gca()
     plt.xticks([i  for i in xvalues], xvalues)
@@ -214,7 +219,8 @@ def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     ax.set_xlim([0, xend+1])
     ax.set_title(title)
 
-    ax.bar([i for i in xvalues], yvalues, width=barwidth, color="r", label="accuracy")
+    for i in range(numy):
+        ax.bar([x + barwidth * i for x in xvalues], [y[i] for y in yvalues], width=barwidth, color=colors[i], label=legend[i])
     ax.plot([0, xend], [1, 1], "k--")
     ax.legend(loc='upper right')
     ax.set_ylabel(ylabel)

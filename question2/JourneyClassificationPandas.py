@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 
 
+# TODO get training loss, where applicable (else training accuracy itself), to measure overfit
 # TODO improve classification
 def preprocess_data(feature_df):
     targets = []
@@ -19,8 +20,8 @@ def preprocess_data(feature_df):
         for point in train_points:
             points.append(point[1])
         data.append(points)
-    for i,d in enumerate(data):
-        print(targets[i], d)
+    #for i,d in enumerate(data):
+    #    print(targets[i], d)
     # get maximum length of feature lists
     maxlen = len(max(data, key=lambda x: len(x)))
     data = [[int(d[1:]) for d in dlist] for dlist in data]
@@ -53,30 +54,46 @@ def knn_classification(train, val, targets, k):
     # folds contains 10 tuples (training and test sets)
     knn_classifier = KNeighborsClassifier(n_neighbors=k)
     knn_classifier.fit(train[0], train[1])
+    # get training and test accuracy
+    res = knn_classifier.predict(train[0])
+    accTrain = accuracy_score(train[1], res)
     res = knn_classifier.predict(val[0])
-    print(classification_report(res, val[1], target_names=str(targets)))
-    return accuracy_score(res, val[1])
+    accVal = accuracy_score(val[1], res)
+    return accTrain, accVal
+    #print(classification_report(val[1], res))
 
 
 def logreg_classification(train, val, targets):
     lr_classifier = LogisticRegression()
     lr_classifier.fit(train[0], train[1])
+
+    # get prediction by probabilty argmax for the predicted class
     res_prob = lr_classifier.predict_proba(val[0])
-    # get probabilty argmax for the predicted class
     res = np.argmax(res_prob, axis=1)
-    print(classification_report(res, val[1], target_names=str(targets)))
-    return accuracy_score(res, val[1])
+    accVal =  accuracy_score(val[1], res)
+
+    res_prob = lr_classifier.predict_proba(train[0])
+    res = np.argmax(res_prob, axis=1)
+    accTrain =  accuracy_score(train[1], res)
+    return accTrain, accVal
 
 
 def randfor_classification(train, val, targets):
     rf_classifier = RandomForestClassifier()
     rf_classifier.fit(train[0], train[1])
+
+    res = rf_classifier.predict(train[0])
+    accTrain = accuracy_score(train[1], res)
     res = rf_classifier.predict(val[0])
-    print(classification_report(res, val[1], target_names=str(targets)))
-    return accuracy_score(res, val[1])
+    accVal = accuracy_score(val[1], res)
+    return accTrain, accVal
+
+
 
 
 # test file in the same format as the features file
 def improve_classification(features_file, test_file, output_folder, classifier):
+    print("IXTA todo")
+    return
     train_df = pd.read_csv(features_file)
     test_df = pd.read_csv(test_file)

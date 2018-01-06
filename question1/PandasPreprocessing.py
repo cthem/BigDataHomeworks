@@ -9,8 +9,7 @@ def create_trips_file(input_file, output_file):
     lons = df.groupby(["vehicleID", "journeyPatternId"])["longitude"].apply(list)
     lats = df.groupby(["vehicleID", "journeyPatternId"])["latitude"].apply(list)
     df = pd.concat([timestamps, lons, lats], axis=1, ignore_index=False)
-    print("File read")
-    print("Start processing data")
+    print("Processing data.")
 
     for index, row in df.iterrows():
         tslist, lonslist, latslist = [], [], []
