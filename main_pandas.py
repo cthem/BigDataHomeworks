@@ -18,11 +18,11 @@ def question_1(input_file, output_file, output_file_clean, maps_folder):
 def question_2(train_file, test_files, output_folder, maps_folder, class_folder, paropts):
     # Question 2
     print(">>> Running question 2a1 - Nearest neighbours computation")
-    qp2.question_a1(maps_folder, train_file, test_files[0], paropts)
+    # qp2.question_a1(maps_folder, train_file, test_files[0], paropts)
     print(">>> Running question 2a2 - Nearest subroutes computation")
-    qp2.question_a2(maps_folder, test_files[1], train_file)
+    # qp2.question_a2(maps_folder, test_files[1], train_file)
     print(">>> Running question 2b - Cell grid quantization")
-    cellgrid = (4, 3)
+    cellgrid = (10, 10)
     print("Using cell grid:", cellgrid)
     features_file = qp2.question_b(train_file, cellgrid, output_folder)
     print(">>> Running question 2c - Classification")
@@ -66,6 +66,7 @@ if __name__ == '__main__':
     class_folder = os.path.join(output_folder, "classification_charts")
     os.makedirs(output_folder, exist_ok=True)
     os.makedirs(maps_folder, exist_ok=True)
+    os.makedirs(class_folder, exist_ok=True)
 
     # run
     question_1(train_file, output_file, output_file_clean, maps_folder)
