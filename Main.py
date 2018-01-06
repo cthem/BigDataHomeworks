@@ -37,19 +37,19 @@ def question_1(input_file, output_file, output_file_clean, maps_folder, pandas_o
     print("Finished question1")
 
 
-def question_2(train_file, test_files, output_folder, maps_folder, paropts, pandas_option=True):
+def question_2(train_file, test_files, output_folder, maps_folder, class_folder, paropts, pandas_option=True):
     # Question 2
     if pandas_option:
         print(">>> Running question 2a1 - Nearest neighbours computation")
-        nnp.question_a1(output_folder, train_file, test_files[0], paropts)
+        # nnp.question_a1(output_folder, train_file, test_files[0], paropts)
         print(">>> Running question 2a2 - Nearest subroutes computation")
-        nsp.question_a2(maps_folder, test_files[1], train_file)
+        # nsp.question_a2(maps_folder, test_files[1], train_file)
         print(">>> Running question 2b - Cell grid quantization")
         cellgrid = (4, 3)
         print("Using cell grid:", cellgrid)
         features_file = gvp.question_b(train_file, cellgrid, output_folder)
         print(">>> Running question 2c - Classification")
-        jcp.question_c(features_file, output_folder)
+        jcp.question_c(features_file, class_folder)
     else:
         # Read the training data
         trips_list = utils.read_trips(train_file)
@@ -95,10 +95,11 @@ if __name__ == '__main__':
     ############
 
     # prepare files
-    train_file = os.path.join(input_folder, "train_set_dev.csv")
+    train_file = os.path.join(input_folder, "train_set.csv")
     output_file = os.path.join(output_folder, "trips.csv")
     output_file_clean = os.path.join(output_folder, "trips_clean.csv")
     maps_folder = os.path.join(output_folder, "gmplots")
+    class_folder = os.path.join(output_folder, "classification_charts")
     os.makedirs(output_folder, exist_ok=True)
     os.makedirs(maps_folder, exist_ok=True)
 
@@ -112,4 +113,4 @@ if __name__ == '__main__':
     test_files = [ os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
 
     # run
-    question_2(output_file_clean, test_files, output_folder, maps_folder, paropts, pandas_option=True)
+    question_2(output_file_clean, test_files, output_folder, maps_folder, class_folder, paropts, pandas_option=True)
