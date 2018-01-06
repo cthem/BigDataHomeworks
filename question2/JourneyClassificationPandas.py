@@ -53,7 +53,6 @@ def knn_classification(train, val, targets, k):
     knn_classifier = KNeighborsClassifier(n_neighbors=k)
     knn_classifier.fit(train[0], train[1])
     res = knn_classifier.predict(val[0])
-    # TODO fix the below
     print(classification_report(res, val[1], target_names=str(targets)))
     return accuracy_score(res, val[1])
 

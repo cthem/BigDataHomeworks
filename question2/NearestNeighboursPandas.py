@@ -24,7 +24,7 @@ def calculate_nns(test_points, train_df, paropts=None):
         if partype == "processes":
             nearest_neighbours = run_with_processes(numpar, test_lonlat, train_df, nearest_neighbours)
         elif partype == "threads":
-            nearest_neighbours = run_with_threads(numpar, test_lonlat, train_df)
+            nearest_neighbours = run_with_threads(numpar, test_lonlat, train_df, nearest_neighbours)
     else:
         # serial execution
         nearest_neighbours = calculate_dists(test_lonlat, train_df)
@@ -44,11 +44,9 @@ def run_with_processes(numpar, test_lonlat, train_df, nearest_neighbours):
     # for results
     rres = [[] for _ in range(len(train_df.index))]
     tasks = [[] for _ in range(len(train_df.index))]
-    for itrain, rtrain in train_df:
-        train_points = rtrain["points"]
-        train_points = eval(train_points)
-        async_result = pool.apply_async(calculate_dists, (test_lonlat, train_points))
-        tasks[itrain] = async_result
+    for i in range(len(train_df.index)):
+        async_result = pool.apply_async(calculate_dists, (test_lonlat, train_df))
+        tasks[i] = async_result
     pool.close()
     pool.join()
     print("Joined.")

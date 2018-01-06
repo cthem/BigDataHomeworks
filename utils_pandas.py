@@ -98,8 +98,8 @@ def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     :return:
     '''
     flattened = [l for tup in lonlats_tuplelists for l in tup]
-    maxs = [max(t) for t in flattened ]
-    mins = [min(t) for t in flattened ]
+    maxs = [max(t) for t in flattened]
+    mins = [min(t) for t in flattened]
     max_lonlat = max(maxs[0::2]), max(maxs[1::2])
     min_lonlat = min(mins[0::2]), min(mins[1::2])
     delta_lonlat = [mx-mn for (mx,mn) in zip(max_lonlat, min_lonlat)]

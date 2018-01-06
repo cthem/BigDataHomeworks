@@ -84,13 +84,13 @@ if __name__ == '__main__':
     rand_seed = 123123
     random.seed(rand_seed)
 
-    paropts = None
+    paropts = ("processes",10)
 
     # question 1
     ############
 
     # prepare files
-    train_file = os.path.join(input_folder, "train_set.csv")
+    train_file = os.path.join(input_folder, "train_set_dev.csv")
     output_file = os.path.join(output_folder, "trips.csv")
     output_file_clean = os.path.join(output_folder, "trips_clean.csv")
     maps_folder = os.path.join(output_folder, "gmplots")
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     os.makedirs(maps_folder, exist_ok=True)
 
     # run
-    question_1(train_file, output_file, output_file_clean, maps_folder, pandas_option=True)
+    question_1(train_file, output_file, output_file_clean, maps_folder, pandas_option=False)
 
     # question 2
     ############
@@ -108,4 +108,4 @@ if __name__ == '__main__':
     test_files = [ os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
 
     # run
-    question_2(output_file_clean, test_files, output_folder, maps_folder, class_folder, paropts, pandas_option=True)
+    question_2(output_file_clean, test_files, output_folder, maps_folder, class_folder, paropts, pandas_option=False)
