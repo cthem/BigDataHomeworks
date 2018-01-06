@@ -1,9 +1,9 @@
 import numpy as np
-from sklearn.model_selection import KFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
 
 
 def preprocess_data(feature_df):
@@ -53,23 +53,25 @@ def knn_classification(train, val, targets, k):
     knn_classifier.fit(train[0], train[1])
     res = knn_classifier.predict(val[0])
     # TODO fix the below
-    # print(classification_report(res, np.array(twenty_train.target)[test_index], target_names=twenty_train.target_names))
+    print(classification_report(res, val[1], target_names=str(targets)))
     return accuracy_score(res, val[1])
 
 
-def logreg_classification(train, val):
+def logreg_classification(train, val, targets):
     lr_classifier = LogisticRegression()
     lr_classifier.fit(train[0], train[1])
     res_prob = lr_classifier.predict_proba(val[0])
     # get probabilty argmax for the predicted class
     res = np.argmax(res_prob, axis=1)
+    print(classification_report(res, val[1], target_names=str(targets)))
     return accuracy_score(res, val[1])
 
 
-def randfor_classification(train, val):
+def randfor_classification(train, val, targets):
     rf_classifier = RandomForestClassifier()
     rf_classifier.fit(train[0], train[1])
     res = rf_classifier.predict(val[0])
+    print(classification_report(res, val[1], target_names=str(targets)))
     return accuracy_score(res, val[1])
 
 

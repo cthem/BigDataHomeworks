@@ -59,7 +59,7 @@ if __name__ == '__main__':
     ############
 
     # prepare files
-    train_file = os.path.join(input_folder, "train_set.csv")
+    train_file = os.path.join(input_folder, "train_set_dev.csv")
     output_file = os.path.join(output_folder, "trips.csv")
     output_file_clean = os.path.join(output_folder, "trips_clean.csv")
     maps_folder = os.path.join(output_folder, "gmplots")

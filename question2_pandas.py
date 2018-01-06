@@ -74,9 +74,9 @@ def question_c(features_file, output_folder):
                 k = 5
                 res = jcp.knn_classification(train, val, targets, k)
             elif classifier == "logreg":
-                res = jcp.logreg_classification(train, val)
+                res = jcp.logreg_classification(train, val, targets)
             elif classifier == "randfor":
-                res = jcp.randfor_classification(train, val)
+                res = jcp.randfor_classification(train, val, targets)
             accuracies[classifier].append(res)
         titlestr = "%s, overall accuracy: %2.4f" % (classifier, np.mean(accuracies[classifier]))
         up.barchart(list(range(1, 11)), accuracies[classifier], title=titlestr, ylabel="accuracy",
