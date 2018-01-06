@@ -1,47 +1,9 @@
-import pandas as pd
-import os
 import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
-import UtilsPandas as up
-
-
-def question_c(features_file, output_folder):
-    feature_df = pd.read_csv(features_file)
-    kf = KFold(n_splits=10)
-    grid_features, targets = preprocess_data(feature_df)
-    folds_idxs = list(kf.split(grid_features))
-    folds_idxs = list(kf.split(grid_features))
-    trips_array = np.asarray(grid_features)
-    targets = np.asarray(targets)
-
-    classifiers = ["knn", "logreg", "randfor"]
-    accuracies = {}
-    # classify
-    for classifier in classifiers:
-        print("Testing classifier [%s]" % classifier)
-        # train & test each classifier
-        # for each fold
-        accuracies[classifier] = []
-        for i, (train_idx, val_idx) in enumerate(folds_idxs):
-            print("\tClassifing fold %d/%d" % (i + 1, len(folds_idxs)))
-            train = (trips_array[train_idx], targets[train_idx])
-            val = (trips_array[val_idx], targets[val_idx])
-            if classifier == "knn":
-                k = 5
-                res = knn_classification(train, val, targets, k)
-            elif classifier == "logreg":
-                res = logreg_classification(train, val)
-            elif classifier == "randfor":
-                res = randfor_classification(train, val)
-            accuracies[classifier].append(res)
-        titlestr = "%s, overall accuracy: %2.4f" % (classifier, np.mean(accuracies[classifier]))
-        up.barchart(list(range(1, 11)), accuracies[classifier], title=titlestr, ylabel="accuracy",
-                       save=os.path.join(output_folder, classifier))
 
 
 def preprocess_data(feature_df):

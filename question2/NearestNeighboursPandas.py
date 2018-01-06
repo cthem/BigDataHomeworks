@@ -1,28 +1,10 @@
 import pandas as pd
 import os
-import UtilsPandas as up
-from multiprocessing.pool import Pool, ThreadPool
+import utils_pandas as up
+from multiprocessing.pool import ThreadPool
 import threading
 from dtw import dtw as libdtw
-import question1.CleanDataPandas as cdp
-
-
-def question_a1(output_folder, clean_file, test_file, paropts):
-    test_df = pd.read_csv(test_file)
-    train_df = pd.read_csv(clean_file)
-    for index, row in test_df.iterrows():
-        print("Examining test element %d" % (index + 1))
-        outfile_name = os.path.join(output_folder, "nn_%d_" % (index + 1))
-        # prepare to count time
-        millis_start = up.tic()
-        # compute nearest neighbours
-        test_points = row["points"]
-        test_points = eval(test_points)
-        nns_ids_distances = calculate_nns(test_points, train_df, paropts=paropts)
-        # get time elapsed
-        elapsed = up.tictoc(millis_start)
-        # visualize
-        preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, index)
+import question1_pandas as qp1
 
 
 def calculate_nns(test_points, train_df, paropts=None):
@@ -155,13 +137,13 @@ def calculate_dynamic_time_warping(latlons1, latlons2, paropts = None, impl = "d
         dtw[0][0] = 0
         for i in range(1, 1 + len(latlons1)):
             for j in range(1, 1 + len(latlons2)):
-                cost = cdp.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
+                cost = qp1.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
                 dtw[i][j] = cost + min(dtw[i - 1][j], dtw[i][j - 1], dtw[i - 1][j - 1])
         return dtw[-1][-1]
 
     elif impl == "lib":
         # https://github.com/pierre-rouanet/dtw/blob/master/examples/simple%20example.ipynb
-        ret = libdtw(latlons1, latlons2, lambda x,y : cdp.calculate_lonlat_distance(x,y))
+        ret = libdtw(latlons1, latlons2, lambda x,y : qp1.calculate_lonlat_distance(x,y))
         return ret[0]
 
 
@@ -174,11 +156,11 @@ def compute_dists(points_list, paropts):
     if partype == 'process':
         pool = ThreadPool(processes=numpar)
         for i, (p1,p2) in enumerate(points_list):
-            async_result = pool.apply_async(cdp.calculate_lonlat_distance, (p1, p2))
+            async_result = pool.apply_async(qp1.calculate_lonlat_distance, (p1, p2))
             reslist[i] = async_result.get()
     else:
         for i, (p1,p2) in enumerate(points_list):
-            reslist[i] = cdp.calculate_lonlat_distance(p1, p2)
+            reslist[i] = qp1.calculate_lonlat_distance(p1, p2)
     return reslist
 
 

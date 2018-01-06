@@ -1,20 +1,6 @@
-import pandas as pd
-import os
-import UtilsPandas as up
+import utils_pandas as up
 from multiprocessing.pool import ThreadPool
-import question1.CleanDataPandas as cdp
-
-
-def question_a2(output_folder, test_file, train_file):
-    test_df = pd.read_csv(test_file)
-    train_df = pd.read_csv(train_file)
-    for index, row in test_df.iterrows():
-        print("Extracting subroutes for test trip %d/%d" % (index + 1, len(test_df.index)))
-        file_name = os.path.join(output_folder, "subroutes_%d_" % (index + 1))
-        test_points = row["points"]
-        test_points = eval(test_points)
-        max_subseqs = find_similar_subroutes_per_test_trip(test_points, train_df)
-        preprocessing_for_visualisation(test_points, max_subseqs, file_name, index)
+import question1_pandas as qp1
 
 
 def find_similar_subroutes_per_test_trip(test_points, train_df, k=5):
@@ -57,7 +43,7 @@ def calc_lcss(t1, t2):
     for i, p1 in enumerate(t1):
         for j, p2 in enumerate(t2):
             # calculate the dist
-            dist = cdp.calculate_lonlat_distance(p1, p2)
+            dist = qp1.calculate_lonlat_distance(p1, p2)
             equal = dist < 200
             if equal:
                 # the points are equal enough

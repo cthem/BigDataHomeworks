@@ -1,6 +1,6 @@
 import os
 import random
-import UtilsPandas as up
+import utils_pandas as up
 
 
 def visualize_trips(output_folder, df):

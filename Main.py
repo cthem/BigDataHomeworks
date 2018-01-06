@@ -1,19 +1,14 @@
 import sys, os, pkgutil
 import question1.Preprocessing as prep
-import question1.PandasPreprocessing as pdp
 import question1.CleanData as clean
-import question1.CleanDataPandas as cdp
 import question1.DataVisualization as visual
-import question1.DataVisualizationPandas as dvp
+import question1_pandas as qp1
 
+import question2_pandas as qp2
 import question2.NearestNeighbours as nn
-import question2.NearestNeighboursPandas as nnp
 import question2.NearestSubroutes as ns
-import question2.NearestSubroutsPandas as nsp
 import question2.MapInGridView as gv
-import question2.MapInGridViewPandas as gvp
 import question2.JourneyClassification as jc
-import question2.JourneyClassificationPandas as jcp
 import utils
 import random
 
@@ -22,11 +17,11 @@ def question_1(input_file, output_file, output_file_clean, maps_folder, pandas_o
     # Question 1
     if pandas_option:
         print(">>> Running question 1a - parsing the training data")
-        trips_list, df = pdp.create_trips_file(input_file, output_file)
+        trips_list, df = qp1.create_trips_file(input_file, output_file)
         print(">>> Running question 1b - cleaning the training data")
-        trips_list, df = cdp.filter_trips_pandas(output_file_clean, df)
+        trips_list, df = qp1.filter_trips_pandas(output_file_clean, df)
         print(">>> Running question 1c - visualizing the training data")
-        dvp.visualize_trips(maps_folder, df)
+        qp1.visualize_trips(maps_folder, df)
     else:
         print(">>> Running question 1a - parsing the training data")
         trips_list = prep.question_1a(input_file, output_file)
@@ -41,15 +36,15 @@ def question_2(train_file, test_files, output_folder, maps_folder, class_folder,
     # Question 2
     if pandas_option:
         print(">>> Running question 2a1 - Nearest neighbours computation")
-        # nnp.question_a1(output_folder, train_file, test_files[0], paropts)
+        qp2.question_a1(output_folder, train_file, test_files[0], paropts)
         print(">>> Running question 2a2 - Nearest subroutes computation")
-        # nsp.question_a2(maps_folder, test_files[1], train_file)
+        qp2.question_a2(maps_folder, test_files[1], train_file)
         print(">>> Running question 2b - Cell grid quantization")
         cellgrid = (4, 3)
         print("Using cell grid:", cellgrid)
-        features_file = gvp.question_b(train_file, cellgrid, output_folder)
+        features_file = qp2.question_b(train_file, cellgrid, output_folder)
         print(">>> Running question 2c - Classification")
-        jcp.question_c(features_file, class_folder)
+        qp2.question_c(features_file, class_folder)
     else:
         # Read the training data
         trips_list = utils.read_trips(train_file)

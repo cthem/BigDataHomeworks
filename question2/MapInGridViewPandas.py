@@ -1,17 +1,6 @@
 import os
-import pandas as pd
 import matplotlib.pyplot as plt
-import UtilsPandas as up
-
-
-def question_b(train_file, number_of_cells, output_folder):
-    # specify files
-    output_file = os.path.join(output_folder, "tripFeatures.csv")
-    train_df = pd.read_csv(train_file)
-    max_lat, max_lon, min_lat, min_lon = find_min_max_latlong(train_df)
-    rows, columns, cell_names = create_grid(number_of_cells, max_lat, max_lon, min_lat, min_lon, output_folder=output_folder)
-    replace_points(train_df, rows, columns, cell_names, output_file)
-    return output_file
+import utils_pandas as up
 
 
 def find_min_max_latlong(train_df):
