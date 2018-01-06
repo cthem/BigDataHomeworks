@@ -41,9 +41,9 @@ def question_2(train_file, test_files, output_folder, maps_folder, paropts, pand
     # Question 2
     if pandas_option:
         print(">>> Running question 2a1 - Nearest neighbours computation")
-        # nnp.question_a1(output_folder, train_file, test_files[0], paropts)
+        nnp.question_a1(output_folder, train_file, test_files[0], paropts)
         print(">>> Running question 2a2 - Nearest subroutes computation")
-        # nsp.question_a2(maps_folder, test_files[1], train_file)
+        nsp.question_a2(maps_folder, test_files[1], train_file)
         print(">>> Running question 2b - Cell grid quantization")
         cellgrid = (4, 3)
         print("Using cell grid:", cellgrid)
@@ -54,9 +54,9 @@ def question_2(train_file, test_files, output_folder, maps_folder, paropts, pand
         # Read the training data
         trips_list = utils.read_trips(train_file)
         print(">>> Running question 2a1 - Nearest neighbours computation")
-        # nn.question_a1(maps_folder, test_files[0], trips_list, paropts)
+        nn.question_a1(maps_folder, test_files[0], trips_list, paropts)
         print(">>> Running question 2a2 - Nearest subroutes computation")
-        # ns.question_a2(maps_folder, test_files[1], trips_list)
+        ns.question_a2(maps_folder, test_files[1], trips_list)
         print(">>> Running question 2b - Cell grid quantization")
         cellgrid = (4, 3)
         print("Using cell grid:", cellgrid)
