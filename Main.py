@@ -9,6 +9,7 @@ import question1.DataVisualizationPandas as dvp
 import question2.NearestNeighbours as nn
 import question2.NearestNeighboursPandas as nnp
 import question2.NearestSubroutes as ns
+import question2.NearestSubroutsPandas as nsp
 import question2.MapInGridView as gv
 import question2.JourneyClassification as jc
 import utils
@@ -37,19 +38,27 @@ def question_1(input_file, output_file, output_file_clean, maps_folder, pandas_o
 def question_2(train_file, test_files, output_folder, maps_folder, paropts, pandas_option=True):
     # Question 2
     if pandas_option:
-        nnp.question_a1(output_folder, train_file, test_files[0], paropts)
-    # Read the training data
-    trips_list = utils.read_trips(train_file)
-    print(">>> Running question 2a1 - Nearest neighbours computation")
-    nn.question_a1(maps_folder, test_files[0], trips_list, paropts)
-    print(">>> Running question 2a2 - Nearest subroutes computation")
-    ns.question_a2(maps_folder, test_files[1], trips_list)
-    print(">>> Running question 2b - Cell grid quantization")
-    cellgrid = (4, 3)
-    print("Using cell grid:", cellgrid)
-    features_file = gv.subquestion_b(trips_list, cellgrid, output_folder)
-    print(">>> Running question 2c - Classification")
-    jc.question_c(features_file, output_folder)
+        print(">>> Running question 2a1 - Nearest neighbours computation")
+        # nnp.question_a1(output_folder, train_file, test_files[0], paropts)
+        print(">>> Running question 2a2 - Nearest subroutes computation")
+        nsp.question_a2(maps_folder, test_files[1], train_file)
+        print(">>> Running question 2b - Cell grid quantization")
+        cellgrid = (4, 3)
+        print("Using cell grid:", cellgrid)
+        print(">>> Running question 2c - Classification")
+    else:
+        # Read the training data
+        trips_list = utils.read_trips(train_file)
+        print(">>> Running question 2a1 - Nearest neighbours computation")
+        nn.question_a1(maps_folder, test_files[0], trips_list, paropts)
+        print(">>> Running question 2a2 - Nearest subroutes computation")
+        ns.question_a2(maps_folder, test_files[1], trips_list)
+        print(">>> Running question 2b - Cell grid quantization")
+        cellgrid = (4, 3)
+        print("Using cell grid:", cellgrid)
+        features_file = gv.subquestion_b(trips_list, cellgrid, output_folder)
+        print(">>> Running question 2c - Classification")
+        jc.question_c(features_file, output_folder)
 
 
 def check_dependencies():

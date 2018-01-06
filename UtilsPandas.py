@@ -81,7 +81,8 @@ def get_lonlat_tuple(points):
     :param points: [(lon1,lat1), (lon2,lat2),...]
     :return: ([lon1,lon2,...],[lat1,lat2,...])
     '''
-    return ([l[0] for l in points], [l[1] for l in points])
+    return ([l[1] for l in points], [l[2
+                                     ] for l in points])
 
 
 # Visualization

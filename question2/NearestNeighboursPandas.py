@@ -22,7 +22,7 @@ def question_a1(output_folder, clean_file, test_file, paropts):
         # get time elapsed
         elapsed = up.tictoc(millis_start)
         # visualize
-        preprocessing_for_visualization(test_points, train_df, nns_ids_distances, outfile_name, elapsed, index)
+        preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, index)
 
 
 def calculate_nns(test_points, train_df, paropts=None):
@@ -109,12 +109,13 @@ def calculate_dists(test_lonlat, train_df, ret_container = None, paropts = None)
         dists = []
     for index, row in train_df.iterrows():
         train_points = row["points"]
+        jid = row["journeyId"]
         train_points = eval(train_points)
         trip_lonlat = up.idx_to_lonlat(train_points,format="tuples")
         # calculate distance
         distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat, paropts)
         print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, index+1, len(train_df.index), str(row["journeyId"])))
-        dists.append((int(row["tripId"]), distance))
+        dists.append((int(row["tripId"]), distance, jid, train_points))
     return dists
 
 
@@ -181,8 +182,8 @@ def compute_dists(points_list, paropts):
     return reslist
 
 
-
-def preprocessing_for_visualization(test_points, nns_ids_distances, train_df, outfile_name, elapsed, i):
+# TODO problem with write_group_gml, something wrong with given tuples
+def preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, i):
     '''
     :param test_trip: the given test trip from the test file
     :param nearest_neighbours: the 5 nearest neighbours of this test trip, in format id, distance
@@ -199,12 +200,10 @@ def preprocessing_for_visualization(test_points, nns_ids_distances, train_df, ou
     points.append([up.get_lonlat_tuple(test_points)])
     labels.append("test trip: %d" % i)
     # loop over neighbours
-    total_pts = up.get_total_points(train_df)
-    for index, row in train_df.iterrows():
-        train_points = row["points"]
-        train_points = eval(train_points)
+    for j,neighbour in enumerate(nns_ids_distances):
+        train_points = neighbour[3]
         points.append(up.get_lonlat_tuple(train_points))
-        str = ["neighbour %d" % index, "jid: %s" % int(row["tripId"]), "DWT: %d" % nns_ids_distances[index][1], "Delta-t: %s " % elapsed]
+        str = ["neighbour %d" % j, "jid: %s" % neighbour[2], "DWT: %d" % nns_ids_distances[j][1], "Delta-t: %s " % elapsed]
         labels.append("\n".join(str))
     # set all colors to blue
     colors = [['b'] for _ in range(len(nns_ids_distances) + 1)]
