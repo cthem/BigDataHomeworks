@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 import pylab
 from scipy.misc import imread
 import datetime
-import pickle
-import json
+import pandas as pd
 
 
 def tic():
@@ -56,16 +55,21 @@ def idx_to_lonlat(points, idx=None, format="tuple"):
         return list(zip(lons,lats))
 
 
-def sublist(llist, slen):
-    '''
-    return llist divided to sublists of at most slen
-    :param llist:
-    :param sublist_length:
-    :param only_num:
-    :return:
-    '''
-    divs = range(0, len(llist), slen)
-    return [ llist[i:i+slen] for i in divs]
+def get_sub_dataframes(df, num):
+    print("number of tasks: ", str(num))
+    num_data, rem = divmod(len(df.index), num)
+    sudframes = []
+    start = 0
+    end = num_data
+    while end <= len(df.index):
+        new_df = df[start:end]
+        sudframes.append(new_df)
+        start = end
+        end = end + num_data
+    if rem:
+        sudframes = sudframes[:num]
+        sudframes[-1] += df[-rem:]
+    return sudframes
 
 
 def get_total_points(df):
@@ -224,6 +228,5 @@ def barchart(xvalues, yvalues, title="",ylabel="", save=None):
 
 
 if __name__ == '__main__':
-   pts = [([25,26.4,25.1],[26,26.1,26.8])]
-   write_group_gml(pts,"filefile.html")
-   print("Done.")
+    df = pd.read_csv("test_set.csv")
+    dfs = get_sub_dataframes(df, 10)

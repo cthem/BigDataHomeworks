@@ -59,19 +59,14 @@ def run_with_processes(numpar, test_lonlat, train_df, nearest_neighbours):
     return nearest_neighbours
 
 
-#TODO cardu boh8eiaaaa
 def run_with_threads(numpar, test_lonlat, train_df, nearest_neighbours):
     # create empty containers and divide data per thread
     res = [[] for _ in range(numpar)]
-    num_data_per_thread, rem = divmod(len(train_df.index), numpar)
-    data_per_thread = up.sublist(up.get_total_points(train_df), num_data_per_thread)
-    if rem:
-        data_per_thread = data_per_thread[:numpar]
-        # data_per_thread[-1] += trips_list[-rem:]
+    subframes = up.get_sub_dataframes(train_df, numpar)
     # assign data and start the threads
     threads = []
     for i in range(numpar):
-        threads.append(threading.Thread(target=calculate_dists, args=(test_lonlat, data_per_thread[i], res[i])))
+        threads.append(threading.Thread(target=calculate_dists, args=(test_lonlat, subframes[i], res[i])))
         threads[i].start()
     # gather and merge results
     rres = []
