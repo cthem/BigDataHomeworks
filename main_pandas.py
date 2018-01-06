@@ -18,7 +18,7 @@ def question_1(input_file, output_file, output_file_clean, maps_folder):
 def question_2(train_file, test_files, test_file, output_folder, maps_folder, class_folder, paropts):
     # Question 2
     print(">>> Running question 2a1 - Nearest neighbours computation")
-    qp2.question_a1(maps_folder, train_file, test_files[0], paropts)
+    # qp2.question_a1(maps_folder, train_file, test_files[0], paropts)
     print(">>> Running question 2a2 - Nearest subroutes computation")
     qp2.question_a2(maps_folder, test_files[1], train_file)
     print(">>> Running question 2b - Cell grid quantization")
@@ -30,7 +30,7 @@ def question_2(train_file, test_files, test_file, output_folder, maps_folder, cl
 
 
 def check_dependencies():
-    deps = ['numpy', 'scipy']
+    deps = ['numpy', 'scipy', 'pandas']
     for dep in deps:
         res = pkgutil.find_loader(dep)
         if res is None:

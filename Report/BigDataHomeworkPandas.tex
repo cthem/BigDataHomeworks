@@ -123,9 +123,10 @@
 	
 	In the function question\_a1, two dataframes are created for both the test and the training trips. The test dataframe's rows are iterated and for each row the function calculate\_nns from the file NearestNeighboursPandas.py is called in order to get the nearest neighbours, calculating also the time needed for this action.
 	
-	\todo{paralization}
+	There are three ways to execute this task: using processes, threads or serial execution. This information is provided as input giving the kind of execution and the number of processes/threads as well. In the function run\_with\_processes an async task is executed for each process and then the result is stored in a list, while in the function run\_with\_threads the dataframe is splitted in sub dataframes (the number is specified by the number of threads) and then distance is calculated for each subdataframe. After thread join, the result is also stored in the nearest\_neighbours list.
 	
-	In this function, the 3rd column of the dataframe is providing and it is transformed in tuples with the latitudes and longitudes. The list nearest neighbours will keep in tuples for each train trip the trip\_id, the calculated distance (which is calculated using the dynamic time wraping algorithm), the journeyId and finally all the points of the journey. 
+	In the function calculate\_dists, the 3rd column of the dataframe is provided and it is transformed in tuples with the latitudes and longitudes. The list nearest neighbours will keep in tuples for each train trip the trip\_id, the calculated distance (which is calculated using the dynamic time wraping algorithm), the journeyId and finally all the points of the journey. 
+	
 	\todo{custom algorithm or library}
 	
 	The final list is sorted and only the 5 nearest neighbours are kept for visualization. preprocessing\_for\_visualization, three list are created: a list with all the points (longitudes and latitudes) of the test trip and its neighbours, a list with the labels and a list with the colors (in this question the only color is the blue). All this data is provided to the function visualize\_paths in the utils\_pandas.py file in order to export the trips as map images.
@@ -149,6 +150,15 @@
 	Having now found the longest subsequences, we sort the indexes based on the length of the subsequences and we call the update\_current\_maxsubseq in order to update our result comparing previous subsequences. First of all, the new sequences found are iterated, checking if the length of the subsequence list has reached the given number (in our case 5). If there is still space to add the subsequence, then it is added, otherwise we check if the new subsequence is longer from those kept in the list and therefore it should replace it.
 	
 	Finally, a similar data preprocessing is followed before visualize the data. This time the points are separated so as to show which of them belong to the nearest sub-route and color them with red color. The function for the visualization is the same that was used for the question 2a1 in the utils\_pandas.py file.
+	
+	Below, there is an example of the 6 produced maps, showing the nearest sub-routes related to a test trip:
+	
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.50] {question2a1example.jpg}
+			\caption{Example of nearest sub-routes trips visualization}
+		\end{center}
+	\end{figure} 
 	
 	\subsection{Question B}
 	The purpose of this task was to export features for classification for the training dataset. In short, a grid should be created and the points of each trip trace should be replaced by a specific square of the grid. The output file where the exported features are stored is the tripFeatures.csv.

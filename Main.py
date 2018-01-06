@@ -105,7 +105,7 @@ if __name__ == '__main__':
     ############
 
     # prepare files
-    test_files = [ os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
+    test_files = [os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
 
     # run
     question_2(output_file_clean, test_files, output_folder, maps_folder, class_folder, paropts, pandas_option=False)

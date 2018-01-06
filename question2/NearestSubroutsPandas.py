@@ -3,6 +3,7 @@ from multiprocessing.pool import ThreadPool
 import question1_pandas as qp1
 
 
+#TODO include only one time a trip
 def find_similar_subroutes_per_test_trip(test_points, train_df, k=5):
     test_lonlat = up.idx_to_lonlat(test_points, format="tuples")
     max_subseqs = []
