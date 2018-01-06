@@ -53,7 +53,8 @@ if __name__ == '__main__':
     rand_seed = 123123
     random.seed(rand_seed)
 
-    paropts = ("threads",10)
+    # paropts = ("processes", 10)
+    paropts = None
 
     # question 1
     ############

@@ -50,7 +50,7 @@ def idx_to_lonlat(points, idx=None, format="tuple"):
         lons.append(points[i][1])
         lats.append(points[i][2])
     if format == "tuple":
-        return (lons, lats)
+        return lons, lats
     elif format == "tuples":
         return list(zip(lons,lats))
 
@@ -85,13 +85,12 @@ def get_lonlat_tuple(points):
     :param points: [(lon1,lat1), (lon2,lat2),...]
     :return: ([lon1,lon2,...],[lat1,lat2,...])
     '''
-    return ([l[1] for l in points], [l[2
-                                     ] for l in points])
+    return [l[1] for l in points], [l[2] for l in points]
 
 
 # Visualization
 ##################
-
+# TODO check, problem with maps in result, wrong zoom
 def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     '''
      Make a color plot a collection of points.
@@ -137,7 +136,6 @@ def html_to_png(html_path, png_path):
         exit(1)
 
 
-# TODO check, problem with maps in result, wrong zoom
 def visualize_point_sequences(all_pts, colors, labels, file_name):
     '''
     Generic geocoordinate multi-plot visualization function with gmplot.
@@ -225,8 +223,3 @@ def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     else:
         plt.savefig(save, dpi=fig.dpi)
     plt.close()
-
-
-if __name__ == '__main__':
-    df = pd.read_csv("test_set.csv")
-    dfs = get_sub_dataframes(df, 10)

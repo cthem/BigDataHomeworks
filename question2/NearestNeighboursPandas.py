@@ -157,7 +157,6 @@ def compute_dists(points_list, paropts):
     return reslist
 
 
-# TODO problem with write_group_gml, something wrong with given tuples
 def preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, i):
     '''
     :param test_trip: the given test trip from the test file
@@ -177,7 +176,7 @@ def preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name
     # loop over neighbours
     for j,neighbour in enumerate(nns_ids_distances):
         train_points = neighbour[3]
-        points.append(up.get_lonlat_tuple(train_points))
+        points.append([up.get_lonlat_tuple(train_points)])
         str = ["neighbour %d" % j, "jid: %s" % neighbour[2], "DWT: %d" % nns_ids_distances[j][1], "Delta-t: %s " % elapsed]
         labels.append("\n".join(str))
     # set all colors to blue
