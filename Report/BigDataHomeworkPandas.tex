@@ -82,14 +82,14 @@
 	\newpage
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\todo{Remove the null jids from the start}
+
 	\section{Introduction}
     This is the report related to the Python project for the course "Large-Scale Data Analysis Techniques". In the below sections, the implemented logic will be explicitly analyzed. The project is divided in two parts: in the first part the goals are: to preprocess and clean the given data as well as to visualize five of the given trips in the train\_set file. In the second part, the tasks are: to find for all test trips the k nearest neabours from the given train trips, to find the train trips with the longest similar subroute for each test trip, to use 10-fold cross validation to the training data and classify them with three different methods (k-nearest neighbours, logistic regression and random forest) and finally to choose one of the above classification methods and improve the result.
     
     In the Main.py file, it is required to provide the path to the input folder (containing the training and test files) and the output folder where all results will be stored. In this folder an additional directories are created, in order to keep all maps extracted from this application and also to store the charts showing the classification accuracy. There are two ways in order to run this project, either add these folders in the edit configurations choice from the menu, or use the run.sh in order to provide these args. Finally, the dependencies are checked and the folders and files are prepared before starting to run the application.
     
 	\section{Exercise 1}
-	In this section, further details are provided related to the preprocessing and cleaning of the training data as well as to the trip's visualization. All files implementing the requirements of this part are in the folder question1.
+	In this section, further details are provided related to the preprocessing and cleaning of the training data as well as to the trip's visualization. All files implementing the requirements of this part are in the file question1\_pandas.py.
 	
 	\subsection{Question A}
 	The requirement in this part is to preprocess the input training data and create a new file where will be in 3 columns. The first column is the trip\_id incrementing by 1 for each trip, the second is the journey\_id and the last one contains a list of lists, where each item contains a timestamp, a longitude and a latitude. In order to read the given csv file, pandas library was used transforming the csv file to a dataframe. The first necessary thing to do, was to remove all data with null journeyPatternId and then using the groupby method on the columns vehicleID and journeyPatternId, three different dataframes were created. By concatenating them, the final dataframe contains five columns, where the three last columns contain a list of timestamps, a list of longitudes and a list of latitudes respectively.
@@ -99,9 +99,9 @@
 	\subsection{Question B}
 	The second goal was to clean the given data, based on the total trip distance and the max distance between two successive points. Total distance should not be less than 2km and max distance should not exceed 2km.
 	
-	The above logic is implemented in the file CleanData.py in function filter\_trips. The two lists (trips\_too\_small and trips\_too\_big) will keep the excluded trips due to either not valid total distance or to invalid max distance between successive points. For each trip in the training dataset (in the dictionary format from question A) the total distance is calculate, using the function calculate\_lonlat\_distance, which returns the distance between two successive points using the haversine formula. Following the same logic, the max distance between successive points of a trip is calculated and a distance is found more than 2km, the trip is excluded.
+	The above logic is implemented in function filter\_trips\_pandas. The two lists (trips\_too\_small and trips\_too\_big) will keep the excluded trips due to either not valid total distance or to invalid max distance between successive points. For each trip in the training dataset the total distance is calculated, using the function calculate\_lonlat\_distance, which returns the distance between two successive points using the haversine formula. Following the same logic, the max distance between successive points of a trip is calculated and a distance is found more than 2km, the trip is excluded.
 	
-	Finally, the cleaned trips are kept in a list under the same format that was used in Question A and they are extracted in the file cleanTrips.csv, but also in the file tripsClean.pickle which keeps the data structure used. The functions for the data export are in the file utils.py (write\_trips\_to\_file and write\_trips\_using\_pickle).
+	Finally, the distances are checked and rows with invalid trips are removed from the dataframe, which is afterwards exported in a new file (trips\_clean.csv).
 	
 	\subsection{Question C}
 	This task is implemented in the file DataVisualization.py and the created output is stored in the output folder in the gmplots directory. The requirement is to visualize five of the given train trips. For this purporse, after having excluded all trips with null journey\_id and with less than 1 lists with coordinates, the trips list is shuffled and then iterated only for 5 trips. Afterwards, a points list is created having two tuples with all the longitudes and latitudes(function idx\_to\_lonlat in the utils.py). 
