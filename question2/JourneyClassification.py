@@ -49,6 +49,7 @@ def preprocess_data(data_orig):
         print(jid,":",occ)
     return data, targets_nums
 
+
 def question_c(file, output_folder):
     # get the data ready
     trips_list = get_grid_trips(file)
