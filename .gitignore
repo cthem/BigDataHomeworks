@@ -1,7 +1,5 @@
 .directory
 .idea
 input_folder/
-results_folder/
+output_folder/
 *.pyc
-classification_charts/
-test_clean_trips.csv
