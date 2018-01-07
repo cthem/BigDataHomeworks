@@ -1,5 +1,5 @@
 import NearestNeighbours as nn
-import NearestSubrouts as ns
+import NearestSubroutes as ns
 import MapInGridView as gvp
 import JourneyClassification as jcp
 from sklearn.model_selection import KFold
