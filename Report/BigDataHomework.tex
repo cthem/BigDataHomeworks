@@ -91,19 +91,19 @@
 	\section{Exercise 1}
 	In this section, further details are provided related to the preprocessing and cleaning of the training data as well as to the trip's visualization. All files implementing the requirements of this part are in the file question1.py.
 	
-	\subsection{Question A}
+	\subsection{Data Preprocessing (question A)}
 	The requirement in this part is to preprocess the input training data and create a new file with 3 columns, containingthe trip\_id (a number incrementing by 1 for each trip), the journey\_id(excluding trips with null id) and all points and timestamps in the format: [[timestamp1, longitude1, latitude1], [timestamp2, longitude2, latitude2],...]. The given csv file with the training data was transformed to a dataframe using the relevant pandas library. As already mentioned, the data with null journeyPatternId should be removed from the dataframe, therefore the lines are checked for NaN and "null" journey id. Then, the columns vehicleID and journeyPatternId are groupedby three times in order to create three different dataframes. Foe example, the first dataframe contains the columns: vehicleID, journeyPatternId and timpestamp. In a similar way, the two remaining dataframes were formatted. By concatenating them, the final dataframe contains five columns, where the three last columns contain a list of timestamps, a list of longitudes and a list of latitudes respectively.
 	
 	By iterating to each dataframe's row, the three lists are now concatenated in one column and therefore the other two are dropped from the dataframe. Then, the column vehicleID is replaced by the tripId column which is the index of this dataframe, starting from 0 and incrementing by 1. Finally, the column points, which now contains the list of lists with the timestamps and the points, is sorted based on the timestamp of each list item. The final result is exported in a file with the requested format.
 	
-	\subsection{Question B}
+	\subsection{Clean Data (question B)}
 	The second goal was to clean the given data, based on two criteria: total trip distance should not be less than 2km while max distance between two successive points should not exceed 2km.
 	
 	The above logic is implemented in function filter\_trips. The two lists (trips\_too\_small and trips\_too\_big) will keep the excluded trips due to either not valid total distance or to invalid max distance between successive points. For each trip in the training dataset the total distance is calculated, using the function calculate\_lonlat\_distance, which returns the distance between two successive points using the haversine formula. Following the same logic, the max distance between successive points of a trip is calculated and a distance is found more than 2km, the trip is excluded.
 	
 	Finally, the distances are checked and rows with invalid trips are removed from the dataframe, which is, afterwards, exported in a new file (trips\_clean.csv).
 	
-	\subsection{Question C}
+	\subsection{Trip Visualization (question C)}
 	This task is implemented in the function visualize\_trips and the created output is stored in the output folder in the gmplots directory. The requirement is to visualize five of the given train trips. For this purporse, the trips list is shuffled in order to visualize random trips and then iterated only for 5 trips. Then, a points list is created having two tuples with all the longitudes and latitudes(function idx\_to\_lonlat in the utils.py). 
 	
 	Finally, the function write\_group\_gml from the utils.py file is called. In this function, it is calculated the mean for both longitudes and latitudes and then gmplot is used so as to visualize the selected trips. Below, there is an example of a trip shown on map is presented:
@@ -118,7 +118,7 @@
 	\section{Exercise 2}
 	The files implementing the requirements of this part are in the file question2.py and some functions implementing the logic for this question are in the files: NearestNeighbours.py, NearestSubroutes.py, MapInGridView, JourneyClassification.py.
 	
-	\subsection{Question A1}
+	\subsection{Nearest Neighbours (question A1)}
 	For this part a test file is given (test\_set\_a1.csv, included in the input folder) containing additional trips. For each of these trips, the k nearest neighbours are targeted (in this exercise k=5) and an image file is produced, showing all six trips (the test trip and the trips from the training file) on six different maps. Under each map, the test or neighbour index, the journey\_id, the dynamic time warping and the time needed to process the neighbours of this test trip in millisec.
 	
 	In the function question\_a1, two dataframes are created for both the test and the training trips. The test dataframe's rows are iterated and for each row the function calculate\_nns from the file NearestNeighbours.py is called in order to get the nearest neighbours, calculating also the time needed for this action.
@@ -142,7 +142,7 @@
 		\end{center}
 	\end{figure} 
 	
-	\subsection{Question A2}
+	\subsection{Nearest Sub-routes (question A2)}
 	Following the same logic as above, in the function question\_a2, two dataframes are created for the test and the training dataset using pandas library. The test dataframe is iterated row by row, in order to find the 5 trips from the training dataset which have the longest common subsequence with the specific test trip.
 	
 	Similarly to the above question, the points are stored as tuples and the required time is calculated using the relevant methods from the utils.py file. To begin with, the method calc\_lcss is called. In this function, the list of lonlat coordinate tuples are given as input. We keep all similar point values and indexes in two lists while iterating the two given lists. The distance between two points is calculated using the method calculate\_lonlat\_distance in the question1.py file. Based on the exercise requirements, two points are considered as equals if their distance is less than 200 metres. Therefore, if the points are equal, and the indexes are the first point of one of the given lists the cell is marked to unit cost and a new similar sequence is started. Otherwise, we continue to an existing similar sequence, increasing by 1 its length, keeping the current cost in the z variable. On the other hand, if points are not equal, then a new subsequence should start, and therefore L[i][j] is set to zero.
@@ -155,19 +155,19 @@
 	
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.50] {question2a1example.jpg}
+			\includegraphics [scale = 0.50] {question2a2example.jpg}
 			\caption{Example of nearest sub-routes trips visualization}
 		\end{center}
 	\end{figure} 
 	
-	\subsection{Question B}
+	\subsection{Features extraction (question B)}
 	The purpose of this task was to export features for classification for the training dataset. In short, a grid should be created and the points of each trip trace should be replaced by a specific square of the grid. The output file where the exported features are stored is the tripFeatures.csv.
 	
 	In order to be able to draw the grid, it was necessary to find the min and max longitudes and latitudes (function: find\_min\_max\_latlong, file:MapInGridView.py). Having now this information, the next function called is the create\_grid giving as input the number\_of\_cells and the result of the previous method. The distance per cell in the grid is calculated as the difference between the max and the min lat/long divided by the total number of cells. The next step is to create the lines of the rows and the columns and then to provide a name for each cell.
 	
 	Afterwards, all points in the trip dataframe should be replaced by the cell names that each point corresponds to. This logic is implemented in the method replace\_points. For each row in the dataframe, all coordinates are transformed in tuples format and using the find\_index function a name is mapped to this point. After having replaced all points with their new names, the dataframe is exported in .csv format. In order to be able to easily check the created grid, the method visualize\_grid is implemented so as to plot the grid. 
 	
-	\subsection{Question C}
+	\subsection{Classification (question C)}
 	In the method question\_c, a new dataframe is created from the features file, containing the grid cell names. All functions used in this question are in the file JourneyClassification.py. Before starting the classification, the method preprocess\_data was used in order to get the journey\_id of all trips as numbers and also to remove the letter C from the cell names.
 	
 	In the requirements of this question it is mentioned to use 10-fold cross validation, therefore the KFold class is used providing the required folds number and then the training dataset is splitted in training and test folds. It worths to be mentioned here, that method asarrays from numpy was used to the, necessary for this question, lists. In addition, a list with the names of the three classifiers is created and for each of them, the relevant function is called in order to train the classifier and then count the predictions' accuracy on the test dataset. 
