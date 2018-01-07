@@ -7,7 +7,7 @@ from dtw import dtw as libdtw
 import question1 as qp1
 
 
-def calculate_nns(test_points, train_df, paropts=None):
+def calculate_nns(test_points, train_df, paropts=None, k=5):
     # parallelization type
     if paropts:
         print("Parallelizing with", paropts)
@@ -22,9 +22,9 @@ def calculate_nns(test_points, train_df, paropts=None):
     if partype:
         # num threads or processes
         if partype == "processes":
-            nearest_neighbours = run_with_processes(numpar, test_lonlat, train_df, nearest_neighbours)
+            nearest_neighbours = run_with_processes(numpar, test_lonlat, train_df)
         elif partype == "threads":
-            nearest_neighbours = run_with_threads(numpar, test_lonlat, train_df, nearest_neighbours)
+            nearest_neighbours = run_with_threads(numpar, test_lonlat, train_df)
     else:
         # serial execution
         nearest_neighbours = calculate_dists(test_lonlat, train_df)
@@ -33,13 +33,13 @@ def calculate_nns(test_points, train_df, paropts=None):
     # return the top 5
     print("Elapsed for parallelization: ", str(partype), numpar, " is:", up.tictoc(tic))
     print("Neighbours:")
-    nearest_neighbours = nearest_neighbours[:5]
+    nearest_neighbours = nearest_neighbours[:k]
     for neigh in nearest_neighbours:
         print(neigh)
-    return nearest_neighbours[:5]
+    return nearest_neighbours
 
 
-def run_with_processes(numpar, test_lonlat, train_df, nearest_neighbours):
+def run_with_processes(numpar, test_lonlat, train_df):
     pool = ThreadPool(processes=numpar)
     # for results
     rres = [[] for _ in range(len(train_df.index))]
@@ -53,13 +53,13 @@ def run_with_processes(numpar, test_lonlat, train_df, nearest_neighbours):
     for i in range(len(tasks)):
         rres[i] = tasks[i].get()
         # merge results
-        nearest_neighbours = []
+        nns = []
         for r in rres:
-            nearest_neighbours += r
-    return nearest_neighbours
+            nns += r
+    return nns
 
 
-def run_with_threads(numpar, test_lonlat, train_df, nearest_neighbours):
+def run_with_threads(numpar, test_lonlat, train_df):
     # create empty containers and divide data per thread
     res = [[] for _ in range(numpar)]
     subframes = up.get_sub_dataframes(train_df, numpar)
