@@ -1,6 +1,6 @@
 import os
 import matplotlib.pyplot as plt
-import utils_pandas as up
+import utils as up
 
 
 def find_min_max_latlong(train_df):

@@ -89,11 +89,8 @@ def randfor_classification(train, val, targets):
     return accTrain, accVal
 
 
-
-
 # test file in the same format as the features file
 def improve_classification(features_file, test_file, output_folder, classifier):
-    print("IXTA todo")
     return
     train_df = pd.read_csv(features_file)
     test_df = pd.read_csv(test_file)

@@ -1,6 +1,6 @@
 import sys, os, pkgutil
-import question1_pandas as qp1
-import question2_pandas as qp2
+import question1 as qp1
+import question2 as qp2
 import random
 
 
@@ -9,7 +9,7 @@ def question_1(input_file, output_file, output_file_clean, maps_folder):
     print(">>> Running question 1a - parsing the training data")
     trips_list, df = qp1.create_trips_file(input_file, output_file)
     print(">>> Running question 1b - cleaning the training data")
-    trips_list, df = qp1.filter_trips_pandas(output_file_clean, df)
+    trips_list, df = qp1.filter_trips(output_file_clean, df)
     print(">>> Running question 1c - visualizing the training data")
     qp1.visualize_trips(maps_folder, df)
     print("Finished question1")

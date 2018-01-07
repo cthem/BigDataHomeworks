@@ -1,10 +1,10 @@
 import pandas as pd
 import os
-import utils_pandas as up
+import utils as up
 from multiprocessing.pool import ThreadPool
 import threading
 from dtw import dtw as libdtw
-import question1_pandas as qp1
+import question1 as qp1
 
 
 def calculate_nns(test_points, train_df, paropts=None):

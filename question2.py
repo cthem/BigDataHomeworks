@@ -1,11 +1,11 @@
-import question2.NearestNeighboursPandas as nn
-import question2.NearestSubroutsPandas as ns
-import question2.MapInGridViewPandas as gvp
-import question2.JourneyClassificationPandas as jcp
+import NearestNeighbours as nn
+import NearestSubrouts as ns
+import MapInGridView as gvp
+import JourneyClassification as jcp
 from sklearn.model_selection import KFold
 import pandas as pd
 import numpy as np
-import utils_pandas as up
+import utils as up
 import os
 
 

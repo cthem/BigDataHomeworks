@@ -2,7 +2,7 @@ import pandas as pd
 from math import sin, cos, sqrt, atan2, radians
 import os
 import random
-import utils_pandas as up
+import utils as up
 
 
 # Question 1a
@@ -65,17 +65,17 @@ def sort_timestamps(df):
 # Question 1b
 #############
 
-def filter_trips_pandas(output_file, df):
+def filter_trips(output_file, df):
     trips_too_small, trips_too_big = [], []
     for index, row in df.iterrows():
         jounreyId = row["journeyId"]
         points = row["points"]
-        total_dist = calculate_total_distance_per_trip_pandas(points)
+        total_dist = calculate_total_distance_per_trip(points)
         if total_dist < 2000:
             trips_too_small.append(jounreyId)
             df.drop(index, inplace=True)
             continue
-        max_dist = calculate_max_dist_pandas(points)
+        max_dist = calculate_max_dist(points)
         if max_dist > 2000:
             trips_too_big.append(jounreyId)
             df.drop(index, inplace=True)
@@ -88,7 +88,7 @@ def filter_trips_pandas(output_file, df):
     return trips_list, df
 
 
-def calculate_total_distance_per_trip_pandas(points):
+def calculate_total_distance_per_trip(points):
     total_distance = 0
     for i in range(len(points) - 1):
         dist = calculate_lonlat_distance(points[i][1:], points[i + 1][1:])
@@ -96,7 +96,7 @@ def calculate_total_distance_per_trip_pandas(points):
     return total_distance
 
 
-def calculate_max_dist_pandas(points):
+def calculate_max_dist(points):
     max_dist = 2000
     for i in range(len(points) - 1):
         dist = calculate_lonlat_distance(points[i][1:], points[i + 1][1:])

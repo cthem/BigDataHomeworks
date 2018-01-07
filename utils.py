@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 import pylab
 from scipy.misc import imread
 import datetime
-import pickle
-import json
+import pandas as pd
 
 
 def tic():
@@ -41,138 +40,56 @@ def tictoc(previous_tic):
     return msg
 
 
-def write_trips(output_file, trips_list):
-    '''
-    Self explanatory
-    :param output_file:
-    :param trips_list:
-    :return:
-    '''
-    # write list primitives
-    if type(trips_list[0]) == list:
-        with open(output_file, "w") as f:
-            for trip in trips_list:
-                # make csv
-                header = [str(t) for t in trip[:2]]
-                coords = [str(t) for coord_tuple in trip[2:] for t in coord_tuple]
-                trip_str = ",".join(header + coords)
-                # write it
-                f.write(trip_str+"\n")
-    # write list of objects
-    if type(trips_list[0]) == dict:
-        # use json
-        with open(output_file, "w") as f:
-            json.dump(trips_list, f)
-
-def sublist(llist, slen):
-    '''
-    return llist divided to sublists of at most slen
-    :param llist:
-    :param sublist_length:
-    :param only_num:
-    :return:
-    '''
-    divs = range(0, len(llist), slen)
-    return [ llist[i:i+slen] for i in divs]
-
-def serialize_trips(output_file, trips_list):
-    '''
-    Serialize to python pickle
-    :param output_file:
-    :param trips_list:
-    :return:
-    '''
-    with open(output_file, "wb") as f:
-        pickle.dump(trips_list, f)
-
-def read_trips(filepath):
-    '''
-    Read a trips file, csv or pickle
-    :param filepath:
-    :return:
-    '''
-    if filepath.endswith(".pickle"):
-        with open(filepath, "rb") as f:
-            trips = pickle.load(f)
-    else:
-        # read the lines
-        trips=[]
-        with open(filepath, "r") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                elems = line.split(",")
-                obj={}
-                obj["id"] = elems[0]
-                obj["jid"] = elems[1]
-                elems = elems[2:]
-                timestamps, points = [], []
-                for i in range(0, len(elems), 3):
-                    vals = elems[i:i+3]
-                    timestamps.append(float(vals[0]))
-                    points.append((float(vals[1]),float(vals[2])))
-                obj["timestamps"] = timestamps
-                obj["points"] = points
-                trips.append(obj)
-    return trips
-
-
-def read_train_set(filepath):
-    '''
-    Reads the training file
-    :param filepath:
-    :return:
-    '''
-    print("Reading training file ignoring null jids", filepath)
-    num_nulls, num_empties = 0, 0
-    line_objects = []
-    with open(filepath, "r") as f:
-        next(f)
-        for line in f:
-            line_contents = line.strip().split(',')
-            obj = {}
-            obj["jid"] = line_contents[0]
-            # drop nulls and empties
-            if obj["jid"] == "null":
-                num_nulls += 1
-                continue
-            # drop nulls and empties
-            if obj["jid"] == "":
-                num_empties += 1
-                continue
-            obj["vid"] = line_contents[1]
-            obj["ts"] = line_contents[2]
-            obj["lon"] = line_contents[3]
-            obj["lat"] = line_contents[4]
-            line_objects.append(obj)
-    print("Discarded %d null journey id entries" % num_nulls)
-    print("Discarded %d empty journey id entries" % num_empties)
-    return line_objects
-
-
-def idx_to_lonlat(trip, idx = None, format = "tuple"):
-    '''
-    Get the longitudes and latitudes coresponding to the input points of the input trip
-    :param idx: the lonlat indexes to get. if None, get all
-    :param trip: the trip to get stuff from
-    :param format: tuple: ([],[]), tuples: [(),(),()...]
-    :return: a (Lo, La) tuple, where Lo,La are lists of floats.
-    '''
+def idx_to_lonlat(points, idx=None, format="tuple"):
     if idx is None:
-        idx = list(range(len(trip[2:])))
+        idx = list(range(len(points)))
     if type(idx) != list:
         idx = [idx]
     lats, lons = [], []
     for i in idx:
-        lons.append(trip[2+i][1])
-        lats.append(trip[2+i][2])
+        lons.append(points[i][1])
+        lats.append(points[i][2])
     if format == "tuple":
-        return (lons, lats)
+        return lons, lats
     elif format == "tuples":
         return list(zip(lons,lats))
 
 
+def get_sub_dataframes(df, num):
+    print("number of tasks: ", str(num))
+    num_data, rem = divmod(len(df.index), num)
+    sudframes = []
+    start = 0
+    end = num_data
+    while end <= len(df.index):
+        new_df = df[start:end]
+        sudframes.append(new_df)
+        start = end
+        end = end + num_data
+    if rem:
+        sudframes = sudframes[:num]
+        sudframes[-1] += df[-rem:]
+    return sudframes
+
+
+def get_total_points(df):
+    total_points = []
+    for index, row in df.iterrows():
+        points = row["points"]
+        total_points.append(points)
+    return total_points
+
+
+def get_lonlat_tuple(points):
+    '''
+    :param points: [(lon1,lat1), (lon2,lat2),...]
+    :return: ([lon1,lon2,...],[lat1,lat2,...])
+    '''
+    return [l[1] for l in points], [l[2] for l in points]
+
+
+# Visualization
+##################
 def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     '''
      Make a color plot a collection of points.
@@ -183,8 +100,8 @@ def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     :return:
     '''
     flattened = [l for tup in lonlats_tuplelists for l in tup]
-    maxs = [max(t) for t in flattened ]
-    mins = [min(t) for t in flattened ]
+    maxs = [max(t) for t in flattened]
+    mins = [min(t) for t in flattened]
     max_lonlat = max(maxs[0::2]), max(maxs[1::2])
     min_lonlat = min(mins[0::2]), min(mins[1::2])
     delta_lonlat = [mx-mn for (mx,mn) in zip(max_lonlat, min_lonlat)]
@@ -218,15 +135,6 @@ def html_to_png(html_path, png_path):
         exit(1)
 
 
-def get_lonlat_tuple(points):
-    '''
-    :param points: [(lon1,lat1), (lon2,lat2),...]
-    :return: ([lon1,lon2,...],[lat1,lat2,...])
-    '''
-    return ([l[0] for l in points], [l[1] for l in points])
-
-
-# TODO check, problem with maps in result, wrong zoom
 def visualize_point_sequences(all_pts, colors, labels, file_name):
     '''
     Generic geocoordinate multi-plot visualization function with gmplot.
@@ -283,7 +191,7 @@ def visualize_point_sequences(all_pts, colors, labels, file_name):
     plt.close()
 
 
-def barchart(xvalues, yvalues, title="",ylabel="", save=None):
+def barchart(xvalues, yvalues, title="",ylabel="", legend = None, save=None, colors="rbgyckm"):
     '''
     Function to create and show/save a pylab barchart
     :param xvalues:
@@ -293,7 +201,12 @@ def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     :param save:
     :return:
     '''
+    numy = len(yvalues[0])
     barwidth = 0.2
+    if not legend:
+        legend = ["legend" + str(i) for i in numy]
+    while numy > len(colors):
+        colors += colors
     fig = plt.figure(figsize=(12.0, 5.0))
     ax = plt.gca()
     plt.xticks([i  for i in xvalues], xvalues)
@@ -305,7 +218,8 @@ def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     ax.set_xlim([0, xend+1])
     ax.set_title(title)
 
-    ax.bar([i for i in xvalues], yvalues, width=barwidth, color="r", label="accuracy")
+    for i in range(numy):
+        ax.bar([x + barwidth * i for x in xvalues], [y[i] for y in yvalues], width=barwidth, color=colors[i], label=legend[i])
     ax.plot([0, xend], [1, 1], "k--")
     ax.legend(loc='upper right')
     ax.set_ylabel(ylabel)
@@ -314,9 +228,3 @@ def barchart(xvalues, yvalues, title="",ylabel="", save=None):
     else:
         plt.savefig(save, dpi=fig.dpi)
     plt.close()
-
-
-if __name__ == '__main__':
-   pts = [([25,26.4,25.1],[26,26.1,26.8])]
-   write_group_gml(pts,"filefile.html")
-   print("Done.")
