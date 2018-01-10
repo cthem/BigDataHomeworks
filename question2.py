@@ -2,7 +2,6 @@ import NearestNeighbours as nn
 import NearestSubroutes as ns
 import MapInGridView as gvp
 import JourneyClassification as jcp
-from sklearn.model_selection import KFold
 import pandas as pd
 import numpy as np
 import utils as up
@@ -50,51 +49,23 @@ def question_b(train_file, number_of_cells, output_folder):
 
 
 def question_c(features_file, test_file, output_folder):
-    feature_df = pd.read_csv(features_file)
-    kf = KFold(n_splits=10)
-    grid_features, targets = jcp.preprocess_data(feature_df)
-    folds_idxs = list(kf.split(grid_features))
-    trips_array = np.asarray(grid_features)
-    targets = np.asarray(targets)
-
+    df_features = pd.read_csv(features_file)
+    features, targets = jcp.preprocess_data(df_features)
+    num_folds = 5
     classifiers = ["knn", "logreg", "randfor"]
-    # train/val accuracies
-    accuracies = {}
-    mean_accuracies = {}
-    # classify
-    for classifier in classifiers:
-        accuracies[classifier] = []
-        print()
-        print("Testing classifier [%s]" % classifier)
-        # train & test each classifier
-        # for each fold
-        for i, (train_idx, val_idx) in enumerate(folds_idxs):
-            print("\tClassifing fold %d/%d" % (i + 1, len(folds_idxs)))
-            train = (trips_array[train_idx], targets[train_idx])
-            val = (trips_array[val_idx], targets[val_idx])
-            if classifier == "knn":
-                k = 5
-                accTrain, accVal = jcp.knn_classification(train, val, targets, k)
-            elif classifier == "logreg":
-                accTrain, accVal = jcp.logreg_classification(train, val, targets)
-            elif classifier == "randfor":
-                accTrain, accVal = jcp.randfor_classification(train, val, targets)
-            accuracies[classifier].append((accTrain, accVal))
-
-        # accuracy across all folds
-        mean_accuracies[classifier] = [np.mean([x[0] for x in accuracies[classifier]]), \
-                                       np.mean([x[1] for x in accuracies[classifier]])]
-        titlestr = "%s, overall accuracy train/val: %s" % (classifier, str(mean_accuracies[classifier]))
-        up.barchart(list(range(1, 11)), accuracies[classifier], title=titlestr, ylabel="accuracy", legend=["train","val"],
-                       save=os.path.join(output_folder, classifier))
+    # classifiers = ["logreg"]
+    mean_accuracies = jcp.classify(features, targets, num_folds, classifiers, output_folder)
 
     # print mean accuracy per classifier
-    for classifier in accuracies:
+    for classifier in mean_accuracies:
         print(classifier, "accuracy train/val:", mean_accuracies[classifier])
-
-    print("Improving classification")
-    accuracies_impr = {}
-    jcp.improve_classification(features_file, test_file, output_folder, classifiers[0])
+    impr_classifier = "logreg"
+    print()
+    print("Improving classification for classifier", impr_classifier)
+    mean_accuracies = jcp.improve_classification(features_file, num_folds, output_folder, impr_classifier)
     # print updated accuracies
-    for classifier in accuracies_impr:
-        print(classifier, "accuracy:", accuracies_impr[classifier])
+    for technique in mean_accuracies:
+        print(impr_classifier, ", technique",technique,", accuracy train/val:", mean_accuracies[technique])
+
+    # run best classifier on test data, TODO
+

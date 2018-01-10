@@ -2,6 +2,7 @@ import sys, os, pkgutil
 import question1 as qp1
 import question2 as qp2
 import random
+import numpy as np
 
 
 def question_1(input_file, output_file, output_file_clean, maps_folder):
@@ -20,7 +21,7 @@ def question_2(train_file, test_files, test_file, output_folder, maps_folder, cl
     print(">>> Running question 2a1 - Nearest neighbours computation")
     # qp2.question_a1(maps_folder, train_file, test_files[0], paropts)
     print(">>> Running question 2a2 - Nearest subroutes computation")
-    qp2.question_a2(maps_folder, test_files[1], train_file)
+    # qp2.question_a2(maps_folder, test_files[1], train_file)
     print(">>> Running question 2b - Cell grid quantization")
     cellgrid = (10, 10)
     print("Using cell grid:", cellgrid)
@@ -51,17 +52,18 @@ if __name__ == '__main__':
     output_folder = os.path.abspath(sys.argv[2])
 
     rand_seed = 123123
+    np.random.seed(rand_seed)
     random.seed(rand_seed)
 
     # paropts = ("processes", 10)
-    paropts = ("threads", 10)
-    # paropts = None
+    # paropts = ("threads", 10)
+    paropts = None
 
     # question 1
     ############
 
     # prepare files
-    train_file = os.path.join(input_folder, "train_set_dev.csv")
+    train_file = os.path.join(input_folder, "train_set.csv")
     output_file = os.path.join(output_folder, "trips.csv")
     output_file_clean = os.path.join(output_folder, "trips_clean.csv")
     maps_folder = os.path.join(output_folder, "gmplots")
@@ -77,7 +79,7 @@ if __name__ == '__main__':
     ############
 
     # prepare files
-    test_file = [os.path.join(input_folder, "test_set.csv")]
+    test_file = os.path.join(input_folder, "test_set.csv")
     test_files = [os.path.join(input_folder, "test_set_a%d.csv" % t) for t in [1,2]]
 
     # run

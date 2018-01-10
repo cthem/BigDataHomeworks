@@ -85,11 +85,12 @@ def calculate_dists(test_lonlat, train_df, ret_container = None, paropts = None)
     for index, row in train_df.iterrows():
         train_points = row["points"]
         jid = row["journeyId"]
+        print(train_points)
         train_points = eval(train_points)
         trip_lonlat = up.idx_to_lonlat(train_points,format="tuples")
         # calculate distance
         distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat, paropts)
-        print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, index+1, len(train_df.index), str(row["journeyId"])))
+        # print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, index+1, len(train_df.index), str(row["journeyId"])))
         dists.append((int(row["tripId"]), distance, jid, train_points))
     return dists
 

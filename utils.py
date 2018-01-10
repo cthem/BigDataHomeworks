@@ -1,3 +1,4 @@
+import numpy as np
 import gmplot
 import subprocess
 import os
@@ -100,15 +101,17 @@ def write_group_gml(lonlats_tuplelists, outpath, colors=None):
     :return:
     '''
     flattened = [l for tup in lonlats_tuplelists for l in tup]
-    maxs = [max(t) for t in flattened]
-    mins = [min(t) for t in flattened]
-    max_lonlat = max(maxs[0::2]), max(maxs[1::2])
-    min_lonlat = min(mins[0::2]), min(mins[1::2])
-    delta_lonlat = [mx-mn for (mx,mn) in zip(max_lonlat, min_lonlat)]
-    center_lonlat = [min_lonlat[i] + delta_lonlat[i] for i in range(2)]
+    # compute center as max range midpoint
+    # maxs = [max(t) for t in flattened]
+    # mins = [min(t) for t in flattened]
+    # max_lonlat = max(maxs[0::2]), max(maxs[1::2])
+    # min_lonlat = min(mins[0::2]), min(mins[1::2])
+    # delta_lonlat = [mx-mn for (mx,mn) in zip(max_lonlat, min_lonlat)]
+    # center_lonlat = [min_lonlat[i] + delta_lonlat[i] for i in range(2)]
+
+    # compute center as the mean point of the series
+    center_lonlat = [np.mean(x) for x in flattened]
     zoom = 14
-    # print("points:",lonlats_tuplelists)
-    # print("center:",center_lonlat,"delta:",delta_lonlat,"zoom",zoom)
     gmap = gmplot.GoogleMapPlotter(center_lonlat[1], center_lonlat[0], zoom)
     if colors is None:
         colors = ['b' for _ in lonlats_tuplelists]
@@ -165,7 +168,7 @@ def visualize_point_sequences(all_pts, colors, labels, file_name):
         # produce the image
         html_to_png(file_name, image_filename)
         # delete the html
-        os.remove(file_name)
+        # os.remove(file_name)
 
     # read and display images in a collection of pylab plots
     print("Producing plots...")
