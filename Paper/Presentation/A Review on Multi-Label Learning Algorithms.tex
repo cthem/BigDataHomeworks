@@ -85,7 +85,8 @@
 \usepackage{caption}
 \captionsetup{font=scriptsize,labelfont=scriptsize}
 \usepackage{amssymb}
-
+\usepackage{bm}
+\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}                                                                                                                 
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -120,71 +121,74 @@
 
 %------------------------------------------------
 \section{Introduction} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
+\subsection{Multi-label learning}
 \begin{frame}
-\frametitle{Introduction}
-
-\onslide<2->{Traditional Supervized Learning}
+\frametitle{\insertsection : \insertsubsection}
+Single-label supervised learning
 \begin{itemize}
-\item <3-> Real-world object represented by a single instance and associated with a single label
-\item <4-> 
-\item <5-> 
-\end{itemize}
-\onslide<6->{}
-\begin{itemize}
-\item <7-> 
-\item <8-> 
-\end{itemize} 
-
-\onslide<9->{}
-\begin{itemize}
-\item <10-> 
-\begin{itemize}
-	\item [$\diamond$]<10->
-\end{itemize}
-\item <11-> 
-\begin{itemize}
-	\item [$\diamond$]<12-> 
-	\item [$\diamond$]<12-> 
-	\item [$\diamond$]<12->
-\end{itemize}
+	\item Applied to classification
+	\item Supervised: Given dataset $\{ (x_i, y_i)\}, i = 1, \dots N, x \in X, y \in Y$
+	\item Goal is to learn a model $f: X \rightarrow Y$
 \end{itemize}
 
+Multi-label supervised learning
+\begin{itemize}
+	\item Multiple labels per instance: $\{ (x_i, \bm{y}_i)\}, i = 1, \dots N, x \in X, \bm{y} \in \mathbb{P}(Y)$
+	\item Learn a model $f: X \times Y \rightarrow r$ where $r\in \mathbb{R}$ is the confidence that $y_i$ characterizes $x_i$
+	\item For classification, assume that $x_i$ belongs to $y_i$ if $r$ is greater than some threshold $t(x_i)$
+
+		\begin{itemize}
+			\item $t(\cdot)$ can be a prededermined constant function or learned from $X$
+		\end{itemize}
+
+\end{itemize}
+TODO: Include stuff about multilabeled dataset characterization?
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{\insertsection : \insertsubsection}
+Label search space $\mathbb{S_Y}$ grows exponentially as a function of $|Y|$: 
+\begin{itemize}
+	\item e.g. for $|Y|=20, |\mathbb{S_Y}| = 2 ^ {|\mathbb{P(Y)}|} = 2^{20} \ge 10^6$
+\end{itemize}
+Solution: integrate in the learning process potential label correlations.
+This work examines algorithms grouped in three broad categories:
+
+\begin{enumerate}
+	\item First-order strategies
+		\begin{itemize}
+			\item Transform multi-labelled problem to multiple, single-label problems 
+			\item Ignore label correlations 
+			\item Simple, scalable, suboptimal
+		\end{itemize}
+	\item Second-order strategies
+		\begin{itemize}
+			\item Consider \emph{pairwise} label relations
+			\item Good trade-off between generalization performance and scalability
+			\item Lacking in some real-world applications
+		\end{itemize} 
+	\item Higher-order strategies
+		\begin{itemize}
+			\item Capture more complicated label interdependencies
+			\item Strong modelling capabilities
+			\item Computationally demanding, less scalable
+		\end{itemize}
+
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{\insertsection : \insertsubsection}
+Evaluation ex-based metrics: accuracy, recall, precision, F-measure
 \end{frame}
 %------------------------------------------------
-\section{The paradigm}
-\subsection{Formal Definition} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
 
+%------------------------------------------------
 \begin{frame}
-\frametitle{Formal Definition}
-
-\onslide<2->{}
-\begin{itemize}
-\item <3-> 
-\item <4-> 
-\item <5-> 
-\end{itemize}
-\onslide<6->{}
-\begin{itemize}
-\item <7-> 
-\item <8-> 
-\end{itemize} 
-
-\onslide<9->{}
-\begin{itemize}
-\item <10-> 
-\begin{itemize}
-\item [$\diamond$]<10->
-\end{itemize}
-\item <11-> 
-\begin{itemize}
-\item [$\diamond$]<12-> 
-\item [$\diamond$]<12-> 
-\item [$\diamond$]<12->
-\end{itemize}
-\end{itemize}
-
+\frametitle{\insertsection : \insertsubsection}
 \end{frame}
-
 %------------------------------------------------
 
 \subsection{Evaluation Metrics} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
