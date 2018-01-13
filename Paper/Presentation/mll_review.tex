@@ -135,7 +135,7 @@ Multi-label supervised learning
 \begin{itemize}
 	\item Multiple labels per instance: $\{ (x_i, \bm{y}_i)\}, i = 1, \dots N, x \in X, \bm{y} \in \mathbb{P}(Y)$
 	\item Learn a model $f: X \times Y \rightarrow r$ where $r\in \mathbb{R}$ is the confidence that $y_i$ characterizes $x_i$
-	\item For classification, assume that $x_i$ belongs to $y_i$ if $r$ is greater than some threshold $t(x_i)$
+	\item For classification, assume that $x_i$ belongs to $y_i$ if $r \ge $ $t(x_i)$
 
 		\begin{itemize}
 			\item $t(\cdot)$ can be a predetermined constant function or learned from $X$
@@ -206,15 +206,33 @@ TODO: theoretical results?
 
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
-Algorithms in two categories:
+
+Assume multi-label classification problem with $q$ possible class labels $Y=\{y_1, \dots y_q\}$
+
+Group algorithms in two categories:
 \begin{itemize}
 	\item \emph{Problem Transformation Methods: }Transform the learning problem into other well-established learning scenarios (fit data to algorithm philosophy)
 	\item \emph{Algorithm Adaptation Methods: }Adapt popular learning techniques to deal with multi-label data directly (fit algorithm to data philosophy)
 \end{itemize}
+\end{frame}
+
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{\insertsection : \insertsubsection}
 \begin{figure}
 	\begin{center}
-		\includegraphics[scale = 0.25]{images/algorithmsclass.png}
-		\caption{8 representative algorithms}
+		\includegraphics[scale = 0.75]{images/aa.png}
+	\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{\insertsection : \insertsubsection}
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale = 0.7]{images/pt.png}
 	\end{center}
 \end{figure}
 \end{frame}
@@ -223,10 +241,21 @@ Algorithms in two categories:
 \subsection{Problem Transformation Methods}
 
 \begin{frame}
+
 \frametitle{\insertsection : \insertsubsection}
-\emph{Binary Relevance}
+\textbf{Binary Relevance}
 \begin{itemize}
-	\item Decompose problem into q independent binary classification problems per possible label in the label space
+	\item Decompose to $q$ independent binary classification problems, $h_i(x)$
+	\item Cross-train on $q$ binary training sets (one for each $y_i$)
+	\item Predict labels of unseen $x$ by evaluating each classifier $h_i(x)$
+	\item Output labels where  $h_i(x) > 0$ else $\underset{1 \geq i \geq q}{argmax} \{h_i(x))\}$ 
+\end{itemize}
+
+Pros \& cons:
+\begin{itemize}
+	\item Simple, parallelizable
+	\item Sensitive to class-imbalanced data
+	\item Ignores label correlations (first-order method)
 \end{itemize}
 
 \end{frame}
