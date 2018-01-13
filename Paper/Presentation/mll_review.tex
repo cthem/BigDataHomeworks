@@ -271,7 +271,9 @@ Pros \& cons:
 	\item Transform the problem into a chain of binary classification problems
 	\item Build subsequent binary classifiers upon the predictions of preceding ones
 	\item A permutation function is used to specify an order to the labels
-	\item Binary training setconstructed by appending each instance with its relevanceto those labels
+	\item Binary training set
+constructed by appending each instance with its relevance
+to those labels
 	\item Predict relevant labels for unknown instances by iteratively traversing the classifier chain
 \end{itemize}
 
@@ -293,7 +295,7 @@ Pros \& cons:
 	\item For $q$ labels, generate $q(q-1)/2$ binary classifiers by pairwise comparison
 	\item Construct training set per label pairs considering the example's relevance
 	\item For unknown instance, get the overall classifiers' votes
-	\item Virtual label $y_v$ as thresholding parameter
+	\item Virtual label $y_v$ as artificial splitting point between relevant and irrelevant labels
 \end{itemize}
 Pros \& cons:
 \begin{itemize}
@@ -314,27 +316,36 @@ Pros \& cons:
 	\item Convert training set into a multi-class set, treating each label set as a new class
 	\item Each example is reassigned with the mapped single-label participating in multi-class classifier induction
 	\item For unknown $x$, counts the maximum and actual number of votes
-	\item Label set is relevant when the actual number of votes exceedshalf of the maximum ones
+	\item Label set is relevant when the actual number of votes exceeds
+half of the maximum ones
 \end{itemize}
 Pros \& cons:
 \begin{itemize}
 	\item Incompleteness: predicts only label sets included in the training set
-	\item Inefficiency: large $Y$ implies high training complexity.Improvement by combining LP and ensemble learning
+	\item Inefficiency: large $Y$ implies high training complexity.Improve by invoking LP only on random k-labelsets and ensemble learning to LP classifiers
 \end{itemize}
 \end{frame}
 %------------------------------------------------
 \subsection{Alogrithm Adaptation Methods}
 %------------------------------------------------
 \begin{frame}
-\Huge{\centerline{Alogrithm Adaptation Methods}}
+\Huge{\centerline{Algorithm Adaptation Methods}}
 \end{frame}
 %------------------------------------------------
 \begin{frame}
 \frametitle{Multi-Label k-Nearest Neighbour}
 \begin{itemize}
 	\item First-order approach algorithm, adapting knn techniques
+	\item Lazy learning and Bayesian reasoning
 	\item Maximum a posteriori (MAP) rule to make prediction by reasoning and embody label info in the neighbours
 	\item For new instances, $N(x)$ represents the set of its knn (uses Euclidean distance)
+	\item Posterior probability $\mathbb{P}(H_j|C_j)$ and $\mathbb{P}(\neg H_j|C_j)$, where $C_j$ is the knn of $x$ and $H_j$ is the event that $x$ has the label $y_j$
+	\item Predict relevant label set based on which probability is higher(MAP rule)
+	\item Frequency counting strategy:
+	\begin{enumerate}
+		\item Estimation of prior probabilities ($\mathbb{P}(H_j)$ \& $\mathbb{P}(\neg H_j)$) using a smoothing parameter $s$ (usually $s=1$)
+		\item Estimation of likelyhoods (($\mathbb{P}(C_j|H_j)$ \& $\mathbb{P}(C_j|\neg H_j)$)
+	\end{enumerate}
 	
 \end{itemize}
 \end{frame}
@@ -342,29 +353,51 @@ Pros \& cons:
 %------------------------------------------------
 \begin{frame}
 \frametitle{Multi-label Decision Tree}
-
+\begin{itemize}
+	\item First-order approach algorithm, that adopts decision tree techniques
+	\item ML entropy is used tobuild the decision tree recursively
+	\item ML dataset $T$ is divided based on a splitting value $\theta$ ($T^-$ \& $T^+$)
+	\item Starting from the root, ML-DT identifies the feature and the splitting value whichmaximizes the information gain and creates the two child nodes
+	\item ML-DT assumes independence among labels and computes the MLentropy in a decomposable way
+	\item Any test instance allocated in a leaf node is associated with the most frequent label $y$ present in that node
+\end{itemize}
+Pros \& cons:
+\begin{itemize}
+	\item High efficiency
+	\item Improvement: pruning strategy  or ensemble learning techniques
+\end{itemize}
 \end{frame}
 %------------------------------------------------
 \begin{frame}
 \frametitle{Ranking Support Vector Machine}
-
+\begin{itemize}
+	\item Second-order approach algorithm, that adopts maximum margin strategy 
+	\item $q$ linear classifiers, optimized to minimize the empiricalranking loss and enabled to handle nonlinear cases with kernel tricks 
+	\item $W = {(w_j , b_j ) | 1 ≤ j ≤ q}$,where $w_j \in \mathbb{R}^d$ and$b_j \in \mathbb{R}$ are the weight vector and bias
+	\item Rank-SVM defines the learning system'smargin on ($x_i$ , $Y_i$), considering its ranking ability on the example’s relevant/irrelevant labels
+\end{itemize}
 \end{frame}
 %------------------------------------------------
 \begin{frame}
 \frametitle{Collective Multi-Label Classifier}
-
+\begin{itemize}
+	\item 
+	\item 
+	\item 
+	\item 
+\end{itemize}
 \end{frame}
 %------------------------------------------------
 \section{Related Learning Settings}
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Related Learning Settings}
+\frametitle{\insertsection}
 \begin{itemize}
-\item 
-\item 
-\item 
-\item 
+	\item 
+	\item 
+	\item 
+	\item 
 \end{itemize}
 \end{frame}
 
@@ -372,7 +405,7 @@ Pros \& cons:
 \section{Conclusion}
 %------------------------------------------------
 \begin{frame}
-\frametitle{Conclusion}
+\frametitle{\insertsection}
 \begin{itemize}
 	\item 
 \end{itemize}
