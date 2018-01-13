@@ -142,7 +142,7 @@ Multi-label supervised learning
 		\end{itemize}
 
 \end{itemize}
-TODO: Include stuff about multilabeled dataset characterization?
+TODO: Include stuff about multi-labeled dataset characterization?
 \end{frame}
 
 %------------------------------------------------
@@ -159,7 +159,7 @@ This work examines algorithms grouped in three broad categories:
 \begin{enumerate}
 	\item First-order strategies
 		\begin{itemize}
-			\item Transform multi-labelled problem to multiple, single-label problems 
+			\item Transform multi-labeled problem to multiple, single-label problems 
 			\item Ignore label correlations 
 			\item Simple, scalable, suboptimal
 		\end{itemize}
@@ -172,7 +172,7 @@ This work examines algorithms grouped in three broad categories:
 	\item Higher-order strategies
 		\begin{itemize}
 			\item Capture more complicated label interdependencies
-			\item Strong modelling capabilities
+			\item Strong modeling capabilities
 			\item Computationally demanding, less scalable
 		\end{itemize}
 
@@ -187,58 +187,48 @@ Need for more complicated evaluation than traditional supervised learning(accura
 	\begin{itemize}
 		\item \emph{Example-based: }Evaluates system's performance on each example and returns the mean value. 
 		\begin{itemize}
-			\item \emph{From classification perspective:} $subset accuracy$, $hamming loss$, $accuracy_{exam}$, $precision_{exam}$, $recall_{exam}$, $F^\beta_{exam}$
+			\item \emph{From classification perspective:} $Subset Accuracy$, $Hamming Loss$, $accuracy_{exam}$, $precision_{exam}$, $recall_{exam}$, $F^\beta_{exam}$
 			\item \emph{From ranking perspective:} one-error, coverage, ranking loss, average precision
 		\end{itemize}
-		\item \emph{Label-based: }Evaluates system's performance on each class label separetely and returns macro/micro averaged value across all class labels
+		\item \emph{Label-based: }Evaluates system's performance on each class label separately and returns macro/micro averaged value across all class labels
 		\begin{itemize}
-			\item From classification perspective:
-			\item From ranking perspective:
+			\item From classification perspective: $B_{macro}$, $B_{micro}$
+			\item From ranking perspective: $AUC_{macro}$, $AUC_{micro}$
 		\end{itemize}
 	\end{itemize}
 TODO: theoretical results?
 \end{frame}
 %------------------------------------------------
-
-%------------------------------------------------
-\begin{frame}
-\frametitle{\insertsection : \insertsubsection}
-\end{frame}
-%------------------------------------------------
-
 \section{Multi-label Learning Algorithms}
-
 %------------------------------------------------
 
 \subsection{Simple Categorization}
 
 \begin{frame}
-\frametitle{Algorithm categories}
-%	\begin{figure}
-%	\includegraphics[width = \textwidth, height = \textheight, keepaspectratio]{neuralnetwork.png}
-%	\end{figure}
-
+\frametitle{\insertsection : \insertsubsection}
+Algorithms in two categories:
+\begin{itemize}
+	\item \emph{Problem Transformation Methods: }Transform the learning problem into other well-established learning scenarios (fit data to algorithm philosophy)
+	\item \emph{Algorithm Adaptation Methods: }Adapt popular learning techniques to deal with multi-label data directly (fit algorithm to data philosophy)
+\end{itemize}
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale = 0.25]{images/algorithmsclass.png}
+		\caption{8 representative algorithms}
+	\end{center}
+\end{figure}
 \end{frame}
 
 %------------------------------------------------
 \subsection{Problem Transformation Methods}
 
 \begin{frame}
-\frametitle{Binary Relevance}
+\frametitle{\insertsection : \insertsubsection}
+\emph{Binary Relevance}
+\begin{itemize}
+	\item Decompose problem into q independent binary classification problems per possible label in the label space
+\end{itemize}
 
-\begin{itemize}
-\item <2-> 
-\begin{itemize}
-\item <3-> 
-\item <4-> 
-\item <5-> 
-\end{itemize}
-\item <6-> 
-\begin{itemize}
-\item <7-> 
-\item <8-> 
-\end{itemize}
-\end{itemize}
 \end{frame}
 %------------------------------------------------
 
