@@ -121,7 +121,7 @@
 
 %------------------------------------------------
 \section{Introduction} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
-\subsection{Multi-label learning}
+\subsection{Problem Definition}
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
 Single-label supervised learning
@@ -138,7 +138,7 @@ Multi-label supervised learning
 	\item For classification, assume that $x_i$ belongs to $y_i$ if $r$ is greater than some threshold $t(x_i)$
 
 		\begin{itemize}
-			\item $t(\cdot)$ can be a prededermined constant function or learned from $X$
+			\item $t(\cdot)$ can be a predetermined constant function or learned from $X$
 		\end{itemize}
 
 \end{itemize}
@@ -146,6 +146,7 @@ TODO: Include stuff about multilabeled dataset characterization?
 \end{frame}
 
 %------------------------------------------------
+\subsection{Algorithm Strategies}
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
 Label search space $\mathbb{S_Y}$ grows exponentially as a function of $|Y|$: 
@@ -179,9 +180,23 @@ This work examines algorithms grouped in three broad categories:
 \end{frame}
 
 %------------------------------------------------
+\subsection{Evaluation Metrics}
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
-Evaluation ex-based metrics: accuracy, recall, precision, F-measure
+Need for more complicated evaluation than traditional supervised learning(accuracy, F-measure etc). There are 2 metrics categories 
+	\begin{itemize}
+		\item \emph{Example-based: }Evaluates system's performance on each example and returns the mean value. 
+		\begin{itemize}
+			\item \emph{From classification perspective:} $subset accuracy$, $hamming loss$, $accuracy_{exam}$, $precision_{exam}$, $recall_{exam}$, $F^\beta_{exam}$
+			\item \emph{From ranking perspective:} one-error, coverage, ranking loss, average precision
+		\end{itemize}
+		\item \emph{Label-based: }Evaluates system's performance on each class label separetely and returns macro/micro averaged value across all class labels
+		\begin{itemize}
+			\item From classification perspective:
+			\item From ranking perspective:
+		\end{itemize}
+	\end{itemize}
+TODO: theoretical results?
 \end{frame}
 %------------------------------------------------
 
@@ -190,44 +205,6 @@ Evaluation ex-based metrics: accuracy, recall, precision, F-measure
 \frametitle{\insertsection : \insertsubsection}
 \end{frame}
 %------------------------------------------------
-
-\subsection{Evaluation Metrics} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
-
-\begin{frame}
-\frametitle{Evaluation Metrics}
-\begin{itemize}
-\item 
-
-\begin{itemize}
-\item [] $\rhd$ 
-\item [] $\rhd$ 
-\item [] $\rhd$ 
-\end{itemize}
-
-\item 
-
-\begin{itemize}
-\item [] $\rhd$ 
-\item [] $\rhd$ 
-\end{itemize}
-
-\item 
-\begin{itemize}
-\item [] $\rhd$ 
-\item [] $\rhd$
-\end{itemize}
-
-\item 
-\begin{itemize}
-\item [] $\rhd$ 
-\item [] $\rhd$
-\end{itemize}
-\end{itemize}
-
-\end{frame}
-
-%------------------------------------------------
-
 
 \section{Multi-label Learning Algorithms}
 
