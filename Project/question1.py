@@ -9,17 +9,19 @@ import utils
 #################
 
 def create_trips_file(input_file, output_file):
-    print("Reading training file with pandas ignoring null jids", input_file)
+    print("Reading training file", input_file, " - will ignore null journey ids")
+    print("Parsing csv...")
     df = pd.read_csv(input_file)
-    print("Read %d lines." % len(df))
     # remove potential NaNs and "null" jids
+    print("Removing nulls and NaNs ...")
     df = df[pd.notnull(df['journeyPatternId'])]
     df = df[df['journeyPatternId'] != "null"].reindex()
     timestamps = df.groupby(["vehicleID", "journeyPatternId"])["timestamp"].apply(list)
     lons = df.groupby(["vehicleID", "journeyPatternId"])["longitude"].apply(list)
     lats = df.groupby(["vehicleID", "journeyPatternId"])["latitude"].apply(list)
     df = pd.concat([timestamps, lons, lats], axis=1, ignore_index=False)
-    print("Start processing data")
+    print("Done reading training file!")
+    print("Transforming data to the required format")
     for index, row in df.iterrows():
         tslist, lonslist, latslist = [], [], []
         tslist = row["timestamp"]
@@ -43,6 +45,7 @@ def create_trips_file(input_file, output_file):
     df = sort_timestamps(df)
     df.to_csv(output_file)
     trips_list = df.to_dict(orient='dict')
+    print("Done transforming data!")
     return trips_list, df
 
 
@@ -66,6 +69,7 @@ def sort_timestamps(df):
 #############
 
 def filter_trips(output_file, df):
+    print("Filtering %d trips..." % len(df))
     trips_too_small, trips_too_big = [], []
     for index, row in df.iterrows():
         jounreyId = row["journeyId"]
@@ -80,8 +84,8 @@ def filter_trips(output_file, df):
             trips_too_big.append(jounreyId)
             df.drop(index, inplace=True)
             continue
-    print("Total trips deleted due to total distance less than 2km: %d" % len(trips_too_small))
-    print("Total trips deleted due to max distance between two points more than 2km: %d" % len(trips_too_big))
+    print("Deleted %d due to having total distance less than 2km" % len(trips_too_small))
+    print("Deleted %d trips due having to max distance between two points more than 2km" % len(trips_too_big))
     print("Writing",len(df),"cleaned trips to", output_file)
     df.to_csv(output_file)
     trips_list = df.to_dict(orient='dict')
@@ -128,11 +132,16 @@ def calculate_lonlat_distance(point1, point2):
 def visualize_trips(output_folder, df):
     output_file_base = os.path.join(output_folder, "mapplot")
     num_visualize = 5
-    total_points = utils.get_total_points(df)
-    random.shuffle(total_points)
+    idxs = list(range(len(df)))
+    random.shuffle(idxs)
+    # total_points = utils.get_total_points(df)
+    print("Randomly selected %d trips to visualize, with indexes" % num_visualize, idxs[:num_visualize])
     for i in range(num_visualize):
+        idx = idxs[i]
+        total_pts = utils.get_total_points(df[idx : idx + 1])[0]
         file_name = output_file_base + str(i) + ".html"
         # get point coordinates lon-lat
-        points_lonlat = [utils.idx_to_lonlat(total_points[i])]
+        # points_lonlat = [utils.idx_to_lonlat(total_points[i])]
+        points_lonlat = [utils.idx_to_lonlat(total_pts)]
         # produce output htmls
         utils.write_group_gml(points_lonlat, file_name)

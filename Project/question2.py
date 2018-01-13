@@ -7,17 +7,17 @@ import utils
 import os
 
 
-def question_a1(output_folder, clean_file, test_file, paropts):
-    test_df = pd.read_csv(test_file)
+def question_a1(output_folder, clean_file, test_file, paropts, k):
+    print("Extracting %d nearest neighbours for each test trip" % k)
+    test_df = pd.read_csv(test_file, delimiter="\n")
     train_df = pd.read_csv(clean_file)
     for index, row in test_df.iterrows():
-        print("Examining test element %d" % (index + 1))
+        print("Examining test element %d / %d" % (index + 1, len(test_df)))
         outfile_name = os.path.join(output_folder, "nn_%d_" % (index + 1))
         # prepare to count time
         millis_start = utils.tic()
         # compute nearest neighbours
-        test_points = row["points"]
-        test_points = eval(test_points)
+        test_points = eval(row["Trajectory"])
         nns_ids_distances = nn.calculate_nns(test_points, train_df, paropts=paropts)
         # get time elapsed
         elapsed = utils.tictoc(millis_start)
@@ -25,15 +25,15 @@ def question_a1(output_folder, clean_file, test_file, paropts):
         nn.preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, index)
 
 
-def question_a2(output_folder, test_file, train_file):
-    test_df = pd.read_csv(test_file)
+def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts):
+    print("Extracting %d subroutes for each test trip" % k)
+    test_df = pd.read_csv(test_file, delimiter="\n")
     train_df = pd.read_csv(train_file)
     for index, row in test_df.iterrows():
-        print("Extracting subroutes for test trip %d/%d" % (index + 1, len(test_df.index)))
+        print("Extracting subroutes for test trip %d/%d" % (index + 1, len(test_df)))
         file_name = os.path.join(output_folder, "subroutes_%d_" % (index + 1))
-        test_points = row["points"]
-        test_points = eval(test_points)
-        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df)
+        test_points = eval(row["Trajectory"])
+        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, conseq_lcss)
         ns.preprocessing_for_visualisation(test_points, max_subseqs, file_name, index)
 
 

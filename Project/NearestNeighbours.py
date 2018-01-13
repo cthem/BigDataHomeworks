@@ -83,7 +83,7 @@ def calculate_dists(test_lonlat, train_df, ret_container = None, paropts = None)
     for index, row in train_df.iterrows():
         train_points = row["points"]
         jid = row["journeyId"]
-        print(train_points)
+        # print(train_points)
         train_points = eval(train_points)
         trip_lonlat = utils.idx_to_lonlat(train_points,format="tuples")
         # calculate distance
@@ -176,12 +176,12 @@ def preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name
     for j,neighbour in enumerate(nns_ids_distances):
         train_points = neighbour[3]
         points.append([utils.get_lonlat_tuple(train_points)])
-        str = ["neighbour %d" % j, "jid: %s" % neighbour[2], "DWT: %d" % nns_ids_distances[j][1], "Delta-t: %s " % elapsed]
+        str = ["neighbour %d" % j, "jid: %s" % neighbour[2], "DWT: %.1f km" % (nns_ids_distances[j][1]/1000.0), "Delta-t: %s " % elapsed]
         labels.append("\n".join(str))
     # set all colors to blue
     colors = [['b'] for _ in range(len(nns_ids_distances) + 1)]
     # visualize!
-    print("Points:")
-    for pts in points:
-        print(pts)
+    # print("Points:")
+    # for pts in points:
+    #     print(pts)
     utils.visualize_point_sequences(points, colors, labels, outfile_name)

@@ -178,6 +178,8 @@ def visualize_point_sequences(all_pts, colors, labels, file_name):
     imgidx = 0
     for row in ax:
         for col in row:
+            if imgidx >= len(img_names):
+                break
             # remove axes' value ticks
             col.set_xticks([])
             col.set_yticks([])
@@ -188,8 +190,6 @@ def visualize_point_sequences(all_pts, colors, labels, file_name):
             # delete the image
             os.remove(img_names[imgidx])
             imgidx += 1
-            if imgidx >= len(img_names):
-                break
     pylab.savefig(base_file_name + ".nnplot.jpg", dpi=300)
     plt.close()
 
@@ -229,5 +229,24 @@ def barchart(xvalues, yvalues, title="",ylabel="", legend = None, save=None, col
     if save is None:
         plt.show()
     else:
-        plt.savefig(save, dpi=fig.dpi)
+        plt.savefig(save, dpi=fig.dpi, format="png")
     plt.close()
+
+def subsets(seq):
+    """
+    Generate all possible subsets of iterable
+    :param seq:
+    :return:
+    """
+    j=1
+    subseqs=[]
+    while True:
+        for i in range(len(seq)-j+1):
+            slist = seq[i:i+j]
+            if slist not in subseqs:
+                subseqs.append(slist)
+        if j==len(seq):
+            break
+        j+=1
+    return subseqs
+

@@ -26,11 +26,11 @@ def classify(features, targets, num_folds, classifiers, output_folder, filename_
     # classify
     for classifier in classifiers:
         accuracies[classifier] = []
-        print("Testing classifier [%s]" % classifier)
+        print("\nTesting classifier [%s]" % classifier)
         # train & test each classifier
         # for each fold
         for i, (train_idx, val_idx) in enumerate(folds_idxs):
-            print("\tClassifing fold %d/%d" % (i + 1, len(folds_idxs)), end=" ")
+            print("\tClassifying fold %d/%d" % (i + 1, len(folds_idxs)), end=" ")
             train = (trips_array[train_idx], targets[train_idx])
             val = (trips_array[val_idx], targets[val_idx])
             if classifier == "knn":
@@ -41,13 +41,13 @@ def classify(features, targets, num_folds, classifiers, output_folder, filename_
             elif classifier == "randfor":
                 accTrain, accVal = randfor_classification(train, val)
             accuracies[classifier].append((accTrain, accVal))
-            print("accuracies train/val:",accuracies[classifier][-1])
+            print("- accuracies train/val:",accuracies[classifier][-1])
 
         # accuracy across all folds
         mean_accuracies[classifier] = [np.mean([x[0] for x in accuracies[classifier]]), \
                                        np.mean([x[1] for x in accuracies[classifier]])]
         titlestr = "%s, overall accuracy train/val: %s" % (classifier, str(mean_accuracies[classifier]))
-        chart_filename = os.path.join(output_folder, classifier + "_" + filename_tag)
+        chart_filename = os.path.join(output_folder, classifier + "_" + filename_tag + "_chart")
         utils.barchart(list(range(1, num_folds + 1)), accuracies[classifier], title=titlestr, ylabel="accuracy", legend=["train","val"],
                     save=chart_filename)
 
@@ -55,12 +55,12 @@ def classify(features, targets, num_folds, classifiers, output_folder, filename_
 
 # TODO improve classification
 def preprocess_data(feature_df):
+    print("Preprocessing data for classification.")
     targets = []
     data = []
     # TODO make an options dict bundle cardundle
     seed = 123
     feature_df = feature_df.sample(frac=1, random_state = seed).reset_index(drop=True)
-    print(feature_df[:2])
     for index, row in feature_df.iterrows():
         targets.append(row["journeyId"])
         train_points = row["points"]
@@ -91,10 +91,11 @@ def preprocess_data(feature_df):
         occurences = sum([1 if t == jid else 0 for t in targets])
         hist.append((jid, occurences))
 
-    hist = sorted(hist, key=lambda x: x[1], reverse= True)
-    print("Most frequent 5 jids:")
-    for (jid, occ) in hist[:5]:
-        print(jid, ":", occ)
+    # hist = sorted(hist, key=lambda x: x[1], reverse= True)
+    # print("Most frequent 5 jids:")
+    # for (jid, occ) in hist[:5]:
+    #     print(jid, ":", occ)
+    print("Done preprocessing data")
     return data, targets_nums
 
 
@@ -152,7 +153,7 @@ def improve_classification(features_file, num_folds, output_folder, classifier):
     norms = ["l2","l1","max"]
     for norm in norms:
         tag = "norm_%s" % norm
-        print("Trying strategy: %s" % tag)
+        print("\nTrying strategy: %s" % tag, end='')
         grid_features = sklearn.preprocessing.normalize(grid_features, norm = norm, copy=False)
         mean_acc = classify(grid_features, targets, num_folds,classifier,output_folder, tag)
         mean_accuracies[tag] = mean_acc
@@ -160,8 +161,8 @@ def improve_classification(features_file, num_folds, output_folder, classifier):
     # try various regularization strengths
     Cs = [0.2, 0.5 , 1.5, 2.0]
     for c in Cs:
-        tag = "C %s" % c
-        print("Trying strategy: %s" % tag)
+        tag = "C_%1.3f" % c
+        print("\nTrying strategy: %s" % tag, end='')
         classifier_obj = LogisticRegression(C=c)
         mean_acc = classify(grid_features, targets, num_folds,classifier,output_folder, tag, classifier_obj=classifier_obj)
         mean_accuracies[tag] = mean_acc
