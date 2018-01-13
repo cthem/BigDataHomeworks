@@ -4,7 +4,7 @@ import threading
 import question1 as qp1
 
 
-def find_similar_subroutes_per_test_trip(test_points, train_df, k=5, paropts=None):
+def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None, conseq_lcss = True):
     if paropts:
         print("Parallelizing with", paropts)
         partype, numpar = paropts
@@ -16,17 +16,17 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k=5, paropts=Non
     if partype:
         # num threads or processes
         if partype == "processes":
-            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k)
+            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k, conseq_lcss)
         elif partype == "threads":
-            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k)
+            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k, conseq_lcss)
     else:
-        max_subseqs = serial_execution(train_df, test_lonlat, k)
+        max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss)
     if len(max_subseqs) != k:
         print("WARNING: Specified %d subseqs!" % k)
     return max_subseqs
 
 
-def serial_execution(df, test_lonlat, k):
+def serial_execution(df, test_lonlat, k, conseq_lcss):
     max_subseqs = []
     for index, row in df.iterrows():
         train_points = row["points"]
@@ -34,12 +34,14 @@ def serial_execution(df, test_lonlat, k):
         train_lonlat = utils.idx_to_lonlat(train_points, format="tuples")
         timestart = utils.tic()
         # compute common subsequences between the test trip and the current candidate
-        subseqs, subseqs_idx = calc_lcss(test_lonlat, train_lonlat)
+        subseqs, subseqs_idx = calc_lcss(test_lonlat, train_lonlat, conseq_lcss= conseq_lcss)
         elapsed = utils.tictoc(timestart)
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
         # update the list of the longest subsequences
-        max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
+        if subseqs:
+            max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
+            # print("Updated max subseqs, len now:",len(max_subseqs))
     return max_subseqs
 
 
@@ -94,55 +96,110 @@ def exec_with_threads(df, numpar, test_lonlat, k):
     return max_subseqs
 
 
-def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None):
-    print("Have to check the lcss")
-    '''
-    :param t1: list of lonlat coordinate tuples
-    :param t2: same
-    :return:
-    '''
+def calc_lcss_noconseq(t1, t2, subseqs=None, subseqs_idx=None):
+
     if subseqs is not None:
         seqs = subseqs
-
     else:
         seqs = []
 
     if subseqs_idx is not None:
         idxs = subseqs_idx
-
     else:
         idxs = []
 
+    curr_len = 0
+    L = [ [0 for _ in t2 + [0]] for _ in t1 + [0]]
+    for i in range(1,len(t1) + 1):
+        for j in range(1,len(t2) + 1):
+            p1, p2 = t1[i-1], t2[j-1]
+            dist = qp1.calculate_lonlat_distance(t1[i],t2[j])
+            equal = dist < 200
+            # equal = p1 == p2
+            if equal:
+                L[i][j] =  L[i-1][j-1] + 1
+            else:
+                L[i][j] = max(L[i-1][j-1], L[i-1][j])
+
+    # read back result
+    i, j = len(t1), len(t2)
+    while i and j:
+        if L[i][j] == L[i - 1][j]:
+            i -= 1
+        elif L[i][j] == L[i][j - 1]:
+            j -= 1
+        else:
+            assert t1[i - 1] == t2[j - 1]
+            seqs += t1[i - 1]
+            idxs += [i-1]
+            i -= 1
+            j -= 1
+    seqs.reverse()
+    idxs.reverse()
+    seqs = utils.subsets(seqs)
+    idxs = utils.subsets(idxs)
+    return seqs,list(idxs)
+
+def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = False):
+    '''
+    :param t1: list of lonlat coordinate tuples
+    :param t2: same
+    :return:
+    '''
+    if not conseq_lcss:
+        return calc_lcss_noconseq(t1, t2, subseqs, subseqs_idx)
+
+    if subseqs is not None:
+        seqs = subseqs
+    else:
+        seqs = []
+
+    if subseqs_idx is not None:
+        idxs = subseqs_idx
+    else:
+        idxs = []
+
+
+    # initialize lcss matrix to 0
     L = [ [0 for _ in t2] for _ in t1]
-    # store the sequence of similar point values and indexes
-    z = 0
+
+    curr_len = 0
     for i, p1 in enumerate(t1):
         for j, p2 in enumerate(t2):
             # calculate the dist
             dist = qp1.calculate_lonlat_distance(p1, p2)
             equal = dist < 200
+            # equal = p1 == p2
             if equal:
                 # the points are equal enough
                 if i == 0 or j == 0:
                     # it's the first point of t1 or t2. Mark the cell to unit cost.
                     L[i][j] = 1
-                    # initiate a new similar sequence
-                    seqs.append(t2[j])
+                    # add unitary sequence
+                    seqs.append(p2)
                     idxs.append([j])
                 else:
-                    # continue an existing sequence : current len is the previous plus one
+                    # continue an existing sequence: current len is the previous plus one
                     L[i][j] =  L[i-1][j-1] + 1
-                    #
-                    if L[i][j] > z:
-                        # current cost increases
-                        z = L[i][j]
-                        seqs.append(t2[j-z+1:j+1])
-                        idxs.append(list(range(j-z+1,j+1)))
+                    if L[i][j] > curr_len:
+                        curr_len = L[i][j]
+                        # append new longer sequence
+                        seqs.append(t2[j-curr_len+1:j+1])
+                        idxs.append(list(range(j-curr_len+1,j+1)))
             else:
-                # print(i,j,"-",p1,p2)
-                # for ll in L: print(ll)
                 L[i][j] = 0
+
     return seqs, list(idxs)
+
+if __name__ == '__main__':
+    s1 = "datter"
+    s2 = "dogger"
+    print(s1,"vs",s2)
+    seqs, idxs = calc_lcss(list(s1), list(s2), conseq_lcss=True)
+    print(seqs, idxs)
+    seqs, idxs = calc_lcss(list(s1), list(s2), conseq_lcss=False)
+    print(seqs, idxs)
+    utils.subsets([1,2,7,1,3,9])
 
 
 def update_current_maxsubseq(current, new_seqs, k, elapsed, row):
@@ -195,8 +252,9 @@ def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
 
         # get the indexes of common points
         point_idxs = sseq[0]
+        # get the points data from the pandas dataframe
         train_points = sseq[2]["points"]
-        train_points = eval(train_points)
+        train_points = utils.idx_to_lonlat(eval(train_points))
         # color matching points in red. Remaining points are drawn in blue.
         # get the points from the beginning up to the match
         b1 = train_points[0:point_idxs[0]+1]
