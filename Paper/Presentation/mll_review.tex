@@ -239,11 +239,14 @@ Group algorithms in two categories:
 
 %------------------------------------------------
 \subsection{Problem Transformation Methods}
-
+%------------------------------------------------
 \begin{frame}
+\Huge{\centerline{Problem Transformation Methods}}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
+\frametitle{Binary Relevance}
 
-\frametitle{\insertsection : \insertsubsection}
-\textbf{Binary Relevance}
 \begin{itemize}
 	\item Decompose to $q$ independent binary classification problems, $h_i(x)$
 	\item Cross-train on $q$ binary training sets (one for each $y_i$)
@@ -264,21 +267,19 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Classifier chains}
 \begin{itemize}
-\item <2-> 
-\begin{itemize}
-\item 
-\item <4-> 
-\end{itemize}
-\end{itemize}
-\begin{itemize}
-\item<5-> 
+	\item High-order approach algorithm
+	\item Transform the problem into a chain of binary classification problems
+	\item Build subsequent binary classifiers upon the predictions of preceding ones
+	\item A permutation function is used to specify an order to the labels
+	\item Binary training setconstructed by appending each instance with its relevanceto those labels
+	\item Predict relevant labels for unknown instances by iteratively traversing the classifier chain
 \end{itemize}
 
+Pros \& cons:
 \begin{itemize}
-\item <7-> 
-\begin{itemize}
-\item <8-> 
-\end{itemize}
+	\item Effectiveness largely affected by the ordering
+	\item Exploitation of label correlations
+	\item Does not support parallel implementation
 \end{itemize}
 \end{frame}
 %------------------------------------------------
@@ -286,57 +287,55 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Calibrated Label Ranking}
 \begin{itemize}
-\item <2-> 
-\begin{itemize}
-\item 
-\item <4-> 
+	\item Second-order approach algorithm
+	\item Transform the problem into a label ranking problem
+	\item Ranking implemented by pairwise comparison techniques
+	\item For $q$ labels, generate $q(q-1)/2$ binary classifiers by pairwise comparison
+	\item Construct training set per label pairs considering the example's relevance
+	\item For unknown instance, get the overall classifiers' votes
+	\item Virtual label $y_v$ as thresholding parameter
 \end{itemize}
-\end{itemize}
+Pros \& cons:
 \begin{itemize}
-\item<5-> 
-\end{itemize}
-
-\begin{itemize}
-\item <7-> 
-\begin{itemize}
-\item <8-> 
-\end{itemize}
+	\item Smooth the class-imbalance
+	\item Classifier's number grows from linear to quadratic scale
+	\begin{itemize}
+		\item Improvement: Exact or approximate pruning to reduce classifier's number to be queried
+	\end{itemize}
 \end{itemize}
 \end{frame}
 %------------------------------------------------
 \begin{frame}
 \frametitle{Random k-Labelsets}
 \begin{itemize}
-\item <2-> 
-\begin{itemize}
-\item 
-\item <4-> 
+	\item High-order approach algorithm
+	\item Decompose to an ensemble of multi-class classification problems
+	\item Each component targets a random subset of $Y$, inducing a multi-class classifier by Label Powerset (LP) techniques
+	\item Convert training set into a multi-class set, treating each label set as a new class
+	\item Each example is reassigned with the mapped single-label participating in multi-class classifier induction
+	\item For unknown $x$, counts the maximum and actual number of votes
+	\item Label set is relevant when the actual number of votes exceedshalf of the maximum ones
 \end{itemize}
-\end{itemize}
+Pros \& cons:
 \begin{itemize}
-\item<5-> 
-\end{itemize}
-
-\begin{itemize}
-\item <7-> 
-\begin{itemize}
-\item <8-> 
-\end{itemize}
+	\item Incompleteness: predicts only label sets included in the training set
+	\item Inefficiency: large $Y$ implies high training complexity.Improvement by combining LP and ensemble learning
 \end{itemize}
 \end{frame}
 %------------------------------------------------
-
 \subsection{Alogrithm Adaptation Methods}
-
+%------------------------------------------------
 \begin{frame}
-\frametitle{Multi-Label k-Nearest Neighbor}
+\Huge{\centerline{Alogrithm Adaptation Methods}}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
+\frametitle{Multi-Label k-Nearest Neighbour}
 \begin{itemize}
-\item <2-> 
-\item <3-> 
-\item <4-> 
-\item<5-> 
-\item <6-> 
-% \item<7->
+	\item First-order approach algorithm, adapting knn techniques
+	\item Maximum a posteriori (MAP) rule to make prediction by reasoning and embody label info in the neighbours
+	\item For new instances, $N(x)$ represents the set of its knn (uses Euclidean distance)
+	
 \end{itemize}
 \end{frame}
 
@@ -344,28 +343,16 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Multi-label Decision Tree}
 
-%\begin{figure}
-%	\includegraphics[width = \textwidth, height = \textheight, keepaspectratio]{modelcharacters.png}
-%	\caption{Character enhanced word representations}
-%	\end{figure}
 \end{frame}
 %------------------------------------------------
 \begin{frame}
 \frametitle{Ranking Support Vector Machine}
 
-%\begin{figure}
-%	\includegraphics[width = \textwidth, height = \textheight, keepaspectratio]{modelcharacters.png}
-%	\caption{Character enhanced word representations}
-%	\end{figure}
 \end{frame}
 %------------------------------------------------
 \begin{frame}
 \frametitle{Collective Multi-Label Classifier}
 
-%\begin{figure}
-%	\includegraphics[width = \textwidth, height = \textheight, keepaspectratio]{modelcharacters.png}
-%	\caption{Character enhanced word representations}
-%	\end{figure}
 \end{frame}
 %------------------------------------------------
 \section{Related Learning Settings}
@@ -387,14 +374,7 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Conclusion}
 \begin{itemize}
-\item 
-\item 
-\end{itemize}
-\onslide<4->{}
-\begin{itemize}
-\item <5-> 
-\item <6->
-\item <7-> 
+	\item 
 \end{itemize}
 \end{frame}
 
@@ -403,7 +383,5 @@ Pros \& cons:
 \begin{frame}
 \Huge{\centerline{Thank you}}
 \end{frame}
-
 %------------------------------------------------
-
 \end{document} 
