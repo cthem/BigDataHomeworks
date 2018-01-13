@@ -2,7 +2,7 @@ import pandas as pd
 from math import sin, cos, sqrt, atan2, radians
 import os
 import random
-import utils as up
+import utils
 
 
 # Question 1a
@@ -128,11 +128,11 @@ def calculate_lonlat_distance(point1, point2):
 def visualize_trips(output_folder, df):
     output_file_base = os.path.join(output_folder, "mapplot")
     num_visualize = 5
-    total_points = up.get_total_points(df)
+    total_points = utils.get_total_points(df)
     random.shuffle(total_points)
     for i in range(num_visualize):
         file_name = output_file_base + str(i) + ".html"
         # get point coordinates lon-lat
-        points_lonlat = [up.idx_to_lonlat(total_points[i])]
+        points_lonlat = [utils.idx_to_lonlat(total_points[i])]
         # produce output htmls
-        up.write_group_gml(points_lonlat, file_name)
+        utils.write_group_gml(points_lonlat, file_name)

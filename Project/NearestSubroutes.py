@@ -1,4 +1,4 @@
-import utils as up
+import utils
 from multiprocessing.pool import ThreadPool
 import threading
 import question1 as qp1
@@ -11,7 +11,7 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k=5, paropts=Non
     else:
         partype, numpar = None, None
 
-    test_lonlat = up.idx_to_lonlat(test_points, format="tuples")
+    test_lonlat = utils.idx_to_lonlat(test_points, format="tuples")
     max_subseqs = []
     if partype:
         # num threads or processes
@@ -31,11 +31,11 @@ def serial_execution(df, test_lonlat, k):
     for index, row in df.iterrows():
         train_points = row["points"]
         train_points = eval(train_points)
-        train_lonlat = up.idx_to_lonlat(train_points, format="tuples")
-        timestart = up.tic()
+        train_lonlat = utils.idx_to_lonlat(train_points, format="tuples")
+        timestart = utils.tic()
         # compute common subsequences between the test trip and the current candidate
         subseqs, subseqs_idx = calc_lcss(test_lonlat, train_lonlat)
-        elapsed = up.tictoc(timestart)
+        elapsed = utils.tictoc(timestart)
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
         # update the list of the longest subsequences
@@ -49,12 +49,12 @@ def exec_with_processes(df, process_num, test_lonlat, k):
     for index, row in df.iterrows():
         train_points = row["points"]
         train_points = eval(train_points)
-        train_lonlat = up.idx_to_lonlat(train_points, format="tuples")
-        timestart = up.tic()
+        train_lonlat = utils.idx_to_lonlat(train_points, format="tuples")
+        timestart = utils.tic()
         # compute common subsequences between the test trip and the current candidate
         async_result = pool.apply_async(calc_lcss, (test_lonlat, train_lonlat))
         subseqs, subseqs_idx = async_result.get()
-        elapsed = up.tictoc(timestart)
+        elapsed = utils.tictoc(timestart)
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
         # update the list of the longest subsequences
@@ -64,21 +64,21 @@ def exec_with_processes(df, process_num, test_lonlat, k):
     pool.join()
     return max_subseqs
 
-
+# TODO error with row
 def exec_with_threads(df, numpar, test_lonlat, k):
     max_subseqs = []
     res1 = [[] for _ in range(numpar)]
     res2 = [[] for _ in range(numpar)]
-    subframes = up.get_sub_dataframes(df, numpar)
+    subframes = utils.get_sub_dataframes(df, numpar)
     # assign data and start the threads
     threads = []
-    timestart = up.tic()
+    timestart = utils.tic()
     for i in range(numpar):
         train_lonlat = []
         for index, row in subframes[i].iterrows():
             train_points = row["points"]
             train_points = eval(train_points)
-            train_lonlat = up.idx_to_lonlat(train_points, format="tuples")
+            train_lonlat = utils.idx_to_lonlat(train_points, format="tuples")
         threads.append(threading.Thread(target=calc_lcss, args=(test_lonlat, train_lonlat, res1, res2)))
         threads[i].start()
     # gather and merge results
@@ -89,7 +89,7 @@ def exec_with_threads(df, numpar, test_lonlat, k):
         subseqs += res1[i]
         subseqs_idx += res2[i]
     subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
-    elapsed = up.tictoc(timestart)
+    elapsed = utils.tictoc(timestart)
     max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
     return max_subseqs
 
@@ -97,7 +97,6 @@ def exec_with_threads(df, numpar, test_lonlat, k):
 def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None):
     print("Have to check the lcss")
     '''
-
     :param t1: list of lonlat coordinate tuples
     :param t2: same
     :return:
@@ -183,7 +182,7 @@ def update_current_maxsubseq(current, new_seqs, k, elapsed, row):
 def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
     # initialize to the test trip data
     labels = ["test trip: %s" % index]  # test jid
-    points = [[up.get_lonlat_tuple(test_points)]]
+    points = [[utils.get_lonlat_tuple(test_points)]]
     colors = [['b']]
 
     for j, sseq in enumerate(max_subseqs):
@@ -201,19 +200,19 @@ def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
         # color matching points in red. Remaining points are drawn in blue.
         # get the points from the beginning up to the match
         b1 = train_points[0:point_idxs[0]+1]
-        b1 = up.get_lonlat_tuple(b1)
+        b1 = utils.get_lonlat_tuple(b1)
         if b1[0]:
             pts.append(b1)
             cols.append('b')
         # get the matching points
         r = train_points[point_idxs[0]:point_idxs[-1]+1]
-        r = up.get_lonlat_tuple(r)
+        r = utils.get_lonlat_tuple(r)
         if r[0]:
             pts.append(r)
             cols.append('r')
         # get the points from the last matching point, to the end of the points
         b2 = train_points[point_idxs[-1]:]
-        b2 = up.get_lonlat_tuple(b2)
+        b2 = utils.get_lonlat_tuple(b2)
         if b2[0]:
             pts.append(b2)
             cols.append('b')
@@ -225,4 +224,4 @@ def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
         print("Added pts:", pts)
         print("Added cols:", cols)
     # send the whole parameter bundle to be drawn
-    up.visualize_point_sequences(points, colors, labels, file_name)
+    utils.visualize_point_sequences(points, colors, labels, file_name)

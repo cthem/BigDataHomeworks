@@ -3,8 +3,7 @@ import NearestSubroutes as ns
 import MapInGridView as gvp
 import JourneyClassification as jcp
 import pandas as pd
-import numpy as np
-import utils as up
+import utils
 import os
 
 
@@ -15,13 +14,13 @@ def question_a1(output_folder, clean_file, test_file, paropts):
         print("Examining test element %d" % (index + 1))
         outfile_name = os.path.join(output_folder, "nn_%d_" % (index + 1))
         # prepare to count time
-        millis_start = up.tic()
+        millis_start = utils.tic()
         # compute nearest neighbours
         test_points = row["points"]
         test_points = eval(test_points)
         nns_ids_distances = nn.calculate_nns(test_points, train_df, paropts=paropts)
         # get time elapsed
-        elapsed = up.tictoc(millis_start)
+        elapsed = utils.tictoc(millis_start)
         # visualize
         nn.preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, index)
 

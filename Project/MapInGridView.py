@@ -1,6 +1,6 @@
 import os
 import matplotlib.pyplot as plt
-import utils as up
+import utils
 
 
 def find_min_max_latlong(train_df):
@@ -60,7 +60,7 @@ def replace_points(train_df, rows, columns, cell_names, output_file):
         timestamps = []
         for point in train_points:
             timestamps.append(point[0])
-        train_lonlats = up.idx_to_lonlat(train_points, format="tuples")
+        train_lonlats = utils.idx_to_lonlat(train_points, format="tuples")
         new_points = []
         for i,lonlat in enumerate(train_lonlats):
             new_point = []

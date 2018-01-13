@@ -1,6 +1,4 @@
-import pandas as pd
-import os
-import utils as up
+import utils
 from multiprocessing.pool import ThreadPool
 import threading
 from dtw import dtw as libdtw
@@ -15,8 +13,8 @@ def calculate_nns(test_points, train_df, paropts=None, k=5):
     else:
         partype, numpar = None, None
 
-    tic = up.tic()
-    test_lonlat = up.idx_to_lonlat(test_points, format="tuples")
+    tic = utils.tic()
+    test_lonlat = utils.idx_to_lonlat(test_points, format="tuples")
     nearest_neighbours = [-1 for _ in range(len(train_df.index))]
 
     if partype:
@@ -31,7 +29,7 @@ def calculate_nns(test_points, train_df, paropts=None, k=5):
     # sort the list to increasing distance
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])
     # return the top 5
-    print("Elapsed for parallelization: ", str(partype), numpar, " is:", up.tictoc(tic))
+    print("Elapsed for parallelization: ", str(partype), numpar, " is:", utils.tictoc(tic))
     print("Neighbours:")
     nearest_neighbours = nearest_neighbours[:k]
     for neigh in nearest_neighbours:
@@ -62,7 +60,7 @@ def run_with_processes(numpar, test_lonlat, train_df):
 def run_with_threads(numpar, test_lonlat, train_df):
     # create empty containers and divide data per thread
     res = [[] for _ in range(numpar)]
-    subframes = up.get_sub_dataframes(train_df, numpar)
+    subframes = utils.get_sub_dataframes(train_df, numpar)
     # assign data and start the threads
     threads = []
     for i in range(numpar):
@@ -87,7 +85,7 @@ def calculate_dists(test_lonlat, train_df, ret_container = None, paropts = None)
         jid = row["journeyId"]
         print(train_points)
         train_points = eval(train_points)
-        trip_lonlat = up.idx_to_lonlat(train_points,format="tuples")
+        trip_lonlat = utils.idx_to_lonlat(train_points,format="tuples")
         # calculate distance
         distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat, paropts)
         # print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, index+1, len(train_df.index), str(row["journeyId"])))
@@ -172,12 +170,12 @@ def preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name
     points, labels= [], []
     # add tuple of longitudes, latitudes and visualization params for the test trip
     # list of lists because multi-color gml visualizer expects such
-    points.append([up.get_lonlat_tuple(test_points)])
+    points.append([utils.get_lonlat_tuple(test_points)])
     labels.append("test trip: %d" % i)
     # loop over neighbours
     for j,neighbour in enumerate(nns_ids_distances):
         train_points = neighbour[3]
-        points.append([up.get_lonlat_tuple(train_points)])
+        points.append([utils.get_lonlat_tuple(train_points)])
         str = ["neighbour %d" % j, "jid: %s" % neighbour[2], "DWT: %d" % nns_ids_distances[j][1], "Delta-t: %s " % elapsed]
         labels.append("\n".join(str))
     # set all colors to blue
@@ -186,4 +184,4 @@ def preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name
     print("Points:")
     for pts in points:
         print(pts)
-    up.visualize_point_sequences(points, colors, labels, outfile_name)
+    utils.visualize_point_sequences(points, colors, labels, outfile_name)
