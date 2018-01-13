@@ -127,7 +127,7 @@
 Single-label supervised learning
 \begin{itemize}
 	\item Applied to classification
-	\item Supervised: Given dataset $\{ (x_i, y_i)\}, i = 1, \dots N, x \in X, y \in Y$
+	\item Supervised: Dataset $\{ (x_i, y_i)\}, i = 1, \dots N, x \in X, y \in Y$
 	\item Goal is to learn a model $f: X \rightarrow Y$
 \end{itemize}
 
@@ -149,9 +149,9 @@ TODO: Include stuff about multi-labeled dataset characterization?
 \subsection{Algorithm Strategies}
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
-Label search space $\mathbb{S_Y}$ grows exponentially as a function of $|Y|$: 
+Label search space $\mathbb{S_Y}$ grows exponentially as a function of $|Y|=q$
 \begin{itemize}
-	\item e.g. for $|Y|=20, |\mathbb{S_Y}| = 2 ^ {|\mathbb{P(Y)}|} = 2^{20} \ge 10^6$
+	\item e.g. for $q=20, |\mathbb{S_Y}| = 2 ^ {|\mathbb{P(Y)}|} = 2^{20} \ge 10^6$
 \end{itemize}
 Solution: integrate in the learning process potential label correlations.
 This work examines algorithms grouped in three broad categories:
@@ -215,28 +215,6 @@ Group algorithms in two categories:
 	\item \emph{Algorithm Adaptation Methods: }Adapt popular learning techniques to deal with multi-label data directly (fit algorithm to data philosophy)
 \end{itemize}
 \end{frame}
-
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{\insertsection : \insertsubsection}
-\begin{figure}
-	\begin{center}
-		\includegraphics[scale = 0.75]{images/aa.png}
-	\end{center}
-\end{figure}
-\end{frame}
-
-\begin{frame}
-\frametitle{\insertsection : \insertsubsection}
-\begin{figure}
-	\begin{center}
-		\includegraphics[scale = 0.7]{images/pt.png}
-	\end{center}
-\end{figure}
-\end{frame}
-
 %------------------------------------------------
 \subsection{Problem Transformation Methods}
 %------------------------------------------------
@@ -245,13 +223,24 @@ Group algorithms in two categories:
 \end{frame}
 %------------------------------------------------
 \begin{frame}
+\frametitle{\insertsection : \insertsubsection}
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale = 0.7]{images/pt.png}
+	\end{center}
+\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
 \frametitle{Binary Relevance}
 
 \begin{itemize}
-	\item Decompose to $q$ independent binary classification problems, $h_i(x)$
-	\item Cross-train on $q$ binary training sets (one for each $y_i$)
-	\item Predict labels of unseen $x$ by evaluating each classifier $h_i(x)$
-	\item Output labels where  $h_i(x) > 0$ else $\underset{1 \geq i \geq q}{argmax} \{h_i(x))\}$ 
+	\item Decompose multi-label problem to $q$ independent binary classification problems
+	\item Construct $q$ binary (one-vs-all) training sets (one for each $y_i$)
+	\item Cross-train each binary classifier $h_i(x)$ on its respective dataset
+	
+	\item Predict labels of an unseen $x$ by evaluating each classifier $h_i(x)$
+	\item Output labels where  $h_i(x) > 0$ or $\underset{1 \geq i \geq q}{argmax} \{h_i(x))\}$, if none
 \end{itemize}
 
 Pros \& cons:
@@ -333,6 +322,15 @@ Pros \& cons:
 \end{frame}
 %------------------------------------------------
 \begin{frame}
+\frametitle{\insertsection : \insertsubsection}
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale = 0.75]{images/aa.png}
+	\end{center}
+\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
 \frametitle{Multi-Label k-Nearest Neighbour}
 \begin{itemize}
 	\item First-order approach algorithm, adapting knn techniques
@@ -355,10 +353,13 @@ Pros \& cons:
 \frametitle{Multi-label Decision Tree}
 \begin{itemize}
 	\item First-order approach algorithm, that adopts decision tree techniques
-	\item ML entropy is used tobuild the decision tree recursively
+	\item ML entropy is used to
+build the decision tree recursively
 	\item ML dataset $T$ is divided based on a splitting value $\theta$ ($T^-$ \& $T^+$)
-	\item Starting from the root, ML-DT identifies the feature and the splitting value whichmaximizes the information gain and creates the two child nodes
-	\item ML-DT assumes independence among labels and computes the MLentropy in a decomposable way
+	\item Starting from the root, ML-DT identifies the feature and the splitting value which
+maximizes the information gain and creates the two child nodes
+	\item ML-DT assumes independence among labels and computes the ML
+entropy in a decomposable way
 	\item Any test instance allocated in a leaf node is associated with the most frequent label $y$ present in that node
 \end{itemize}
 Pros \& cons:
@@ -372,9 +373,12 @@ Pros \& cons:
 \frametitle{Ranking Support Vector Machine}
 \begin{itemize}
 	\item Second-order approach algorithm, that adopts maximum margin strategy 
-	\item $q$ linear classifiers, optimized to minimize the empiricalranking loss and enabled to handle nonlinear cases with kernel tricks 
-	\item $W = {(w_j , b_j ) | 1 ≤ j ≤ q}$,where $w_j \in \mathbb{R}^d$ and$b_j \in \mathbb{R}$ are the weight vector and bias
-	\item Rank-SVM defines the learning system'smargin on ($x_i$ , $Y_i$), considering its ranking ability on the example’s relevant/irrelevant labels
+	\item $q$ linear classifiers, optimized to minimize the empirical
+ranking loss and enabled to handle nonlinear cases with kernel tricks 
+	\item $W = {(w_j , b_j ) | 1 ≤ j ≤ q}$,where $w_j \in \mathbb{R}^d$ and
+$b_j \in \mathbb{R}$ are the weight vector and bias
+	\item Rank-SVM defines the learning system's
+margin on ($x_i$ , $Y_i$), considering its ranking ability on the example’s relevant/irrelevant labels
 \end{itemize}
 \end{frame}
 %------------------------------------------------
