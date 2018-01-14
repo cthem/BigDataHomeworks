@@ -24,18 +24,18 @@ def question_2(opts):
     print("=====================")
     # Question 2
     print("\n>>> Running question 2a1 - Nearest neighbours computation")
-    qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"])
+    # qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"])
 
     print("\n>>> Running question 2a2 - Nearest subroutes computation")
-    qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],opts["conseq_lcss"], opts["k"], opts["paropts"])
+    # qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],opts["conseq_lcss"], opts["k"], opts["paropts"])
 
     print("\n>>> Running question 2b - Cell grid quantization")
-    cellgrid = (10, 10)
+    cellgrid = opts["grid"]
     print("Using cell grid with dimensions", cellgrid)
-    features_file = qp2.question_b(opts["cleanfile"], cellgrid, opts["outdir"])
+    features_file, grid_file = qp2.question_b(opts["cleanfile"], cellgrid, opts["outdir"])
 
     print("\n>>> Running question 2c - Classification")
-    # qp2.question_c(features_file, test_file, class_folder)
+    qp2.question_c(features_file, grid_file, opts["testfiles"][2], opts["classifdir"], opts["seed"], opts["classiffile"], opts["folds"])
 
 
 def check_dependencies():
@@ -81,6 +81,9 @@ if __name__ == '__main__':
     options["cleanfile"]  = join(options["outdir"], "trips_clean.csv")
     options["mapsdir"]    = join(options["outdir"], "gmplots")
     options["classifdir"] = join(options["outdir"], "classification_charts")
+    options["classiffile"] = join(options["outdir"],"​testSet_JourneyPatternIDs.csv")
+    options["folds"] = 2
+    options["grid"] = (5,5)
 
     os.makedirs(options["outdir"], exist_ok=True)
     os.makedirs(options["mapsdir"], exist_ok=True)

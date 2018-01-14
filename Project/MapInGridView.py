@@ -1,29 +1,41 @@
 import os
 import matplotlib.pyplot as plt
 import utils
+from collections import OrderedDict
 
 
-def find_min_max_latlong(train_df):
+def find_min_max_latlon(train_df, output_folder):
     max_lat, max_lon = -1000, -1000
     min_lat, min_lon = 1000, 1000
+    llats, llons = [],[]
     for index, row in train_df.iterrows():
-        train_points = row["points"]
-        train_points = eval(train_points)
-        max_lon = max([t[1] for t in train_points] + [max_lon])
-        min_lon = min([t[1] for t in train_points] + [min_lon])
-        max_lat = max([t[2] for t in train_points] + [max_lat])
-        min_lat = min([t[2] for t in train_points] + [min_lat])
-    return max_lat, max_lon, min_lat, min_lon
+        train_points = eval(row["points"])
+        lats = [t[2] for t in train_points]
+        lons = [t[1] for t in train_points]
+        llats.extend(lats)
+        llons.extend(lons)
+        max_lon = max(lons + [max_lon])
+        min_lon = min(lons + [min_lon])
+        max_lat = max(lats + [max_lat])
+        min_lat = min(lats + [min_lat])
+    plt.plot(llats,llons,"b.")
+    plt.savefig(os.path.join(output_folder,"data_minmax_grid_extent.png"))
+    plt.close()
+    return (max_lon,max_lat),(min_lon, min_lat),llats, llons #max_lat, max_lon, min_lat, min_lon
 
 
-def create_grid(number_of_cells, max_lat,max_lon,min_lat,min_lon, output_folder):
-    cell_lat_dist, cell_lon_dist = get_distance_per_cell(number_of_cells, min_lat, min_lon, max_lat, max_lon)
-    rows = create_grid_lines(number_of_cells[0], min_lat, cell_lat_dist)
-    columns=create_grid_lines(number_of_cells[1], min_lon, cell_lon_dist)
+def create_grid(number_of_cells, max_lonlat,min_lonlat,all_lats, all_lons, output_folder):
+    total_dists = [ m-n for (m,n) in zip(max_lonlat, min_lonlat)]
+    cell_dists = [m/n for (m,n) in zip(total_dists, number_of_cells)]
+    cell_lat_dist, cell_lon_dist = cell_dists
+
+    rows = create_grid_lines(number_of_cells[0], min_lonlat[1], cell_lat_dist)
+    columns=create_grid_lines(number_of_cells[1], min_lonlat[0], cell_lon_dist)
     cell_names = create_cell_names(number_of_cells)
 
-    visualize_grid(rows,columns,min_lat,min_lon,max_lat,max_lon, output_folder=output_folder)
-    return rows,columns,cell_names
+    visualize_grid(rows,columns,min_lonlat,max_lonlat,output_folder=output_folder)
+    visualize_grid(rows,columns,min_lonlat,max_lonlat,output_folder=output_folder, points=(all_lons, all_lats))
+    return (rows, columns, cell_names)
 
 
 def get_distance_per_cell(number_of_cells, min_lat, min_lon, max_lat, max_lon):
@@ -53,28 +65,75 @@ def create_cell_names(number_of_cells):
     return cell_names
 
 
-def replace_points(train_df, rows, columns, cell_names, output_file):
-    for index,row in train_df.iterrows():
-        train_points = row["points"]
+def map_to_features(data_df, grid, output_file):
+    rows, columns, cell_names = grid
+    raw_features, timestamps = map_to_features_pointwise(data_df, grid)
+    headername = "points" if "points" in data_df else "Trajectory"
+    maxlen = max([len(f) for f in raw_features])
+    current_feat = None
+    for i,(featlist,ts) in enumerate(zip(raw_features,timestamps)):
+        # squeeze duplicate points
+        sq_feats = []
+        for f,t in zip(featlist,ts):
+            #if f not in sq_feats:
+            if not ( sq_feats and f == sq_feats[-1]): # alternate check
+                sq_feats.append([t, f])
+        if len(sq_feats) < maxlen:
+            sq_feats += [[-1, 'C9999'] for _ in range(maxlen-len(sq_feats))]
+        data_df.at[i,headername] = sq_feats
+
+        # squeezed = list(OrderedDict.fromkeys(featlist))
+        # print("\t",featlist, "\n\t",squeezed)
+        # print("Num Cs, squeezed:",len(featlist),len(squeezed),"grid rowcols:",len(rows),len(columns))
+        # if len(squeezed) < maxlen:
+        #     squeezed += [['C9999'] for _ in range(maxlen-len(squeezed))]
+        # data_df.at[i,headername] = [ts] + squeezed
+    # make dataframe
+    if output_file is not None:
+        data_df.to_csv(output_file)
+    else:
+        return data_df
+
+def map_to_features_pointwise(data_df, grid):
+    rows, columns, cell_names = grid
+    # measure some statistics
+    grid_hist = {}
+    total_points = 0
+    numcells = (len(rows) + 1) * (len(columns) + 1)
+    for cc in cell_names:
+        for c in cc:
+            grid_hist['C' + str(c)] = 0
+
+    points_header = "points" if "points" in data_df else "Trajectory"
+    features, timestamps = [], []
+    for index,row in data_df.iterrows():
+        train_points = row[points_header]
         train_points = eval(train_points)
-        timestamps = []
-        for point in train_points:
-            timestamps.append(point[0])
+
+        ts = [p[0] for p in train_points]
+        timestamps.append(ts)
         train_lonlats = utils.idx_to_lonlat(train_points, format="tuples")
-        new_points = []
+        feature_list = []
         for i,lonlat in enumerate(train_lonlats):
-            new_point = []
             lon = lonlat[0]  # for columns
             lat = lonlat[1]  # for rows
-            lat_idx = find_index(rows, lat)
-            lon_idx = find_index(columns, lon)
-            cell_name = 'C'+cell_names[lat_idx][lon_idx]
-            new_point.append(timestamps[i])
-            new_point.append(cell_name)
-            new_points.append(new_point)
-        train_df.at[index, "points"] = new_points
-    train_df.to_csv(output_file)
+            row_idx = find_index(rows, lat)
+            col_idx = find_index(columns, lon)
+            cell_name = 'C'+cell_names[row_idx][col_idx]
+            # visualize_grid(rows,columns,None,None,[[lon],[lat]])
+            grid_hist[cell_name] += 1
+            total_points += 1
 
+            feature_list.append(cell_name)
+        features.append(feature_list)
+    # show stats
+    print()
+    print("Grid assignment frequencies of the total of %d points:" % total_points)
+    ssum = 0
+    for i, name in enumerate(grid_hist):
+        print(i,"/", numcells, name, grid_hist[name])
+        ssum += grid_hist[name]
+    return features, timestamps
 
 def find_index(points_list, point):
     count = 0
@@ -84,14 +143,13 @@ def find_index(points_list, point):
         count += 1
     return count
 
-
 # Auxiliary function, visualizes the grid created above
-def visualize_grid(rows, columns, min_lat=None, min_lon=None, max_lat=None, max_lon=None, points = [], cells = [], output_folder=""):
+def visualize_grid(rows, columns, min_lonlat=None,  max_lonlat=None, points = [], cells = [], output_folder=""):
     # visualize
-    min_lat = min(rows) if min_lat is None else min_lat
-    min_lon = min(columns) if min_lon is None else min_lon
-    max_lat = max(rows) if max_lat is None else max_lat
-    max_lon = max(columns) if max_lon is None else max_lon
+    min_lat = min(rows + points[1]) if min_lonlat is None else min_lonlat[1]
+    min_lon = min(columns + points[0]) if min_lonlat is None else min_lonlat[0]
+    max_lat = max(rows + points[1]) if max_lonlat is None else max_lonlat[1]
+    max_lon = max(columns + points[0]) if max_lonlat is None else max_lonlat[0]
 
     fig = plt.figure()
     plt.plot([min_lat, max_lat], [min_lon, min_lon], 'k');
@@ -102,10 +160,13 @@ def visualize_grid(rows, columns, min_lat=None, min_lon=None, max_lat=None, max_
         plt.plot([x, x], [min_lon, max_lon], 'r');
     for y in columns:
         plt.plot([min_lat, max_lat], [y, y], 'b');
-    for p in points:
-        plt.plot(p[1],p[0],".k")
+
+    if points:
+        plt.plot(points[1],points[0],".k")
+
     for p in cells:
         plt.plot(p[1],p[0],"*g")
+
     plt.xlabel("lat")
     plt.ylabel("lon")
     plt.savefig(os.path.join(output_folder, "grid.png"), dpi = fig.dpi)

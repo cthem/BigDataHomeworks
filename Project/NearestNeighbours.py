@@ -30,10 +30,8 @@ def calculate_nns(test_points, train_df, paropts=None, k=5):
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])
     # return the top 5
     print("Elapsed for parallelization: ", str(partype), numpar, " is:", utils.tictoc(tic))
-    print("Neighbours:")
     nearest_neighbours = nearest_neighbours[:k]
-    for neigh in nearest_neighbours:
-        print(neigh)
+    print("Neighbours:",[n[0] for n in nearest_neighbours])
     return nearest_neighbours
 
 

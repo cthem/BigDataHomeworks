@@ -5,6 +5,7 @@ import JourneyClassification as jcp
 import pandas as pd
 import utils
 import os
+import pickle
 
 
 def question_a1(output_folder, clean_file, test_file, paropts, k):
@@ -39,32 +40,58 @@ def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts):
 
 def question_b(train_file, number_of_cells, output_folder):
     # specify files
-    output_file = os.path.join(output_folder, "tripFeatures.csv")
+    grid_file = os.path.join(output_folder,"grid.pickle")
+    feature_file = os.path.join(output_folder, "tripFeatures.csv")
+    # read data and make the grid
     train_df = pd.read_csv(train_file)
-    max_lat, max_lon, min_lat, min_lon = gvp.find_min_max_latlong(train_df)
-    rows, columns, cell_names = gvp.create_grid(number_of_cells, max_lat, max_lon, min_lat, min_lon, output_folder=output_folder)
-    gvp.replace_points(train_df, rows, columns, cell_names, output_file)
-    return output_file
+    max_lonlat, min_lonlat, all_lats, all_lons = gvp.find_min_max_latlon(train_df, output_folder)
+    grid = gvp.create_grid(number_of_cells, max_lonlat, min_lonlat, all_lats, all_lons, output_folder=output_folder)
+    # save grid and transform data
+    with open(grid_file, "wb") as f:
+        pickle.dump(grid, f)
+    gvp.map_to_features(train_df, grid, feature_file)
+    return feature_file, grid_file
 
 
-def question_c(features_file, test_file, output_folder):
+def question_c(features_file, grid_file, test_file, output_folder, seed, classif_file, num_folds):
     df_features = pd.read_csv(features_file)
-    features, targets = jcp.preprocess_data(df_features)
-    num_folds = 5
+    features, jid_mapping, targets = jcp.preprocess_train_data(df_features, seed)
     classifiers = ["knn", "logreg", "randfor"]
     # classifiers = ["logreg"]
-    mean_accuracies = jcp.classify(features, targets, num_folds, classifiers, output_folder)
+    mean_accuracies = jcp.train(features, targets, num_folds, classifiers, output_folder)
 
     # print mean accuracy per classifier
+    print()
     for classifier in mean_accuracies:
         print(classifier, "accuracy train/val:", mean_accuracies[classifier])
-    impr_classifier = "logreg"
+
+    # select the logistic regression algorithm to beat the benchmark
+    impr_classifier_name = "logreg"
+    baseline_accuracy = mean_accuracies[impr_classifier_name][-1]
+    best_accuracy, best_classifier, best_technique = -1, None, None
     print()
-    print("Improving classification for classifier", impr_classifier)
-    mean_accuracies = jcp.improve_classification(features_file, num_folds, output_folder, impr_classifier)
+    print("Improving classification for classifier", impr_classifier_name)
+    mean_accuracies = jcp.improve_classification(features_file, num_folds, output_folder, impr_classifier_name, seed)
+
+    print()
+    print("Performance comparison:")
     # print updated accuracies
     for technique in mean_accuracies:
-        print(impr_classifier, ", technique",technique,", accuracy train/val:", mean_accuracies[technique])
+        accuracy, classifier = mean_accuracies[technique]
+        # get validation accuracy
+        accuracy = accuracy['logreg'][-1]
+        print(impr_classifier_name, ", technique",technique,", validation accuracy :", accuracy)
+        if best_accuracy < accuracy:
+            best_classifier = classifier
+            best_technique = technique
 
-    # run best classifier on test data, TODO
+    # run best classifier on the test data
+    # read and featurify data
+    test_data_df = pd.read_csv(test_file,delimiter=";")
+    with open(grid_file,"rb") as f:
+        grid = pickle.load(f)
+    test_features = gvp.map_to_features(test_data_df, grid, None)
+    test_features = jcp.preprocess_test_data(test_features)
+    jcp.test(best_classifier, best_technique, test_features, jid_mapping, classif_file)
+
 

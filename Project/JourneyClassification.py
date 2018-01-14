@@ -12,7 +12,7 @@ import utils
 import os
 
 
-def classify(features, targets, num_folds, classifiers, output_folder, filename_tag = "", classifier_obj = None):
+def train(features, targets, num_folds, classifiers, output_folder, filename_tag ="", classifier_obj = None):
     kf = KFold(n_splits = num_folds)
     folds_idxs = list(kf.split(features))
     trips_array = np.asarray(features)
@@ -54,12 +54,11 @@ def classify(features, targets, num_folds, classifiers, output_folder, filename_
     return mean_accuracies
 
 # TODO improve classification
-def preprocess_data(feature_df):
-    print("Preprocessing data for classification.")
+def preprocess_train_data(feature_df, seed):
+    print("Preprocessing training data")
     targets = []
     data = []
-    # TODO make an options dict bundle cardundle
-    seed = 123
+    # shuffle data
     feature_df = feature_df.sample(frac=1, random_state = seed).reset_index(drop=True)
     for index, row in feature_df.iterrows():
         targets.append(row["journeyId"])
@@ -69,8 +68,11 @@ def preprocess_data(feature_df):
         for point in train_points:
             points.append(point[1])
         data.append(points)
+
     # get maximum length of feature lists
     maxlen = len(max(data, key=lambda x: len(x)))
+    print("Padding training features to a max length of", maxlen)
+    # keep the numeric part of the text features
     data = [[int(d[1:]) for d in dlist] for dlist in data]
     # pad to the maximum length
     for i, datum in enumerate(data):
@@ -85,19 +87,35 @@ def preprocess_data(feature_df):
             num_ids[t] = len(num_ids)
         targets_nums.append(num_ids[t])
 
-    # count occurences
-    hist = []
-    for jid in num_ids:
-        occurences = sum([1 if t == jid else 0 for t in targets])
-        hist.append((jid, occurences))
+    # count instances per jid
+    jids = [j for j in num_ids]
+    counts = [targets_nums.count(num_ids[j]) for j in jids]
+    jids_sorted = sorted(zip(jids,counts), key = lambda x : x[1], reverse = True)
+    print("10 Jids with most data:")
+    for i in range(10):
+        print(i,":",jids_sorted[i])
 
-    # hist = sorted(hist, key=lambda x: x[1], reverse= True)
-    # print("Most frequent 5 jids:")
-    # for (jid, occ) in hist[:5]:
-    #     print(jid, ":", occ)
     print("Done preprocessing data")
-    return data, targets_nums
+    return data, num_ids, targets_nums
 
+def preprocess_test_data(feature_df):
+    print("Preprocessing test data")
+    data, ids = [], []
+    for index, row in feature_df.iterrows():
+        ids.append(row["Test_Trip_ID"])
+        data.append([r[1] for r in row["Trajectory"]])
+
+    # get maximum length of feature lists
+    maxlen = len(max(data, key=lambda x: len(x)))
+    print("Padding test features to a max length of", maxlen)
+    # keep the numeric part of the text features
+    data = [[int(d[1:]) for d in dlist] for dlist in data]
+    # pad to the maximum length
+    for i, datum in enumerate(data):
+        if len(datum) < maxlen:
+            data[i] = datum + [3 for _ in range(maxlen - len(datum))]
+
+    return data
 
 def knn_classification(train, val, k):
     # folds contains 10 tuples (training and test sets)
@@ -118,14 +136,15 @@ def logreg_classification(train, val, lr_classifier = None):
         lr_classifier = LogisticRegression()
     lr_classifier.fit(train[0], train[1])
 
+    res_prob = lr_classifier.predict_proba(train[0])
+    res = np.argmax(res_prob, axis=1)
+    accTrain =  accuracy_score(train[1], res)
+
     # get prediction by probabilty argmax for the predicted class
     res_prob = lr_classifier.predict_proba(val[0])
     res = np.argmax(res_prob, axis=1)
     accVal =  accuracy_score(val[1], res)
 
-    res_prob = lr_classifier.predict_proba(train[0])
-    res = np.argmax(res_prob, axis=1)
-    accTrain =  accuracy_score(train[1], res)
     return accTrain, accVal
 
 
@@ -141,11 +160,11 @@ def randfor_classification(train, val):
 
 
 # test file in the same format as the features file
-def improve_classification(features_file, num_folds, output_folder, classifier):
+def improve_classification(features_file, num_folds, output_folder, classifier, seed):
     print()
     print("Reading features:",features_file)
     train_df = pd.read_csv(features_file)
-    grid_features, targets = preprocess_data(train_df)
+    grid_features, jid_mapping, targets = preprocess_train_data(train_df, seed)
     # try various techniques for improvement
     mean_accuracies = {}
 
@@ -154,9 +173,10 @@ def improve_classification(features_file, num_folds, output_folder, classifier):
     for norm in norms:
         tag = "norm_%s" % norm
         print("\nTrying strategy: %s" % tag, end='')
+        classifier_obj = LogisticRegression()
         grid_features = sklearn.preprocessing.normalize(grid_features, norm = norm, copy=False)
-        mean_acc = classify(grid_features, targets, num_folds,classifier,output_folder, tag)
-        mean_accuracies[tag] = mean_acc
+        mean_acc = train(grid_features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
+        mean_accuracies[tag] = (mean_acc, classifier_obj)
 
     # try various regularization strengths
     Cs = [0.2, 0.5 , 1.5, 2.0]
@@ -164,10 +184,35 @@ def improve_classification(features_file, num_folds, output_folder, classifier):
         tag = "C_%1.3f" % c
         print("\nTrying strategy: %s" % tag, end='')
         classifier_obj = LogisticRegression(C=c)
-        mean_acc = classify(grid_features, targets, num_folds,classifier,output_folder, tag, classifier_obj=classifier_obj)
-        mean_accuracies[tag] = mean_acc
+        mean_acc = train(grid_features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
+        mean_accuracies[tag] = (mean_acc, classifier_obj)
 
     return mean_accuracies
+
+
+def test(logreg_object, best_technique, features, jid_mapping, output_file):
+    jids = [j for j in jid_mapping]
+    numeric_ids = [jid_mapping[j] for j in jids]
+    if best_technique.startswith("norm"):
+        norm = float(best_technique.split("_")[-1])
+        features = sklearn.preprocessing.normalize(features, norm = norm, copy=False, classifier_obj=logreg_object)
+
+    # classify
+    res_prob = logreg_object.predict_proba(features)
+    res = np.argmax(res_prob, axis=1)
+    # write result
+    with open(output_file, "w") as f:
+        lines = []
+        lines.append(["Test_Trip_ID\tPredicted_JourneyPatternID"])
+        for i,r in enumerate(res):
+            jid = jids[numeric_ids.index(r)]
+            lines.append("%d\t%s" % (i,jid))
+        f.writelines(lines)
+
+
+
+
+
 
 def compare_with_baseline(baseline):
 
