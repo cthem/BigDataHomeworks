@@ -117,7 +117,7 @@ def write_group_gml(lonlats_tuplelists, outpath, colors=None):
         colors = ['b' for _ in lonlats_tuplelists]
     for idx,pts in enumerate(lonlats_tuplelists):
         # expects input in lats, longs
-        gmap.plot(pts[1], pts[0], colors[idx], edge_width=5)
+        gmap.plot(pts[1], pts[0], colors[idx],edge_width=5)
     print("Writing plot", outpath)
     gmap.draw(outpath)
 

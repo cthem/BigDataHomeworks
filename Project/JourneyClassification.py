@@ -201,20 +201,12 @@ def test(logreg_object, best_technique, features, jid_mapping, output_file):
     res_prob = logreg_object.predict_proba(features)
     res = np.argmax(res_prob, axis=1)
     # write result
+    print("Writing results on",output_file)
     with open(output_file, "w") as f:
         lines = []
-        lines.append(["Test_Trip_ID\tPredicted_JourneyPatternID"])
+        lines.append("Test_Trip_ID\tPredicted_JourneyPatternID")
         for i,r in enumerate(res):
             jid = jids[numeric_ids.index(r)]
             lines.append("%d\t%s" % (i,jid))
         f.writelines(lines)
-
-
-
-
-
-
-def compare_with_baseline(baseline):
-
-    pass
 

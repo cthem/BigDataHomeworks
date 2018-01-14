@@ -68,6 +68,7 @@ def question_c(features_file, grid_file, test_file, output_folder, seed, classif
     # select the logistic regression algorithm to beat the benchmark
     impr_classifier_name = "logreg"
     baseline_accuracy = mean_accuracies[impr_classifier_name][-1]
+
     best_accuracy, best_classifier, best_technique = -1, None, None
     print()
     print("Improving classification for classifier", impr_classifier_name)
@@ -80,18 +81,23 @@ def question_c(features_file, grid_file, test_file, output_folder, seed, classif
         accuracy, classifier = mean_accuracies[technique]
         # get validation accuracy
         accuracy = accuracy['logreg'][-1]
-        print(impr_classifier_name, ", technique",technique,", validation accuracy :", accuracy)
+        print(impr_classifier_name, ", technique",technique,", validation accuracy :", accuracy,
+              "change over baseline: %2.2f%%" % ((accuracy-baseline_accuracy) / baseline_accuracy * 100))
         if best_accuracy < accuracy:
             best_classifier = classifier
             best_technique = technique
 
     # run best classifier on the test data
     # read and featurify data
+    print("Reading test data...")
     test_data_df = pd.read_csv(test_file,delimiter=";")
     with open(grid_file,"rb") as f:
         grid = pickle.load(f)
+    print("Transforming test data to features...")
     test_features = gvp.map_to_features(test_data_df, grid, None)
     test_features = jcp.preprocess_test_data(test_features)
-    jcp.test(best_classifier, best_technique, test_features, jid_mapping, classif_file)
+    print("Running test on",best_classifier,"-",best_technique)
+    jcp.test(impr_classifier_name, best_technique, test_features, jid_mapping, classif_file)
+    print("Done!")
 
 

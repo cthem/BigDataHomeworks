@@ -18,7 +18,7 @@ def find_min_max_latlon(train_df, output_folder):
         min_lon = min(lons + [min_lon])
         max_lat = max(lats + [max_lat])
         min_lat = min(lats + [min_lat])
-    plt.plot(llats,llons,"b.")
+    plt.plot(llons,llats,"b.")
     plt.savefig(os.path.join(output_folder,"data_minmax_grid_extent.png"))
     plt.close()
     return (max_lon,max_lat),(min_lon, min_lat),llats, llons #max_lat, max_lon, min_lat, min_lon
@@ -69,26 +69,18 @@ def map_to_features(data_df, grid, output_file):
     rows, columns, cell_names = grid
     raw_features, timestamps = map_to_features_pointwise(data_df, grid)
     headername = "points" if "points" in data_df else "Trajectory"
-    maxlen = max([len(f) for f in raw_features])
-    current_feat = None
+    maxlen = -1
     for i,(featlist,ts) in enumerate(zip(raw_features,timestamps)):
         # squeeze duplicate points
         sq_feats = []
         for f,t in zip(featlist,ts):
-            #if f not in sq_feats:
-            if not ( sq_feats and f == sq_feats[-1]): # alternate check
+            if (not sq_feats) or (f not in [ v[-1] for v in sq_feats]): # alternate check
+            # if (not sq_feats) or (f != sq_feats[-1][-1]): # alternate check
                 sq_feats.append([t, f])
-        if len(sq_feats) < maxlen:
-            sq_feats += [[-1, 'C9999'] for _ in range(maxlen-len(sq_feats))]
+        if len(sq_feats) > maxlen:
+            maxlen = len(sq_feats)
         data_df.at[i,headername] = sq_feats
-
-        # squeezed = list(OrderedDict.fromkeys(featlist))
-        # print("\t",featlist, "\n\t",squeezed)
-        # print("Num Cs, squeezed:",len(featlist),len(squeezed),"grid rowcols:",len(rows),len(columns))
-        # if len(squeezed) < maxlen:
-        #     squeezed += [['C9999'] for _ in range(maxlen-len(squeezed))]
-        # data_df.at[i,headername] = [ts] + squeezed
-    # make dataframe
+    print("Max squeezed feature length:",maxlen)
     if output_file is not None:
         data_df.to_csv(output_file)
     else:
@@ -144,7 +136,7 @@ def find_index(points_list, point):
     return count
 
 # Auxiliary function, visualizes the grid created above
-def visualize_grid(rows, columns, min_lonlat=None,  max_lonlat=None, points = [], cells = [], output_folder=""):
+def visualize_grid_gml_print(rows, columns, min_lonlat=None,  max_lonlat=None, points = [], cells = [], output_folder=""):
     # visualize
     min_lat = min(rows + points[1]) if min_lonlat is None else min_lonlat[1]
     min_lon = min(columns + points[0]) if min_lonlat is None else min_lonlat[0]
@@ -156,6 +148,7 @@ def visualize_grid(rows, columns, min_lonlat=None,  max_lonlat=None, points = []
     plt.plot([min_lat, max_lat], [max_lon, max_lon], 'k');
     plt.plot([min_lat, min_lat], [min_lon, max_lon], 'k');
     plt.plot([max_lat, max_lat], [min_lon, max_lon], 'k');
+
     for x in rows:
         plt.plot([x, x], [min_lon, max_lon], 'r');
     for y in columns:
@@ -169,5 +162,34 @@ def visualize_grid(rows, columns, min_lonlat=None,  max_lonlat=None, points = []
 
     plt.xlabel("lat")
     plt.ylabel("lon")
+    plt.savefig(os.path.join(output_folder, "grid.png"), dpi = fig.dpi)
+    plt.close()
+
+def visualize_grid(rows, columns, min_lonlat=None,  max_lonlat=None, points = [], cells = [], output_folder=""):
+    # visualize
+    min_lat = min(rows + points[1]) if min_lonlat is None else min_lonlat[1]
+    min_lon = min(columns + points[0]) if min_lonlat is None else min_lonlat[0]
+    max_lat = max(rows + points[1]) if max_lonlat is None else max_lonlat[1]
+    max_lon = max(columns + points[0]) if max_lonlat is None else max_lonlat[0]
+
+    fig = plt.figure()
+    plt.plot([min_lon, min_lon], [min_lat, max_lat], 'k');
+    plt.plot([max_lon, max_lon], [min_lat, max_lat], 'k');
+    plt.plot([min_lon, max_lon], [min_lat, min_lat], 'k');
+    plt.plot([min_lon, max_lon], [max_lat, max_lat], 'k');
+
+    for x in rows:
+        plt.plot([min_lon, max_lon], [x, x], 'r');
+    for y in columns:
+        plt.plot([y, y], [min_lat, max_lat],'b');
+
+    if points:
+        plt.plot(points[0],points[1],".k")
+
+    for p in cells:
+        plt.plot(p[0],p[1],"*g")
+
+    plt.xlabel("lon")
+    plt.ylabel("lat")
     plt.savefig(os.path.join(output_folder, "grid.png"), dpi = fig.dpi)
     plt.close()
