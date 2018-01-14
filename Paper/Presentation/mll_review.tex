@@ -1,20 +1,6 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Beamer Presentation
-% LaTeX Template
-% Version 1.0 (10/11/12)
-%
-% This template has been downloaded from:
-% http://www.LaTeXTemplates.com
-%
-% License:
-% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 %	PACKAGES AND THEMES
-%----------------------------------------------------------------------------------------
-
+%-------------------------------------------------------------------------------------
 \documentclass{beamer}
 \setbeamercovered{transparent}
 \setbeamercolor{local structure}{fg=black}
@@ -86,18 +72,17 @@
 \captionsetup{font=scriptsize,labelfont=scriptsize}
 \usepackage{amssymb}
 \usepackage{bm}
-\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}                                                                                                                 
-
-%----------------------------------------------------------------------------------------
+\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}                                                                                                    
+%-------------------------------------------------------------------------------------
 %	TITLE PAGE
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
 \title[Large-Scale Data Analysis Techniques]{A Review on Multi-Label Learning Algorithms} % The short title appears at the bottom of every slide, the full title is only on the title page
 
 \author[Sissy Themeli, Nikiforos Pittaras]{Min-Ling Zhang and Zhi-Hua Zhou} % Your name
 \institute[DI-UOA] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 {
-	IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING\\ % Your institution for the title page
+	IEEE Transactions On Knowledge And Data Engineering\\ % Your institution for the title page
 	\medskip
 }
 \date{\today} % Date, can be changed to a custom date
@@ -115,11 +100,10 @@
 %\setbeamercolor{subsection in toc}{fg=black}
 \end{frame}
 
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 %	PRESENTATION SLIDES
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------
 
-%------------------------------------------------
 \section{Introduction} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
 \subsection{Problem Definition}
 \begin{frame}
@@ -347,7 +331,6 @@ Pros \& cons:
 	
 \end{itemize}
 \end{frame}
-
 %------------------------------------------------
 \begin{frame}
 \frametitle{Multi-label Decision Tree}
@@ -379,29 +362,67 @@ ranking loss and enabled to handle nonlinear cases with kernel tricks
 $b_j \in \mathbb{R}$ are the weight vector and bias
 	\item Rank-SVM defines the learning system's
 margin on ($x_i$ , $Y_i$), considering its ranking ability on the example’s relevant/irrelevant labels
+
+TODO!!!
 \end{itemize}
+Pros \& cons:
+\begin{itemize}
+	\item Benefits from kernels to handle non-linear classification problems
+	\item Multiple kernel learning techniques can beemployed to learn from multi-label data
+\end{itemize}
+
 \end{frame}
 %------------------------------------------------
 \begin{frame}
 \frametitle{Collective Multi-Label Classifier}
 \begin{itemize}
-	\item 
+	\item Second-order approach algorithm, that adapts maximum entropyprinciple \item Correlationsamong labels are encoded as constraints that the resulting
+	distribution must satisfy
 	\item 
 	\item 
 	\item 
 \end{itemize}
+Pros \& cons:
+\begin{itemize}
+	\item More general than Rank-SVM, that only considers relevant-irrelevant label pairs
+\end{itemize}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
+\frametitle{\insertsection : Summary}
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale = 0.45]{images/summary.png}
+		\caption{Summary of Representative Multi-Label Learning Algorithms}
+	\end{center}
+\end{figure}
 \end{frame}
 %------------------------------------------------
 \section{Related Learning Settings}
 %------------------------------------------------
-
 \begin{frame}
 \frametitle{\insertsection}
 \begin{itemize}
-	\item 
-	\item 
-	\item 
-	\item 
+	\item Multi-instance learning
+	\begin{itemize}
+		\item Each example described by a bag of instances while associated with a single/binary label
+		\item Models the object’s ambiguities in input space
+	\end{itemize}
+	\item Ordinal classification
+	\begin{itemize}
+		\item Natural ordering of class labels and their relevance
+		\item Vague (ordinal) insteadof definite judgment on the label relevance
+	\end{itemize}
+	\item Multi-task learning
+	\begin{itemize}
+		\item Multiple tasks are trained in parallel, usually small number of tasks
+		\item Traininginformation of related tasks used as an inductive bias to improve the generalization performance of other tasks
+		\item Taskscan be in the same or different feature space
+	\end{itemize}
+	\item Data streams classification
+	\begin{itemize}
+		\item Real-world objects are generated online and processed in a real-time manner
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -409,9 +430,32 @@ margin on ($x_i$ , $Y_i$), considering its ranking ability on the example’s re
 \section{Conclusion}
 %------------------------------------------------
 \begin{frame}
+\Huge{\centerline{Conclusion}}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
+\frametitle{\insertsection : Online resources}
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale = 0.47]{images/online.png}
+		\caption{Online Resources for Multi-Label Learning}
+	\end{center}
+\end{figure}
+\end{frame}
+%------------------------------------------------
+\begin{frame}
 \frametitle{\insertsection}
+Summary
 \begin{itemize}
-	\item 
+	\item ML learning problem definition 
+	\item ML learning representative algorithms
+	\item Related learning settings
+\end{itemize}
+
+Open research problems
+\begin{itemize}
+	\item Full understanding and appropriate usage of label correlations (might be asymetric or local)
+	\item Conduct thorough experimental studies toget insights on the pros and cons of different multi-labellearning algorithms
 \end{itemize}
 \end{frame}
 
@@ -419,6 +463,7 @@ margin on ($x_i$ , $Y_i$), considering its ranking ability on the example’s re
 \section{The end}
 \begin{frame}
 \Huge{\centerline{Thank you}}
+\Huge{\centerline{Questions?}}
 \end{frame}
 %------------------------------------------------
 \end{document} 
