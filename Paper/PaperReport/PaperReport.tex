@@ -1,0 +1,94 @@
+\documentclass[12pt]{report}
+\usepackage[a4paper]{geometry}
+\usepackage[myheadings]{fullpage}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx, wrapfig, subcaption, setspace, booktabs}
+\usepackage[T1]{fontenc}
+\usepackage[font=small, labelfont=bf]{caption}
+\usepackage{fourier}
+\usepackage[protrusion=true, expansion=true]{microtype}
+\usepackage[english]{babel}
+\usepackage{sectsty}
+\usepackage{url, lipsum}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{todonotes}
+\graphicspath{{images/}}
+
+\lstset{
+	basicstyle=\ttfamily,
+	columns=fullflexible,
+	frame=single,
+	breaklines=true,
+	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
+\onehalfspacing
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+%-------------------------------------------------------------------------------
+% HEADER & FOOTER
+%-------------------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\setlength\headheight{15pt}
+\fancyfoot[R]{Page \thepage\ of \pageref{LastPage}}
+%-------------------------------------------------------------------------------
+% TITLE PAGE
+%-------------------------------------------------------------------------------
+
+\begin{document}
+	
+	\title{ \normalsize \textsc{Large-Scale Data Analysis Techniques}
+		\\ [2.0cm]
+		\HRule{0.5pt} \\
+		\LARGE \textbf{\uppercase{A Review on Multi-Label Learning Algorithms}}
+		\HRule{2pt} \\ [0.5cm]
+		\normalsize \today \vspace*{5\baselineskip}}
+	
+	\date{}
+	\author{
+		Nikiforos Pittaras, M1422\\
+		Chrysoula Themeli, M1423 \\ 
+		National and Kapodistrian University of Athens\\
+		Department of Informatics and Telecommunications }
+	
+	\maketitle
+	\tableofcontents
+	\listoffigures
+	\newpage
+	
+	%-------------------------------------------------------------------------------
+	% Section title formatting
+	\sectionfont{\scshape}
+	%-------------------------------------------------------------------------------
+	
+	%-------------------------------------------------------------------------------
+	% Summary of the paper
+	%-------------------------------------------------------------------------------
+	
+	\section*{Summary}
+	\addcontentsline{toc}{section}{Summary}
+	
+	
+	
+	%\begin{figure}[H]
+	%	\centering
+	%	\includegraphics[width=0.8\textwidth]{semsearch.png}
+	%	\caption{An overview of the SemSearch architecture}
+	%	\centering
+	%\end{figure}
+
+	%-------------------------------------------------------------------------------
+	% REFERENCES
+	%-------------------------------------------------------------------------------
+	\newpage
+	\addcontentsline{toc}{section}{Bibliography}
+	\begin{thebibliography}{10}
+		\bibitem{intelligent} 
+		Madhu, G., Dr A. Govardhan, and Dr TV Rajinikanth. "Intelligent semantic web search engines: a brief survey." \url{https://arxiv.org/pdf/1102.0831.pdf}
+	\end{thebibliography}
+\end{document}
