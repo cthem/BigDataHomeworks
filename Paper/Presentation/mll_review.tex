@@ -105,7 +105,7 @@
 %-------------------------------------------------------------------------------------
 
 \section{Introduction} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
-\subsection{Problem Definition}
+\subsection{Multi-label learning}
 %------------------------------------------------
 \begin{frame}
 \Huge{\centerline{Introduction}}
@@ -113,36 +113,30 @@
 %------------------------------------------------
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
-Single-label supervised learning
+Applied to supervised classification
 \begin{itemize}
-\item Applied to classification
-\item Supervised: Dataset $\{ (x_i, y_i)\}, i = 1, \dots N, x \in X, y \in Y$
-\item Goal is to learn a model $f: X \rightarrow Y$
+\item Given input data and labels, goal is to learn a model $f: X \rightarrow Y$ 
+\item $f(x_i, y_i) = r$ where $r\in \mathbb{R}$ is the confidence that $y_i$ characterizes $x_i$
+\item Assume that $x_i$ belongs to $y_i$ if $r \ge $ $t(x_i)$
+\begin{itemize}
+  \item $t(\cdot)$ can be a predetermined constant function or learned from $X$
+\end{itemize}
 \end{itemize}
 
-Multi-label supervised learning
+Single-label learning
 \begin{itemize}
-\item Multiple labels per instance: $\{ (x_i, \bm{y}_i)\}, i = 1, \dots N, x \in X, \bm{y} \in \mathbb{P}(Y)$
-\item Learn a model $f: X \times Y \rightarrow r$ where $r\in \mathbb{R}$ is the confidence that $y_i$ characterizes $x_i$
-\item For classification, assume that $x_i$ belongs to $y_i$ if $r \ge $ $t(x_i)$
-
-\begin{itemize}
-\item $t(\cdot)$ can be a predetermined constant function or learned from $X$
+	\item Dataset $\{ (x_i, y_i)\}, i = 1, \dots N, x \in X, y \in Y=\{y_1,\dots,y_q\}$
 \end{itemize}
 
+Multi-label learning
+\begin{itemize}
+\item Multi-label dataset: Multiple labels per instance. $\{ (x_i, \bm{y}_i)\}, i = 1, \dots N, x \in X, \bm{y} \in \mathbb{P}(Y)$
+% \item Learn a model $f: X \times Y \rightarrow r$
+
 \end{itemize}
-TODO: Include stuff about multi-labeled dataset characterization?
+%TODO: Include stuff about multi-labeled dataset characterization?
 \end{frame}
 %------------------------------------------------
-\subsection{Related Work}
-\begin{frame}
-\frametitle{\insertsection : \insertsubsection}
-\begin{itemize}
-\item Madjarov, Gjorgji, et al. "An extensive experimental comparison of methods for multi-label learning." Pattern Recognition 45.9 (2012): 3084-3104
-\item Tsoumakas, Grigorios, and Ioannis Katakis. "Multi-label classification: An overview." International Journal of Data Warehousing and Mining 3.3 (2006)
-\item Zhang, Min-Ling, and Kun Zhang. "Multi-label learning by exploiting label dependency." Proceedings of the 16th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2010
-\end{itemize}
-\end{frame}
 %------------------------------------------------
 \subsection{Algorithm Strategies}
 \begin{frame}
@@ -157,8 +151,8 @@ This work examines algorithms grouped in three broad categories:
 \begin{enumerate}
 \item First-order strategies
 \begin{itemize}
-\item Transform multi-labeled problem to multiple, single-label problems
 \item Ignore label correlations
+\item Often transform M-L problem to multiple, single-label problems
 \item Simple, scalable, suboptimal
 \end{itemize}
 \item Second-order strategies
@@ -181,6 +175,8 @@ This work examines algorithms grouped in three broad categories:
 \subsection{Evaluation Metrics}
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
+Extension of single-label metrics to the M-L case.
+
 Two categories and perspectives:
 \begin{itemize}
 \item \emph{Example-based: }Evaluates multi-labelled performance on each example, extrapolate to whole dataset
@@ -197,8 +193,8 @@ Two categories and perspectives:
 \item Classification perspective: Macro/Micro averaging for single-label example-based, classification-based measures
 \item Ranking perspective: Macro/Micro averaging for AUC
 \end{itemize}
+\item[\rightarrow] Classifiers should aim to optimize \emph{multiple} metrics
 \end{itemize}
-Classifiers should aim to optimize \emph{multiple} metrics
 \end{frame}
 %------------------------------------------------
 \section{Multi-label Learning Algorithms}
@@ -230,7 +226,7 @@ Group algorithms in two categories:
 
 Include algorithms that:
 \begin{itemize}
-\item Has broad, unique characteristics
+\item Has broad, noteworthy or unique characteristics
 \item Has primitive impact, i.e. leads to a number follow-up related methods
 \item Is influential and highly-cited in multi-label learning
 \end{itemize}
@@ -261,7 +257,7 @@ Include algorithms that:
 \item Cross-train each binary classifier $h_i(x)$ on its respective dataset
 
 \item Predict labels of an unseen $x$ by evaluating each classifier $h_i(x)$
-\item Output labels where  $h_i(x) > 0$ or $\underset{1 \geq i \geq q}{argmax} \{h_i(x))\}$, if none
+\item Assign label $y_i$ according to $h_i(x)$ and the thresholding/ranking scheme 
 \end{itemize}
 
 Pros \& cons:
@@ -279,13 +275,14 @@ Pros \& cons:
 \begin{itemize}
 \item A permutation function $f_p$ is used to order $Y$
 \item Transform into a \emph{chain} of binary classification problems
-\item Enrich representations at each step $j$ by concatenating each $x_i$ with the confidence of the $j$-th classifier
+\item Enrich representations at step $j$ by concatenating each $x_i$ with the confidence of preceeding $1,\dots,j-1$-th classifiers
 \item Predict relevant labels for unknown instances by iteratively traversing the classifier chain
 \end{itemize}
+todo prediction
 
 Pros \& cons:
 \begin{itemize}
-\item Higher-order method: exploitation of label correlations, but in a random manner
+\item Higher-order method: exploitation of label correlations to a degree, but in a random manner
 \item Highly sensitive to $f_p$. Ensemble schemes attempt to overcome it.
 \item Iterative operation prevents parallel implementation
 \end{itemize}
@@ -297,10 +294,11 @@ Pros \& cons:
 \begin{itemize}
 \item Transform into a label pairwise comparison ranking problem
 \item For $q$ labels, generate $q(q-1)/2$ binary classifiers by pairwise comparison
-\item Construct training sets $D_{jk} : \{x_i | y_j \in Y_i \oplus y_k \in Y_i\}$
+\item Construct training sets $D_{jk} : \{x_i, Y_i | y_j \in Y_i \oplus y_k \in Y_i\}$
 \item For an unknown instance, all classifiers' votes are aggregated and ranked
 \item A virtual label $y_v$ serves as the artificial splitting point between relevant and irrelevant labels
 \end{itemize}
+todo how it works exactly cardum
 Pros \& cons:
 \begin{itemize}
 \item Second-order approach algorithm. One-vs-one scheme.
@@ -316,13 +314,13 @@ Pros \& cons:
 \frametitle{Random k-Labelsets}
 \begin{itemize}
 \item Decompose to an ensemble of multi-class classification problems
-\item Each component targets a random subset of $Y$, classified with Label Powerset (LP) techniques:
+\item Each component targets a random subset of $\mathbb{P}(Y)$ that appears in $X$, classified with Label Powerset (LP) techniques:
 \begin{itemize}
 \item Transform to single-label data by treating each distinct labelset as a new class
-\item Each example is reassigned with the mapped single-label participating in multi-class classifier induction
-\item For unknown $x$, counts the maximum and actual number of votes
-\item Label set is relevant when the number of votes exceeds half of the max
+\item Each example is reassigned with the new mapped class and classified through regular single-label classification
+\item M-L classify $x$ with $y_i$ when the votes received for $y_i$ from the ensemble exceed half the max possible it can get
 \end{itemize}
+todo how does each LP classify, k-labelsets
 \end{itemize}
 Pros \& cons:
 \begin{itemize}
@@ -494,6 +492,17 @@ Future goals:
 \begin{itemize}
 \item Holy grail: Formal characterization on the underlying concept / mechanism on the appropriate usage of label correlations, especially on large output spaces
 \item Thorough experimental comparative study to discover pros and cons of different multi-label learning algorithms
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\subsection{Related Work}
+\begin{frame}
+\frametitle{\insertsection : \insertsubsection}
+\begin{itemize}
+\item Madjarov, Gjorgji, et al. "An extensive experimental comparison of methods for multi-label learning." Pattern Recognition 45.9 (2012): 3084-3104
+\item Tsoumakas, Grigorios, and Ioannis Katakis. "Multi-label classification: An overview." International Journal of Data Warehousing and Mining 3.3 (2006)
+\item Zhang, Min-Ling, and Kun Zhang. "Multi-label learning by exploiting label dependency." Proceedings of the 16th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2010
 \end{itemize}
 \end{frame}
 
