@@ -14,6 +14,8 @@
 \usepackage{listings}
 \usepackage{float}
 \usepackage{todonotes}
+\usepackage{stmaryrd}
+\usepackage{amsfonts}
 \graphicspath{{images/}}
 
 \lstset{
@@ -70,25 +72,88 @@
 	% Summary of the paper
 	%-------------------------------------------------------------------------------
 	
-	\section*{Summary}
-	\addcontentsline{toc}{section}{Summary}
+	\section*{Introduction}
+	\addcontentsline{toc}{section}{Introduction}
 	
+	\subsection*{Multi-label learning}
+	\addcontentsline{toc}{subsection}{Multi-label learning}
+	The paper "A Review on Multi-Label Learning Algorithms" analyzes the multi-label learning field in supervised classification. Supervised classification trains a model $f: X \rightarrow Y$ and for each pair $f(x_i,y_i)$, the model gives as output a number that represents the confidence that label $y_i$ characterizes $x_i$. Traditional single-label learning maps an example to only one label, ignoring completely multiple semantics that real-objects usually have. On the other hand, multi-label learning allows an example/instance $x_i$ to be mapped to more than one label. However, this results to an exponentially growing search space, since search space might include any number of subsets from the powerset of label-set $Y$ ($|\mathbb{P(Y)}|$).
 	
+	One straightforward solution, is to exploit label correlations. Real-objects are usually characterized by similar concepts. For example, if an article is characterized by label "football" it is very likely that it will be also characterized by the term "sports", while label "science" seems to be irrelevant. In order to exploit such kind of label correlations, three different algorithm strategies were developed:
 	
+	\begin{itemize}
+		\item \textbf{First-order strategies: }These algorithms ignore label correlations and perform a "one-vs-all" strategy. They often transform a multi-label problem into multiple single-label problems. Algorithms of this category are simple, scalable, have the possibility of parallel implementation, but on the other hand their results are suboptimal.
+		\item \textbf{Second-order strategies: }In this category, relevant algorithms consider pairwise label correlations, having a good trade-off between generalization performance and scalability. However, there are still deficiencies in some real-world applications.
+		\item \textbf{High-order strategies: }These algorithms capture even more complicated label correlations and they have strong modeling capabilities. But, on the other hand, they are computationally more demanding and less scalable.
+	\end{itemize}
+	
+	\subsection*{Evaluation metrics}
+	\addcontentsline{toc}{subsection}{Evaluation metrics}
+	One other issue that worths to be mentioned are the evaluation metrics. Since multi-label problems are more complicated, it is necessary to extend existing sigle-label metrics in order to fit the multi-label case. There are two categories of metrics, divided in two perspectives:
+	\begin{itemize}
+		\item \textbf{Example-based: }This kind of metrics evaluate multi-labeled performance on each example and then the result is spread to the whole dataset. The metrics are divided into two perspectives:
+		\begin{itemize}
+			\item \textbf{Classification:} 
+			\begin{itemize}
+				\item \emph{Subset Accuracy: } $subsetacc(h) = \frac{1}{p} \sum_{i=1}^p \llbracket h(x_i) = Y_i \rrbracket$
+				\item \emph{Hamming Loss: }$hloss(h) = \frac{1}{p} \sum_{i=1}^{p} [h(x_i)\Delta Y_i] $
+				\item \emph{Accuracy:} $Accuracy_{exam}(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{|Y_i \cup h(x_i)|}$
+				\item \emph{Precision: }$Precision_{exam}(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{h(x_i)|}$
+				\item \emph{Recall: }$Recall_{exam}(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{|Y_i}$
+				\item \emph{$F^ \beta$ -metric: } $F^ \beta _{exam} (h) = \frac{(1+ \beta ^2) \cdot Precision_{exam}(h) \cdot Recall_{exam}(h)}{\beta ^2 \cdot Precision_{exam}(h) + Recall_{exam}(h)}$
+			\end{itemize}
+			\item \textbf{Ranking:}
+			\begin{itemize}
+				\item \emph{One-error: }$one-error(f) = \frac{1}{p} \llbracket [argmax_{y \in Y}f(x_i,y)] \notin Y_i \rrbracket$
+				\item \emph{Coverage: } $coverage(f) = \frac{1}{p} \sum_{i=1}^{p} max_{y \in Y_i} rank_f(x_i,y) - 1$
+				\item \emph{Ranking loss: }$rloss(f) = \frac{1}{p} \sum_{i=1}^{p} $ \todo{complete it}
+				\item \emph{Average Precision: } \todo{average precision}
+			\end{itemize}
+		\end{itemize}
+		\item \textbf{Label-based: }
+		\begin{itemize}
+			\item \todo{label based metrics}
+		\end{itemize}
+	\end{itemize}
 	%\begin{figure}[H]
 	%	\centering
 	%	\includegraphics[width=0.8\textwidth]{semsearch.png}
 	%	\caption{An overview of the SemSearch architecture}
 	%	\centering
 	%\end{figure}
+	
+	\section*{Multi-label learning algorithms}
+	\addcontentsline{toc}{section}{Multi-label learning algorithms}
+	In this paper, 8 representative multi-label algorithms are presented and analyzed, seleceted with respect to below criteria:
+	\begin{itemize}
+		\item[$\checkmark$] Broad spectrum (unique characteristics)
+		\item[$\checkmark$] Primitive impact (lead to a number follow-up related methods)
+		\item[$\checkmark$] Favorable influence (highly-cited) 
+	\end{itemize}
+	
+	The algorithms to be presented are grouped in two categories:
+	\begin{itemize}
+		\item \textbf{Problem Transformation Methods: }Algorithms of this category, in order to handle a multi-label problem, transform it into other well-established learning scenarios ("Fit data to algorithm" philosophy)
+		\item \textbf{Algorithm Adaptation Methods: }Here, algorithms adapt popular learning techniques to deal with multi-label data directly ("Fit algorithm to data" philosophy)
+	\end{itemize}
 
+	\subsection*{Problem Transformation Methods}
+	\addcontentsline{toc}{subsection}{Problem Transformation Methods}
+	
+	\subsubsection*{Binary Relevance}
+	\addcontentsline{toc}{subsubsection}{Binary Relevance}
+	This algorithm decomposes the multi-learning problem into $q$ independent binary classification problems, each of them corresponding to a possible label in the label-set. First task is to construct a corresponding binary training set and then to use a binary learning algorithm in order to train the relevant binary classifier. Each training instance is involved in the learning process of all $q$ classifiers(cross-training strategy), which is regarded as positive instance in case of relevant labels and irrelevant otherwise. For new instances, the algorithm predicts the relevant label set by querying each binary classifier and combining the relevant labels.
+	
+	This is a first-order approach algorithm, since it ignores completely any label associations. However, since the one-vs-rest scheme is used and classifiers are build for each label separately, the algorithm has the possibility of parallel implementation. Finally, the algorithm is sensitive to class-imbalance data (true positives are much less than false positives).
 	%-------------------------------------------------------------------------------
 	% REFERENCES
 	%-------------------------------------------------------------------------------
 	\newpage
 	\addcontentsline{toc}{section}{Bibliography}
 	\begin{thebibliography}{10}
-		\bibitem{intelligent} 
-		Madhu, G., Dr A. Govardhan, and Dr TV Rajinikanth. "Intelligent semantic web search engines: a brief survey." \url{https://arxiv.org/pdf/1102.0831.pdf}
+		\bibitem{comp} 
+		Madjarov, Gjorgji, et al. "An extensive experimental comparison of methods for multi-label learning." Pattern Recognition 45.9 (2012): 3084-3104
+		\bibitem{overview} Tsoumakas, Grigorios, and Ioannis Katakis. "Multi-label classification: An overview." International Journal of Data Warehousing and Mining 3.3 (2006)
+		\bibitem{correlations} Zhang, Min-Ling, and Kun Zhang. "Multi-label learning by exploiting label dependency." Proceedings of the 16th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2010
 	\end{thebibliography}
 \end{document}
