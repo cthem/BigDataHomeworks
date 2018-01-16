@@ -351,9 +351,9 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Multi-Label k-Nearest Neighbour}
 \begin{itemize}
-\item[$\bullet$] First-order approach algorithm, adapting knn techniques
-\item[$\bullet$] Compares the MAP probabilities: $P(K|C_j), K \in \{H_j, \neg H_j\}$
-\item[$\bullet$] Priors $P(K)$ computed by smoothed frequency estimation in the training data
+	\item[$\bullet$] Let $H_j \equiv (y_j \in Y_i)$, $C_j = \sum_{x_k \in N(x_i)} [\delta(y_j \in Y_k)]$
+\item[$\bullet$] Compares the MAP probabilities: $P(K|C_j), K \in \{H_j, \neg H_j\}$ to decide if to include $y_j$ in the prediction. Compute with the Bayes' theorem.
+\item[$\bullet$] Priors $P(K)$ computed by smoothed frequency counting in the training data
 \item[$\bullet$] Likelihoods $P(C_j|K)$ are computed as a function of:
 \begin{itemize}
 \item[$\circ$] $\kappa(r)$, the number of examples labelled $y_j$ with $r$ neighbours labelled $y_j$
@@ -363,7 +363,7 @@ Pros \& cons:
 
 Pros \& cons:
 \begin{itemize}
-\item[$\bullet$] First-order approach, Bayesian and Lazy reasoning
+\item[$\bullet$] First-order approach, Bayesian reasoning
 \item[$\bullet$] Decision boundary can be modified on-line via new instances
 \item[$\bullet$] Class imbalance can be overcome by calculating priors
 \item[$\bullet$] Extensions proposed for label correlation exploitations
@@ -376,7 +376,7 @@ Pros \& cons:
 \frametitle{Multi-label Decision Tree}
 \begin{itemize}
 \item[$\bullet$] Multi-label entropy is used to build a decision tree recursively
-\item[$\bullet$] Split position is such that the information gain criterion is maximized
+\item[$\bullet$] Split $x$ at feature $l$ s.t. the information gain criterion is maximized
 \item[$\bullet$] Dataset $T$ is split on the $l$-th feature valued $\theta$ to branches ($T^-$ \& $T^+$), where $ x_{il} \leq \theta, x_i \in T^-$ and $ x_{il} > \theta, x_i \in T^+$
 \item[$\bullet$] Recurse on subtrees until a stopping criterion is met (e.g. child size)
 \item[$\bullet$] Single-label entropy is computed by considering labelsets as new classes
@@ -394,16 +394,17 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Ranking Support Vector Machine}
 \begin{itemize}
-\item[$\bullet$] $q$ linear classifiers, optimized to minimize the empirical ranking loss
-\item[$\bullet$] For each relevant-nonrelevant label pair $(y_j,y_k) \in Y_j \times \bar Y$ their decision boundary is marked by $\left<w_j,w_k\right> + b_j - b_k=0$
-\item[$\bullet$] Retrieves a ranked label pairs list for each unseen instance
+	\item[$\bullet$] $q$ linear classifiers $h_i(x)$, optimized with the empirical ranking loss
+\item[$\bullet$] Relevant-nonrelevant label pairs of $x_i$ $(y_j,y_k) \in Y_i \times \bar Y_i$ are separated by a function of their classifiers $h_j, h_k$: $\left<w_j-w_k, x_i \right> + b_j - b_k=0$
+\item[$\bullet$] Retrieves a ranked list of label pairs for each unseen instance
 \item[$\bullet$] Non-linearity achievable through feature mapping and the kernel trick
 \item[$\bullet$] Convex quadratic programming problem, solved by any QP solver
 \end{itemize}
+TODO : details of operation ixta
 Pros \& cons:
 \begin{itemize}
 \item[$\bullet$] Second-order approach, maximum margin strategy
-\item[$\bullet$] Extensible by kernel learning, kernel selection can be overcome by MKL techniques
+\item[$\bullet$] Extensible by kernel learning: kernel selection can be overcome by Multiple Kernel Learning techniques
 \item[$\bullet$] Adaptable learning by selecting an appropriate loss function
 \end{itemize}
 
@@ -418,6 +419,7 @@ Pros \& cons:
 \item[$\bullet$] Objective arrived by Lagrange multipliers, solvable by any constraint optimization solver
 \item[$\bullet$] Unseen instances labelled with $Y = \underset{y}{\text{argmax }} P(y | x)$
 \end{itemize}
+how the fuck
 Pros \& cons:
 \begin{itemize}
 \item[$\bullet$] Second-order approach. All label pairs considered, not just relevant-irrelevant ones.
@@ -440,12 +442,12 @@ Pros \& cons:
 \begin{frame}
 \frametitle{\insertsection}
 \begin{itemize}
-\item[$\bullet$] Multi-instance learning
+\item[$\bullet$] Multi-instance learning Todoooo
 \begin{itemize}
 \item[$\circ$] Each ML example described by a bag of instances while associated with a single/binary label
 \item[$\circ$] Models the object’s complex semantics in input space, rather than its output
 \end{itemize}
-\item[$\bullet$] Ordinal classification
+\item[$\bullet$] Ordinal classification Todoooo
 \begin{itemize}
 \item[$\circ$] Model class co-relevance in a (vague) graded membership vector
 \item[$\circ$] Transform ML problem to a set of ordinal set of problems
