@@ -136,7 +136,6 @@ Multi-label learning
 % \item Learn a model $f: X \times Y \rightarrow r$
 
 \end{itemize}
-%TODO: Include stuff about multi-labeled dataset characterization?
 \end{frame}
 %------------------------------------------------
 %------------------------------------------------
@@ -400,7 +399,7 @@ Pros \& cons:
 \item[$\bullet$] Non-linearity achievable through feature mapping and the kernel trick
 \item[$\bullet$] Convex quadratic programming problem, solved by any QP solver
 \end{itemize}
-TODO : details of operation ixta
+TODO : details of svm operation
 Pros \& cons:
 \begin{itemize}
 \item[$\bullet$] Second-order approach, maximum margin strategy
@@ -442,14 +441,19 @@ Pros \& cons:
 \begin{frame}
 \frametitle{\insertsection}
 \begin{itemize}
-\item[$\bullet$] Multi-instance learning Todoooo
+\item[$\bullet$] Multi-instance learning
+  % https://en.wikipedia.org/wiki/Multiple-instance_learning
 \begin{itemize}
-\item[$\circ$] Each ML example described by a bag of instances while associated with a single/binary label
-\item[$\circ$] Models the object’s complex semantics in input space, rather than its output
+\item[$\circ$] Instead of labeled instances, get binary-labeled \emph{bags of instances}
+\item[$\circ$] Assign positive label to bag if at least one member is positive
+\item[$\circ$] Models complex semantics of $x_i$ in input space, rather than its output
 \end{itemize}
-\item[$\bullet$] Ordinal classification Todoooo
+\item[$\bullet$] Ordinal classification
+  % https://en.wikipedia.org/wiki/Ordinal_regression
 \begin{itemize}
-\item[$\circ$] Model class co-relevance in a (vague) graded membership vector
+\item[$\circ$] Assume labels are related through a natural ordering
+\item[$\circ$] Instead of explicit class relevance, assume an ordering of
+  relevance between labels via a membership vector
 \item[$\circ$] Transform ML problem to a set of ordinal set of problems
 \end{itemize}
 \item[$\bullet$] Multi-task learning
