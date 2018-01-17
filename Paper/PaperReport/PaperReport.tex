@@ -16,6 +16,7 @@
 \usepackage{todonotes}
 \usepackage{stmaryrd}
 \usepackage{amsfonts}
+\usepackage{amsmath}
 \graphicspath{{images/}}
 
 \lstset{
@@ -115,12 +116,6 @@
 			\item \todo{label based metrics}
 		\end{itemize}
 	\end{itemize}
-	%\begin{figure}[H]
-	%	\centering
-	%	\includegraphics[width=0.8\textwidth]{semsearch.png}
-	%	\caption{An overview of the SemSearch architecture}
-	%	\centering
-	%\end{figure}
 	
 	\section*{Multi-label learning algorithms}
 	\addcontentsline{toc}{section}{Multi-label learning algorithms}
@@ -139,7 +134,13 @@
 
 	\subsection*{Problem Transformation Methods}
 	\addcontentsline{toc}{subsection}{Problem Transformation Methods}
-	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{pt.png}
+		\caption{Problem Transformation Algorithms}
+		\centering
+	\end{figure}
+
 	\subsubsection*{Binary Relevance}
 	\addcontentsline{toc}{subsubsection}{Binary Relevance}
 	This algorithm decomposes the multi-learning problem into $q$ independent binary classification problems, each of them corresponding to a possible label in the label-set. First task is to construct a corresponding binary training set and then to use a binary learning algorithm in order to train the relevant binary classifier. Each training instance is involved in the learning process of all $q$ classifiers(cross-training strategy), which is regarded as positive instance in case of relevant labels and irrelevant otherwise. For new instances, the algorithm predicts the relevant label set by querying each binary classifier and combining the relevant labels.
@@ -160,12 +161,97 @@
 	
 	\subsubsection*{Random k-Labelsets}
 	\addcontentsline{toc}{subsubsection}{Random k-Labelsets}
+	Random k-labelsets algorithm transforms the multi-label learning problem into an ensemble of multi-class classification problems where each component targets a random subset of $Y$, that appears in $X$ classified with Label Powerset (LP) techniques. In more detail, the multi-label dataset is transformed into single-label data by treating each distinct labelset as a new class. Each training example is reassigned with the new mapped class and classified through regular single-label classification. An instance $x_i$ is assigned to label $y_i$ when the votes received for $y_i$ from the ensemble exceed half the max possible that this label can get. For unseen instances $x$, LP predicts its associated label set $Y$ by querying the prediction of multi-class classifier and then mapping it back to the power set of $Y$.
+	
+	This is a high-order approach algorithm, utilizing label correlations. However, there are two limitations in terms of practical feasibility: 
+	
+	\begin{itemize}
+		\item[$\diamond$] \emph{Incompleteness: }The algorithm is data-sensitive and cannot generalize to labelsets that do not appear into the training set
+		\item[$\diamond$] \emph{Inefficiency: }Large $Y$ implies high training complexity and extremely few training examples for some newly mapped classes.
+	\end{itemize}
+
+	To overcome above issues while keeping LP's simplicity, Random k-Labelsets chooses to combine ensemble learning with LP. The latter is invoked only on random k-labelsets (each leading to a multi-class classifier $g_{y^k(l_r)}^+$) to guarantee computational efficiency and then ensemble a number of LP classifiers to achieve predictive completeness. For new instances $x$, two quantities are calculated: $\tau(\textbf{x},y_j)$, which counts the maximum number of votes that $y_j$ can receive from the ensemble and $\mu(\textbf{x},y_j)$, which counts the actual number of votes that $y_j$ receives from the ensemble. Therefore, the predicted labelset is calculated as follows: $Y = \{y_j|\mu(\textbf{x},y_j)/\tau(\textbf{x},y_j)>0.5,  1 \leq j \leq q\}$. This means that when the actual number of votes exceeds half of the maximum number of votes, $y_j$ is considered as a relevant label.For an ensemble created by n k-labelsets, the maximum number of votes on each label is $nk/q$ on average (usually: k=3 and n = 2q). Finally, another way to improve LP is to prune distinct label set in D appearing less than a pre-specified counting threshold.
+	
+	\subsection*{Algorithm Adaptation Methods}
+	\addcontentsline{toc}{subsection}{Algorithm Adaptation Methods}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{aa.png}
+		\caption{Algorithm Adaptation Methods}
+		\centering
+	\end{figure}
+
+	\subsubsection*{Multi-Label k-Nearest Neighbor (ML-kNN)}
+	\addcontentsline{toc}{subsubsection}{Multi-Label k-Nearest Neighbor (ML-kNN)}
+	ML-kNN algorithm adapts k-nearest neighbor techniques utilizing maximum a posteriori (MAP) rule to make prediction by reasoning with the labeling information embodied in the neighbors. For new instances $x$, $N(x)$ represents the set of its k nearest neighbors identified in the dataset (similarity among instances is calculated by Euclidean distance). Let $H_j \equiv (y_j \in Y_i)$, $C_j = \sum_{x_k \in N(x_i)} [\delta(y_j \in Y_k)]$. $C_j$ records the number of x’s neighbors with label $y_j$, while $H_j$ is the event that $\textbf{x}$ has the label $y_j$. Moreover, $P(H_j|C_j)$ is the posterior probability that $H_j$ can be applied in the condition that $\textbf{x}$ has exactly $C_j$ neighbors. Similarly, $P(\neg H_j|C_j)$ needs to be calculated in order to decide if to include $y_j$ in the prediction. This will be computed using the Bayes' theorem:
+	
+	\begin{center}
+		$\frac{P(H_j|C_J)}{P(\neg H_j|C_j)} = \frac{P(H_j) \cdot P(C_j|H_j)}{P(\neg H_j) \cdot P(C_j| \neg H_j)}$
+	\end{center}
+
+	Prior probabilities ($P(H_j)$ and $P(\neg H_j)$) are computed via the frequency counting strategy, where a smoothing parameter $s$ is used to control the effect of uniform prior on the estimation (usually $s=1$). In addition, likelyhoods $P(C_j|H_j)$ and $P(C_j| \neg H_j)$ are computed using two frequency arrays:
+	\begin{itemize}
+		\item $\kappa(r)$, the number of examples labelled $y_j$ with $r$ neighbours labelled $y_j$
+		\item $\overset{\sim}{\kappa}(r)$, the number of examples not labelled $y_j$ with $r$ neighbours labelled $y_j$
+	\end{itemize}
+	 
+	This algorithm is a first-order approach using Bayesian reasoning. The decision boundary can be modified on-line when new instances appear. Moreover, Through prior probabilities calculation class-imbalance issue can be overcome. However, since label correlations are ignored, some extensions are proposed that take into account label associations.
+	
+	\subsubsection*{Multi-Label Decision Tree (ML-DT)}
+	\addcontentsline{toc}{subsubsection}{Multi-Label Decision Tree (ML-DT)}
+	ML-DT adapts decision tree techniques using multi-label entropy to build a decision tree recursively. Let $T = \{(x_i, Y_i) | 1 \leq i \leq n \}$ be the multi-label dataset with n examples. The algorithm splits the $x$ vector at the feature $l$ that maximizes the information gain criterion. Moreover, dataset $T$ is split on the $l$-th feature valued $\theta$ into branches ($T^-$ \& $T^+$), where $x_{il} \leq \theta, x_i \in T^-$ and $x_{il} > \theta, x_i \in T^+$. This process is invoked recursively by treating each time one of the two branches as the new root node and terminates until some stopping criterion $C$ is met (e.g. child size). Each subset is treated as a new class and single-label entropy is computed. Any new instances are assigned the label of the majority of members of the leaf that they arrive.
+	
+	In order to ensure low computational cost and high efficiency, the algorithm assumes independence among the labels (first-order approach). However, extended strategies are proposes, such as pruning and ensemble strategies, so as to exploit label correlations as well.
+	
+	\subsubsection*{Ranking Support Vector Machine (Rank-SVM)}
+	\addcontentsline{toc}{subsubsection}{Ranking Support Vector Machine (Rank-SVM)}
+	Rank-SVM adapts maximum margin strategy, where $q$ linear classifiers are optimized to minimize empirical ranking loss and enabled to handle nonlinear cases with kernel tricks. The learning system is composed by those classifiers $W = \{w_j,b_j | 1 \leq j \leq q\}$, where $w_j \in \mathbb{R}^d$ and $b_j \in \mathbb{R}$ are the weight vector and the bias
+	for the j-th class label $y_j$ respectively. Rank-SVM defines the system’s margin on $(x_i,Y_i)$ by considering its ranking ability on the relevant and irrelevant label pairs of $x_i$ $(y_j,y_k) \in Y_i \times \bar Y_i$, which are separated by a function of their classifiers $h_j, h_k$: $\left<w_j-w_k, x_i \right> + b_j - b_k=0$. When the learning system is capable of properly ranking every relevant-irrelevant label pair for each training example, the classifier will return positive margin. For each new instances $x$, the algorithms retrieves a ranked list of label pairs.
+	
+	Moreover, non-linear problems can be solved through feature mapping and kernel trick, while convex quadratic programming problems can be solved by any QP solver. This algorithm is a second-order approach using pairwise label associations. Improvements can be achieved by: replacing ranking with hamming loss which can be cast as a general form of	structured output classification, accomplishing thresholding strategy with techniques other than stacking-style procedure and avoiding the problem of kernel selection by employing multiple kernel learning techniques to learn from multi-label data.
+	
+	 \subsubsection*{Collective Multi-Label Classifier}
+	 \addcontentsline{toc}{subsubsection}{Collective Multi-Label Classifier}
+	 This algorithm adapts maximum entropy principle, where correlations among labels are encoded as binary random vectors into a joint probability distribution function(pdf) and label correlations are encoded into the joint pdf as constraints. This is a second-order approach, where all label pairs are considered and not just the relevant-irrelevant ones. Let $H_p(x, y)$ represent the information entropy of $(x,y)$ given their distribution $p(\cdot , \cdot)$. The principle of maximum entropy assumes that the distribution best modeling the current state of knowledge is the one maximizing $H_p(x, y)$ subject to a collection K of given facts: $\mathbb{E_p}[f_k(x,y)] = F_k$, where $F_k$ are estimated from the training set. The fact is expressed as constraint on the expectation of  some  function  over. Along with the normalization constraint on $p(\cdot , \cdot)$ , the constrained optimization problem can be solved with standard Lagrange Multiplier techniques. Any unseen instance $x$ is labeled with $Y = \underset{y}{\text{argmax }} P(y | x)$. Exact inference with arg max is only tractable for small label space, otherwise pruning strategies should be applied.
+	 
+	 \subsection*{Summary of Multi-Label Learning Algorithms}
+	 \addcontentsline{toc}{subsection}{Summary of Multi-Label Learning Algorithms}
+	 
+	 \begin{figure}[H]
+	 	\centering
+	 	\includegraphics[width=1\textwidth]{summary.png}
+	 	\caption{Summary of Multi-Label Learning Algorithms}
+	 	\centering
+	 \end{figure}
+ 
+ 	\section*{Related Learning Methods}
+ 	\addcontentsline{toc}{section}{Related Learning Methods}
+ 	Four learning methods are mentioned in this paper, which can be found below:
+ 	\begin{enumerate}
+ 		\item \textbf{Multi-instance learning: }This method studies the problem where each example is described by a bag of instances while associated with a single/binary label. Bag is assigned positive label in case of at least one positive member. Finally, it models complex semantics of $x_i$ in input space rather than its output.
+ 		\item \textbf{Ordinal classification: }This method assumes that labels are related through a natural ordering and instead of explicit class relevance, it assumes an ordering of relevant between labels via a membership vector. Finally, the multi-label problem is transformed into a set of ordinal set of problems.
+ 		\item \textbf{Multi-task learning: }This method studies the problem where multiple tasks are trained in parallel, sharing information, where knowledge from related tasks is used as an inductive bias to help improve the generalization performance of other tasks. The  tasks can be in the same feature space or different feature spaces, while in multi-label learning all the examples share the same feature space. Finally, in multi-task learning it is not reasonable to have a large number of tasks, while in multi-label learning it is usual to deal with large label space.
+ 		\item \textbf{Data streams classification: }This method studies the problem	where real-world objects are generated online and processed in a real-time manner. Key factor is to deal with the concept drift problem. Some existing strategies are: classifiers update significantly whenever a new batch of examples arrive, assumption that the influence of past data gradually declines as time evolves or change detector alerting whenever a concept drift is detected.
+ 	\end{enumerate}
+ 	
+	\section*{Conclusion}
+	\addcontentsline{toc}{section}{Conclusion}
+	Summarizing all the above, this paper defines the multi-label learning problem, presents 8 multi-label learning representative algorithms and mentiones some additional related learning methods. Some important future goals are the formal characterization on the underlying concept/mechanism on the appropriate usage of label correlations (especially on large output spaces) and also a thorough experimental comparative study to discover the advantages and disadvantages of different multi-label learning algorithms. Below, some online resources on multi-label learning are presented:
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\textwidth]{online.png}
+		\caption{Online resources for Multi-Label Learning}
+		\centering
+	\end{figure}
+	
 	%-------------------------------------------------------------------------------
 	% REFERENCES
 	%-------------------------------------------------------------------------------
-	\newpage
 	\addcontentsline{toc}{section}{Related Work}
-	\begin{thebibliography}{10}
+	\renewcommand\bibname{Related Work}
+	\begin{thebibliography}{9}
 		\bibitem{comp} 
 		Madjarov, Gjorgji, et al. "An extensive experimental comparison of methods for multi-label learning." Pattern Recognition 45.9 (2012): 3084-3104
 		\bibitem{overview} Tsoumakas, Grigorios, and Ioannis Katakis. "Multi-label classification: An overview." International Journal of Data Warehousing and Mining 3.3 (2006)
