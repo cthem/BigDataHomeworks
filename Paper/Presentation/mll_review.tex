@@ -153,13 +153,15 @@ Label search space $\mathbb{S_Y}$ grows exponentially as a function of $|Y|=q$
 \item[$\triangleright$] e.g. for $q=20, |\mathbb{S_Y}| = 2 ^ {|\mathbb{P(Y)}|} = 2^{20} \ge 10^6$
 \end{itemize}
 Solution: integrate in the learning process potential label correlations.
-This work examines algorithms grouped in three broad categories:
+
+In this work the authors group M-L algorithms in three categories:
 
 \begin{enumerate}
 \item First-order strategies
 \begin{itemize}
 \item[$\circ$] Ignore label correlations
 \item[$\circ$] Often transform M-L problem to multiple, single-label problems
+  and combine the per-label results
 \item[$\circ$] Simple, scalable, suboptimal
 \end{itemize}
 \item Second-order strategies
@@ -171,7 +173,7 @@ This work examines algorithms grouped in three broad categories:
 \item Higher-order strategies
 \begin{itemize}
 \item[$\circ$] Capture more complicated label interdependencies
-\item[$\circ$] Strong modeling capabilities
+\item[$\circ$] Strong modeling capabilities that can capture complex relationships
 \item[$\circ$] Computationally demanding, less scalable
 \end{itemize}
 
@@ -184,24 +186,24 @@ This work examines algorithms grouped in three broad categories:
 \frametitle{\insertsection : \insertsubsection}
 Extension of single-label metrics to the M-L case.
 
-Two categories and perspectives:
+Grouped into two categories and perspectives:
 \begin{itemize}
 \item[$\bullet$] \emph{Example-based: }Evaluates multi-labeled performance on each example, extrapolate to whole dataset
 \begin{itemize}
 \item[$\circ$] \emph{Classification perspective:}
 \begin{itemize}
 \item[$\star$] Subset Accuracy, Hamming Loss
-\item[$\star$] Precision, Recall, F-measure, F$^\beta$ -measure
+\item[$\star$] Precision, Recall,  F$^\beta$ -measure
 \end{itemize}
 \item[$\circ$] \emph{Ranking perspective:} one-error, coverage, ranking loss, average precision
 \end{itemize}
 \item[$\bullet$] \emph{Label-based: }Evaluates performance on each label separately, extrapolate to whole label set
 \begin{itemize}
-\item[$\circ$] Classification perspective: Macro/Micro averaging for single-label example-based, classification-based measures
+\item[$\circ$] Classification perspective: Macro/Micro averaging techniques for single-label example-based, classification-perspective measures
 \item[$\circ$] Ranking perspective: Macro/Micro averaging for AUC
 \end{itemize}
 \end{itemize}
-$\ast$ Classifiers should aim to optimize \emph{multiple} metrics
+$\ast$ Ideally, classifiers should be trained to optimize \emph{multiple} metrics
 \end{frame}
 %------------------------------------------------
 \section{Multi-label Learning Algorithms}
@@ -220,7 +222,9 @@ Group algorithms in two categories:
 \item[$\bullet$] \emph{Problem Transformation Methods:}
 
 \begin{itemize}
-\item[$\circ$] Transform the learning problem into other well-established learning scenarios
+\item[$\circ$] Transform the learning problem into other, managable (often
+  single-label) learning
+  problems 
 \item[$\circ$] ``Fit data to algorithm'' philosophy
 \end{itemize}
 
@@ -231,10 +235,10 @@ Group algorithms in two categories:
 \end{itemize}
 \end{itemize}
 
-Include algorithms that:
+Authors include algorithms that:
 \begin{itemize}
 \item[$\checkmark$] Has broad, noteworthy or unique characteristics
-\item[$\checkmark$] Has primitive impact, i.e. leads to a number follow-up related methods
+\item[$\checkmark$] Has important impact, leading to a number follow-up related methods
 \item[$\checkmark$] Is influential and highly-cited in multi-label learning
 \end{itemize}
 
@@ -259,18 +263,20 @@ Include algorithms that:
 \frametitle{Binary Relevance}
 
 \begin{itemize}
-\item[$\bullet$] Decompose multi-label problem to $q$ independent binary classification problems
+\item[$\bullet$] Decompose multi-label problem to $|Y|=q$ independent binary classification problems
 \item[$\bullet$] Construct $q$ binary (one-vs-all) training sets (one for each $y_i$)
-\item[$\bullet$] Cross-train each binary classifier $h_i(x)$ on its respective dataset
+\item[$\bullet$] Independently train each classifier $h_i(x)$ on its respective dataset
 
 \item[$\bullet$] Predict labels of an unseen $x$ by evaluating each classifier $h_i(x)$
-\item[$\bullet$] Assign label $y_i$ according to $h_i(x)$ and the thresholding/ranking scheme 
+\item[$\bullet$] Assign label $y_i$ according to $r = h_i(x)$ and the
+  thresholding setting 
 \end{itemize}
 
 Pros \& cons:
 \begin{itemize}
-\item[$\bullet$] Simple, one-vs-rest scheme, parallelizable
-\item[$\bullet$] Sensitive to class-imbalanced data
+\item[$\bullet$] Simple, one-vs-rest scheme $\rightarrow$ easily parallelizable
+\item[$\bullet$] Sensitive to class-imbalanced data\footnote{Very different
+    number of pos. and neg. examples for a class}
 \item[$\bullet$] Ignores label correlations (first-order method)
 \end{itemize}
 
@@ -280,18 +286,17 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Classifier chains}
 \begin{itemize}
-\item[$\bullet$] A permutation function $f_p$ is used to order $Y$
+\item[$\bullet$] Reorder the label $Y$ set using a permutation function $f_p$ 
 \item[$\bullet$] Transform into a \emph{chain} of binary classification problems
 \item[$\bullet$] Enrich representations at step $j$ by concatenating each $x_i$ with the confidence of preceeding $1,\dots,j-1$-th classifiers
 \item[$\bullet$] Predict relevant labels for unknown instances by iteratively traversing the classifier chain
-\item[$\bullet$] $\lambda_{\tau(j)}^x \in \{-1,+1\}$ represents the predicted binary assignment
-of $y_{\tau(j)}$, which is recursively obtained
 \end{itemize}
 
 Pros \& cons:
 \begin{itemize}
 \item[$\bullet$] High-order method: exploitation of label correlations to a degree, but in a random manner
-\item[$\bullet$] Highly sensitive to $f_p$. Ensemble schemes attempt to overcome it.
+\item[$\bullet$] Highly sensitive to $f_p$. Running multiple chain executions in an ensemble
+  attempt to overcome this dependency.
 \item[$\bullet$] Iterative operation prevents parallel implementation
 \end{itemize}
 \end{frame}
@@ -301,15 +306,16 @@ Pros \& cons:
 \frametitle{Calibrated Label Ranking}
 \begin{itemize}
 \item[$\bullet$] Transform into a label pairwise comparison ranking problem
-\item[$\bullet$] For $q$ labels, generate $q(q-1)/2$ binary classifiers by pairwise comparison and use a binary algorithm $g_{jk}(x)$
-\item[$\bullet$] Construct training sets $D_{jk} : \{x_i, Y_i | y_j \in Y_i \oplus y_k \in Y_i\}$. System votes for each example and if $g_{jk}(x) >0$,$x_i$ is associated with $y_j$, otherwise with $y_k$
-\item[$\bullet$] For an unknown instance, all classifiers' votes are aggregated and ranked
-\item[$\bullet$] A virtual label $y_v$ serves as the artificial splitting point between relevant and irrelevant labels
+\item[$\bullet$] For $q$ labels, generate $q(q-1)/2$ binary classifiers by pairwise comparison and use a binary algorithm $h_{jk}(x)$
+\item[$\bullet$] Construct training sets $D_{jk} : \{x_i, Y_i | y_j \in Y_i \oplus y_k \in Y_i\}$. System votes for each example and if $h_{jk}(x) >0$,$x_i$ is associated with $y_j$, otherwise with $y_k$
+\item[$\bullet$] For an unknown instance, all classifiers' votes are aggregated
+  and resulting labels are ranked according to the total confidence $r$
+\item[$\bullet$] A virtual label $y_v$ is learned as a threshold, serving as the artificial splitting point between relevant and irrelevant labels
 \end{itemize}
 Pros \& cons:
 \begin{itemize}
 \item[$\bullet$] Second-order approach algorithm. One-vs-one scheme.
-\item[$\bullet$] Smooths out the class-imbalance problem
+\item[$\bullet$] Pairwise comparison smooths out the class-imbalance problem
 \item[$\bullet$] Number of classifiers is quadratic to $|Y|$ (compared to linear for BR)
 \begin{itemize}
 \item[$\circ$] Pruning methods to reduce the search space
@@ -321,13 +327,14 @@ Pros \& cons:
 \frametitle{Random k-Labelsets}
 \begin{itemize}
 \item[$\bullet$] Decompose to an ensemble of multi-class classification problems
-\item[$\bullet$] Each component targets a random subset of $\mathbb{P}(Y)$ that appears in $X$, classified with Label Powerset (LP) techniques:
+\item[$\bullet$] Each component targets a random subset of $\mathbb{P}(Y)$ (that
+  also appears in $X$), classified with Label Powerset (LP) techniques:
 \begin{itemize}
-\item[$\circ$] Transform to single-label data by treating each distinct labelset as a new class
+\item[$\circ$] Transform to single-label data by treating each distinct labelset
+  as a new class $\rightarrow$ multi to single label problem
 \item[$\circ$] Each example is reassigned with the new mapped class and classified through regular single-label classification
 \item[$\circ$] M-L classify $x$ with $y_i$ when the votes received for $y_i$ from the ensemble exceed half the max possible it can get
 \end{itemize}
-todo how does each LP classify, k-labelsets
 \end{itemize}
 Pros \& cons:
 \begin{itemize}
@@ -358,7 +365,7 @@ Pros \& cons:
 \begin{itemize}
 	\item[$\bullet$] Let $H_j \equiv (y_j \in Y_i)$, $C_j = \sum_{x_k \in N(x_i)} [\delta(y_j \in Y_k)]$
 \item[$\bullet$] Compares the MAP probabilities: $P(K|C_j), K \in \{H_j, \neg H_j\}$ to decide if to include $y_j$ in the prediction. Compute with the Bayes' theorem.
-\item[$\bullet$] Priors $P(K)$ computed by smoothed frequency counting in the training data
+\item[$\bullet$] Single-label priors $P(K)$ computed by smoothed frequency counting in the training data
 \item[$\bullet$] Likelihoods $P(C_j|K)$ are computed as a function of:
 \begin{itemize}
 \item[$\circ$] $\kappa(r)$, the number of examples labelled $y_j$ with $r$ neighbours labelled $y_j$
@@ -370,7 +377,7 @@ Pros \& cons:
 \begin{itemize}
 \item[$\bullet$] First-order approach, Bayesian reasoning
 \item[$\bullet$] Decision boundary can be modified on-line via new instances
-\item[$\bullet$] Class imbalance can be overcome by calculating priors
+\item[$\bullet$] M-L class imbalance can be overcome by calculating the priors
 \item[$\bullet$] Extensions proposed for label correlation exploitations
 \end{itemize}
 
@@ -381,7 +388,7 @@ Pros \& cons:
 \frametitle{Multi-label Decision Tree}
 \begin{itemize}
 \item[$\bullet$] Multi-label entropy is used to build a decision tree recursively
-\item[$\bullet$] Split $x$ at feature $l$ s.t. the information gain criterion is maximized
+\item[$\bullet$] Split $x$ at the $l$-th feature\footnote{$x$ has to contain distinct features} s.t. the information gain criterion is maximized
 \item[$\bullet$] Dataset $T$ is split on the $l$-th feature valued $\theta$ to branches ($T^-$ \& $T^+$), where $ x_{il} \leq \theta, x_i \in T^-$ and $ x_{il} > \theta, x_i \in T^+$
 \item[$\bullet$] Recurse on subtrees until a stopping criterion is met (e.g. child size)
 \item[$\bullet$] Single-label entropy is computed by considering labelsets as new classes
@@ -400,13 +407,14 @@ Pros \& cons:
 \frametitle{Ranking Support Vector Machine}
 \begin{itemize}
 	\item[$\bullet$] $q$ linear classifiers $h_i(x)$, optimized with the empirical ranking loss
-\item[$\bullet$] Relevant-nonrelevant label pairs of $x_i$: $(y_j,y_k) \in Y_i
-  \times \bar Y_i$: decision hyperplane\footnote{w.r.t. singed classifier distance} is: $h_j, h_k$: $\left<w_j-w_k, x_i \right> + b_j - b_k=0$
-\item[$\bullet$] Separation margin is the minimum distance of $x_i$ from every  $Y_i \times \bar Y_i$
+\item[$\bullet$] Consider signed distance of $x_i$ from the boundary of every
+  relevant-nonrelevant label pair $(y_j,y_k) \in Y_i \times \bar Y_i$. The
+  pair's decision hyperplane is: $h_j, h_k$: $\left<w_j-w_k, x_i \right> + b_j - b_k=0$
+\item[$\bullet$] The M-L margin is the minimum distance of $x_i$ from every  $Y_i \times \bar Y_i$
 \item[$\bullet$] SVM $\rightarrow$ minimize loss \emph{and} maximize margin.
   Approximate $max(\cdot)$ and introduce slack variables.
 
-\item[$\bullet$] Ranks labels w.r.t. singled distance
+\item[$\bullet$] Ranks labels according to the singed distance
 \item[$\bullet$] Non-linearity achievable through feature mapping and the kernel trick
 \end{itemize}
 Pros \& cons:
@@ -451,7 +459,7 @@ Pros \& cons:
 \end{figure}
 \end{frame}
 %------------------------------------------------
-\section{Related Learning Settings}
+\section{Related Learning Methods}
 %------------------------------------------------
 \begin{frame}
 \frametitle{\insertsection}
@@ -498,12 +506,12 @@ Summary:
 \begin{itemize}
 \item[$\bullet$] Multi-label learning problem definition
 \item[$\bullet$] Multi-label learning representative algorithms
-\item[$\bullet$] Related learning settings
+\item[$\bullet$] Related learning methods
 \end{itemize}
 
 Future goals:
 \begin{itemize}
-\item[$\bullet$] Holy grail: Formal characterization on the underlying concept / mechanism on the appropriate usage of label correlations, especially on large output spaces
+\item[$\star$] Formal characterization on the underlying concept / mechanism on the appropriate usage of label correlations, especially on large output spaces
 \item[$\bullet$] Thorough experimental comparative study to discover pros and cons of different multi-label learning algorithms
 \end{itemize}
 \end{frame}
@@ -530,9 +538,10 @@ Future goals:
 \end{itemize}
 \end{frame}
 %------------------------------------------------
+
+\subsection{Additional Bibliography}
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
-Useful additional bibliography
 \begin{itemize}
 \item[$\bullet$] Elisseeff, André, and Jason Weston. "A kernel method for multi-labelled classification." Advances in neural information processing systems. 2002.
 \item[$\bullet$]  Ghamrawi, Nadia, and Andrew McCallum. "Collective multi-label classification." Proceedings of the 14th ACM international conference on Information and knowledge management. ACM, 2005.

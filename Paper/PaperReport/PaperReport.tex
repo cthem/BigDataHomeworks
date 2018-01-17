@@ -87,52 +87,107 @@
 	
 	\subsection*{Multi-label learning}
 	\addcontentsline{toc}{subsection}{Multi-label learning}
-	The paper "A Review on Multi-Label Learning Algorithms" analyzes the multi-label learning field in supervised classification. Supervised classification trains a model $f: X \rightarrow Y$ and for each pair $f(x_i,y_i)$, the model gives as output a number that represents the confidence that label $y_i$ characterizes $x_i$. Traditional single-label learning maps an example to only one label, ignoring completely multiple semantics that real-objects usually have. On the other hand, multi-label learning allows an example/instance $x_i$ to be mapped to more than one label. However, this results to an exponentially growing search space, since search space might include any number of subsets from the powerset of label-set $Y$ ($|\mathbb{P(Y)}|$).
+	The paper "A Review on Multi-Label Learning Algorithms" analyzes the
+  multi-label learning field in supervised classification. Supervised
+  classification trains a model $f: X \rightarrow Y$ and for each pair
+  $f(x_i,y_i)$, it outputs a real number $r$ that represents the confidence that
+  label $y_i$ characterizes $x_i$. Given $r$ and a thresholding scheme, labels
+  are marked as relevant or not relevant to the input data vector $x_i$ (e.g.
+  for $r$ representing probability estimates, $r \in [0,1]$, a simple
+  thresholding function is $t(x_i) = 0.5$. In other words, labels with outputs
+  greater than $0.5$ are assigned to $x_i$ by our model). Standard, single-label learning maps an
+  example to a single label, completely ignoring multiple semantics that
+  real-objects usually have. On the other hand, multi-label learning allows an
+  example/instance $x_i$ to be mapped to more than one label, i.e. to any label
+  vector which is a subset of $Y$. However, this results to an exponentially growing search space, since
+  the latter depends on the size of the powerset of $Y$, 
+  $|\mathbb{P(Y)}| = 2^{|Y|}$.
 	
-	One straightforward solution, is to exploit label correlations. Real-objects are usually characterized by similar concepts. For example, if an article is characterized by label "football" it is very likely that it will be also characterized by the term "sports", while label "science" seems to be irrelevant. In order to exploit such kind of label correlations, three different algorithm strategies were developed:
+	One straightforward solution is to exploit label correlations. Real objects
+  are usually characterized by similar concepts. For example, if an article is
+  characterized by label "football" it follows that it will be also
+  characterized by the term "sports" and it is likely that it will be labeled
+  with ``crowd'' or ``entertainment''. On the other hand, the label "science"
+  will be likely to be irrelevant. In order to exploit such kind of label
+  correlations, three different algorithm strategies are examined:
 	
 	\begin{itemize}
-		\item \textbf{First-order strategies: }These algorithms ignore label correlations and perform a "one-vs-all" strategy. They often transform a multi-label problem into multiple single-label problems. Algorithms of this category are simple, scalable, have the possibility of parallel implementation, but on the other hand their results are suboptimal.
-		\item \textbf{Second-order strategies: }In this category, relevant algorithms consider pairwise label correlations, having a good trade-off between generalization performance and scalability. However, there are still deficiencies in some real-world applications.
-		\item \textbf{High-order strategies: }These algorithms capture even more complicated label correlations and they have strong modeling capabilities. But, on the other hand, they are computationally more demanding and less scalable.
+		\item \textbf{First-order strategies: }These algorithms ignore label
+      correlations and perform a "one-vs-all" strategy. They often transform a
+      multi-label problem into multiple single-label problems, combining the
+      result in an aggregation-like manner. Algorithms of this category are
+      simple, scalable, have the capability of parallel implementation, but
+      offer suboptimal performance.
+		\item \textbf{Second-order strategies: }Algorithms in this category consider
+      \emph{pairwise} label correlations, i.e. tuples of labels. Having a good
+      trade-off between generalization performance and scalability, they
+      generally outperform first-order strategies but their limited exploration
+      of the label dependency space leads to lacking performance in some real
+      world applications.
+		\item \textbf{High-order strategies: }These algorithms capture a high degree
+      of label correlations, having a large comlexity and strong modeling
+      capabilities. This of course leads to increased performance but renders them computationally demanding and less scalable.
 	\end{itemize}
 	
 	\subsection*{Evaluation metrics}
 	\addcontentsline{toc}{subsection}{Evaluation metrics}
-	One other issue that worths to be mentioned are the evaluation metrics. Since multi-label problems are more complicated, it is necessary to extend existing sigle-label metrics in order to fit the multi-label case. There are two categories of metrics, divided in two perspectives:
+
+	With respect to performance evaluation, traditional single-label evaluation metrics are extended to
+  incorporate the multi-labeled output. This extension is categorizable into two
+  groups. One with respect to the expansion ``axis'' (across examples or labels)
+  and the task type (classification or ranking).
+
+    Before proceeding with the metrics, true positive(TP), false positive(FP),
+    true negative (TN) and false negative (FN) of label $y_j$ will be defined:
+		\begin{itemize}
+			\item \emph{True positive: } $TP_j = |\{x_i | y_j \in Y_i \wedge y_j \in h(x_i), 1 \leq i \leq p \}|$
+			\item \emph{False positive: }$FP_j = |\{x_i | y_j \notin Y_i \wedge y_j \in h(x_i), 1 \leq i \leq p \}|$
+			\item \emph{True negative: }$TN_J = |\{x_i | y_j \notin Y_i \wedge y_j \notin h(x_i), 1 \leq i \leq p \}|$
+			\item \emph{False negative: }$FN_J = |\{x_i | y_j \in Y_i \wedge y_j \notin h(x_i), 1 \leq i \leq p \}|$
+		\end{itemize}
+
 	\begin{itemize}
 		\item \textbf{Example-based: }This kind of metrics evaluate multi-labeled performance on each example and then the result is spread to the whole dataset. The metrics are divided into two perspectives:
+      \todo{Form them up into a table}
 		\begin{itemize}
 			\item Classification:
+        \begin{table}
+          \centering
+          \begin{tabular}{cc} 
+          \toprule
+            one & two \\
+          \midrule
+            one & two \\
+            one & two \\
+          \bottomrule
+          \end{tabular}
+          \caption{Evaluation metrics for multi-label learning}
+          \label{label:evaluation_metrics}
+        \end{table}
+
 			\begin{itemize}
-				\item \emph{Subset Accuracy: } $subsetacc(h) = \frac{1}{p} \sum_{i=1}^p \llbracket h(x_i) = Y_i \rrbracket$
-				\item \emph{Hamming Loss: }$hloss(h) = \frac{1}{p} \sum_{i=1}^{p} [h(x_i)\Delta Y_i] $
-				\item \emph{Accuracy:} $Accuracy_{exam}(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{|Y_i \cup h(x_i)|}$
-				\item \emph{Precision: }$Precision_{exam}(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{h(x_i)|}$
-				\item \emph{Recall: }$Recall_{exam}(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{|Y_i}$
-				\item \emph{$F^ \beta$ -metric: } $F^ \beta _{exam} (h) = \frac{(1+ \beta ^2) \cdot Precision_{exam}(h) \cdot Recall_{exam}(h)}{\beta ^2 \cdot Precision_{exam}(h) + Recall_{exam}(h)}$
+				\item Precision: $P(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{h(x_i)|}$
+				\item Recall: $R(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{|Y_i}$
+        \item Subset Accuracy:  $SA(h) = \frac{1}{p} \sum_{i=1}^p \llbracket h(x_i) = Y_i \rrbracket$
+				\item Hamming Loss: $H(h) = \frac{1}{p} \sum_{i=1}^{p} [h(x_i)\Delta Y_i] $
+				\item Accuracy: $A(h) = \frac{1}{p} \sum_{i=1}^{p} \frac{|Y_i \cap h(x_i)|}{|Y_i \cup h(x_i)|}$
+				\item $F^ \beta$ -metric:  $F^ \beta _{exam} (h) = \frac{(1+ \beta ^2) \cdot Precision_{exam}(h) \cdot Recall_{exam}(h)}{\beta ^2 \cdot Precision_{exam}(h) + Recall_{exam}(h)}$
 			\end{itemize}
 			\item Ranking:
 			\begin{itemize}
-				\item \emph{One-error: }$one-error(f) = \frac{1}{p} \llbracket [argmax_{y \in Y}f(x_i,y)] \notin Y_i \rrbracket$
-				\item \emph{Coverage: } $coverage(f) = \frac{1}{p} \sum_{i=1}^{p} max_{y \in Y_i} rank_f(x_i,y) - 1$
-				\item \emph{Ranking loss: }$rloss(f) = \frac{1}{p} \sum_{i=1}^{p} \frac{1}{|Y_i| {\overset{\sim}{|Y_i|}}} |\{(y', y'') | f(x_i,y') \leq f(x_i,y''), (y', y'') \in Y_i \times {\overset{\sim}{|Y_i|}} \}| $ 
-				\item \emph{Average Precision: } $agvprec(f) = \frac{1}{p} \sum_{i=1}^{p} \frac{1}{|Y_i|} \sum_{y \in Y_i} \frac{|\{y' | rank_f(x_i,y') \leq rank_f(x_i,y), y' \in Y_i\}|}{rank_f(x_i,y)}$
+				\item One-error: $one-error(f) = \frac{1}{p} \llbracket [argmax_{y \in Y}f(x_i,y)] \notin Y_i \rrbracket$
+				\item Coverage:  $coverage(f) = \frac{1}{p} \sum_{i=1}^{p} max_{y \in Y_i} rank_f(x_i,y) - 1$
+				\item Ranking loss: $rloss(f) = \frac{1}{p} \sum_{i=1}^{p} \frac{1}{|Y_i| {\overset{\sim}{|Y_i|}}} |\{(y', y'') | f(x_i,y') \leq f(x_i,y''), (y', y'') \in Y_i \times {\overset{\sim}{|Y_i|}} \}| $ 
+				\item Average Precision:  $agvprec(f) = \frac{1}{p} \sum_{i=1}^{p} \frac{1}{|Y_i|} \sum_{y \in Y_i} \frac{|\{y' | rank_f(x_i,y') \leq rank_f(x_i,y), y' \in Y_i\}|}{rank_f(x_i,y)}$
 			\end{itemize}
 		\end{itemize}
-		\item \textbf{Label-based: }Before proceeding with the metrics, true positive(TP), false positive(FP), true negative (TN) and false negative (FN) will be defined:
-		\begin{itemize}
-			\item \emph{True positive: } $TP_j = |\{x_i | y_j \in Y_i \wedge y_j \in h(x_i), 1 \leq i \leq p \}|;$
-			\item \emph{False positive: }$FP_j = |\{x_i | y_j \notin Y_i \wedge y_j \in h(x_i), 1 \leq i \leq p \}|;$
-			\item \emph{True negative: }$TN_J = |\{x_i | y_j \notin Y_i \wedge y_j \notin h(x_i), 1 \leq i \leq p \}|;$
-			\item \emph{False negative: }$FN_J = |\{x_i | y_j \in Y_i \wedge y_j \notin h(x_i), 1 \leq i \leq p \}|;$
-		\end{itemize}
+  \item \textbf{Label-based: }
 		The label-based metrics are also separated in two perspectives:
 		\begin{itemize}
 			\item Classification: Let $B(TP_j, FP_j, TN_J, FN_J)$ represent some specific binary classification metric $(B \in \{Accuracy, Precision, Recall, F^ \beta \})$. The metrics from classification perspective are the following:
 			\begin{itemize}
-				\item \emph{Macro-averaging: }$B_{macro}(h) = \frac{1}{q} \sum_{1}^{q} B(TP_j, FP_j, TN_J, FN_J)$
-				\item \emph{Micro-averaging: }$B_{micro}(h) = B(\sum_{1}^{q}TP_j, \sum_{1}^{q}FP_j, \sum_{1}^{q}TN_j, \sum_{1}^{q}FN_j)$
+				\item Macro-averaging: $B_{macro}(h) = \frac{1}{q} \sum_{1}^{q} B(TP_j, FP_j, TN_J, FN_J)$
+				\item Micro-averaging: $B_{micro}(h) = B(\sum_{1}^{q}TP_j, \sum_{1}^{q}FP_j, \sum_{1}^{q}TN_j, \sum_{1}^{q}FN_j)$
 			\end{itemize}
 			\item Ranking:
 			\begin{itemize}
@@ -144,16 +199,18 @@
 	
 	\section*{Multi-label learning algorithms}
 	\addcontentsline{toc}{section}{Multi-label learning algorithms}
-	In this paper, 8 representative multi-label algorithms are presented and analyzed, seleceted with respect to below criteria:
+	In this paper, eight representative multi-label algorithms are presented and analyzed, seleceted with respect to below criteria:
 	\begin{itemize}
-		\item[$\checkmark$] Broad spectrum (unique characteristics)
-		\item[$\checkmark$] Primitive impact (lead to a number follow-up related methods)
-		\item[$\checkmark$] Favorable influence (highly-cited) 
+		\item[$\checkmark$] Broad, noteworthy and/or unique characteristics
+		\item[$\checkmark$] Primitive impact (i.e. leads to a number follow-up related methods)
+		\item[$\checkmark$] Favorable influence (popular and/or highly-cited) 
 	\end{itemize}
 	
 	The algorithms to be presented are grouped in two categories:
 	\begin{itemize}
-		\item \textbf{Problem Transformation Methods: }Algorithms of this category, in order to handle a multi-label problem, transform it into other well-established learning scenarios ("Fit data to algorithm" philosophy)
+		\item \textbf{Problem Transformation Methods: }Algorithms of this category
+      transform the multi-labeled problem into into other well-established
+      single-labeled learning scenarios, fusing the results into a multi-label output (``Fit data to algorithm'' philosophy)
 		\item \textbf{Algorithm Adaptation Methods: }Here, algorithms adapt popular learning techniques to deal with multi-label data directly ("Fit algorithm to data" philosophy)
 	\end{itemize}
 
@@ -168,19 +225,43 @@
 
 	\subsubsection*{Binary Relevance}
 	\addcontentsline{toc}{subsubsection}{Binary Relevance}
-	This algorithm decomposes the multi-learning problem into $q$ independent binary classification problems, each of them corresponding to a possible label in the label-set. First task is to construct a corresponding binary training set and then to use a binary learning algorithm in order to train the relevant binary classifier. Each training instance is involved in the learning process of all $q$ classifiers(cross-training strategy), which is regarded as positive instance in case of relevant labels and irrelevant otherwise. For new instances, the algorithm predicts the relevant label set by querying each binary classifier and combining the relevant labels.
+	Binary relevance (BR) decomposes the multi-learning problem into $q$
+  independent binary classification problems, each of them corresponding to a
+  possible label in the label-set $Y$. The first task is to construct a
+  corresponding binary training set for each label, on which a binary learning
+  algorithm is used in order to train the binary classifier that discriminates
+  class $y_j$, i.e. $h_j(\cdot)$. Each training instance is involved in the
+  learning process of all $q$ classifiers(cross-training strategy), which is
+  regarded as positive instance in case of relevant labels and negative
+  otherwise. For new instances, the algorithm predicts the relevant labelset by
+  querying each binary classifier and combining the relevant labels. A label is
+  considered relevant according to the thresholding scheme adopted in the classifier.
 	
-	This is a first-order approach algorithm, since it ignores completely any label associations. However, since the one-vs-rest scheme is used and classifiers are build for each label separately, the algorithm has the possibility of parallel implementation. Finally, the algorithm is sensitive to class-imbalance data (true positives are much less than false positives).
+	This is a first-order approach algorithm, since it ignores completely any
+  label associations. However, since an one-vs-rest scheme is used and
+  classifiers are built for each label separately, the algorithm has the
+  capability of parallel implementation. Finally, this separation renders the
+  algorithm sensitive to class-imbalance in the dataset\footnote{The case where
+    the number of positives and negatives for a class differs significantly}.
 	
 	\subsubsection*{Classifier Chains}
 	\addcontentsline{toc}{subsubsection}{Classifier Chains}
-	The logic of this algorithm is to transform the multi-label learning problem into a chain of binary classification problems, using subsequent binary classifiers in the chain, built upon the predictions of preceding ones and ordered by a permutation function. First of all, a binary training set is constructed by enriching each instance with the confidence of preceding classifiers. Moreover, a binary algorithm is used to determine whether $y_i$ label is relevant or not for an instance. For unknown instances, the algorithm predicts the relevant labels by iteratively traversing the classifier chain ($\lambda _{\tau(j)}^x \in {-1, +1}$ represents the predicted binary assignment of $y_{\tau(j)}$)
+	The logic of this algorithm is to transform the multi-label learning problem
+  into a chain of binary classification problems, using subsequent binary
+  classifiers in a chain, built upon the predictions of preceding ones and
+  ordered by a permutation function $f_p$. First of all, a binary training set
+  is constructed by enriching each instance with the confidence of preceding
+  classifiers, which are concatenated with the data vector $x_i$. Moreover, a binary algorithm is used in step $i$ to
+  determine whether label $y_i$ label is relevant or not for an instance. For
+  unknown instances the algorithm predicts the relevant labels by iteratively
+  traversing the classifier chain producing thresholded confidence scores ($\lambda _{\tau(j)}^x \in {-1, +1}$ in the
+  same order as within the training process by $f_p$ represents the predicted binary assignment of $y_{\tau(j)}$)
 	
 	This is a high-order method, that exploits label correlations to a degree, but in a random manner. However, it is highly sensitive to the permutation function, since the classifiers' ordering directly affects the result. One other disadvantage is that iterative operation prevents parallel implementation. Finally, one possible improvement to overcome the affect of classifiers' ordering is to use ensemble schemes.
 	
-	\subsubsection*{Calibrated Label Ranking}
-	\addcontentsline{toc}{subsubsection}{Calibrated Label Ranking}
-	This algorithm transforms the learning problem into a label pairwise comparison ranking problem. For $q$ labels, $q(q-1)/2$ binary classfiers are generated by pairwise comparison and a binary algorithm $g_{jk}(x)$ is used. Firstly, training sets $D_{jk}$ are constructing, where $D_{jk}: \{x_i, Y_i | y_j \in Y_i \oplus y_k \in Y_i\}$. The learning system votes for each example and if $g_{jk}(x)>0$, then $x_i$ is associated with label $y_j$, otherwise $y_j$ is irrelevant and $x_i$ is assigned to $y_k$. For unknown instances, classifiers' votes are aggregated and ranked. In addition, a virtual label $y_v$ is used as an artificial splitting point between relevant and irrelevant labels.
+	\subsubsection*{Claibrated Label Ranking}
+	\addcontentsline{toc}{subsubsection}{Claibrated Label Ranking}
+	This algorithm transforms the learning problem into a label pairwise comparison ranking problem. For $q$ labels, $q(q-1)/2$ binary classfiers are generated by pairwise comparison and a binary algorithm $h_{jk}(x)$ is used. Firstly, training sets $D_{jk}$ are constructing, where $D_{jk}: \{x_i, Y_i | y_j \in Y_i \oplus y_k \in Y_i\}$. The learning system votes for each example and if $h_{jk}(x)>0$, then $x_i$ is associated with label $y_j$, otherwise $y_j$ is irrelevant and $x_i$ is assigned to $y_k$. For unknown instances, classifiers' votes are aggregated and ranked. In addition, a virtual label $y_v$ is used as an artificial splitting point between relevant and irrelevant labels.
 	
 	This is a second-order approach algorithm using a one-vs-one scheme. The advantage of this method is that it smooths out the class-imbalance problem (where the number of a class positives is much less than the other's class positives). The disadvantage is the number of classifiers is quadratic to $|Y|$, compared to linear for Binary Relevance algorithm. One improvement to this issue is to use pruning methods to reduce the search space.
 	
