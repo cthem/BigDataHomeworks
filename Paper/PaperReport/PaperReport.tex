@@ -107,14 +107,30 @@
 			\begin{itemize}
 				\item \emph{One-error: }$one-error(f) = \frac{1}{p} \llbracket [argmax_{y \in Y}f(x_i,y)] \notin Y_i \rrbracket$
 				\item \emph{Coverage: } $coverage(f) = \frac{1}{p} \sum_{i=1}^{p} max_{y \in Y_i} rank_f(x_i,y) - 1$
-				\item \emph{Ranking loss: }$rloss(f) = \frac{1}{p} \sum_{i=1}^{p} $ \todo{complete it}
-				\item \emph{Average Precision: } \todo{average precision}
+				\item \emph{Ranking loss: }$rloss(f) = \frac{1}{p} \sum_{i=1}^{p} \frac{1}{|Y_i| {\overset{\sim}{|Y_i|}}} |\{(y', y'') | f(x_i,y') \leq f(x_i,y''), (y', y'') \in Y_i \times {\overset{\sim}{|Y_i|}} \}| $ 
+				\item \emph{Average Precision: } $agvprec(f) = \frac{1}{p} \sum_{i=1}^{p} \frac{1}{|Y_i|} \sum_{y \in Y_i} \frac{|\{y' | rank_f(x_i,y') \leq rank_f(x_i,y), y' \in Y_i\}|}{rank_f(x_i,y)}$
 			\end{itemize}
 		\end{itemize}
-		\item \textbf{Label-based: }
+		\item \textbf{Label-based: }Before proceeding with the metrics, true positive(TP), false positive(FP), true negative (TN) and false negative (FN) will be defined:
 		\begin{itemize}
-			\item \todo{label based metrics}
+			\item \emph{True positive: } $TP_j = |\{x_i | y_j \in Y_i \wedge y_j \in h(x_i), 1 \leq i \leq p \}|;$
+			\item \emph{False positive: }$FP_j = |\{x_i | y_j \notin Y_i \wedge y_j \in h(x_i), 1 \leq i \leq p \}|;$
+			\item \emph{True negative: }$TN_J = |\{x_i | y_j \notin Y_i \wedge y_j \notin h(x_i), 1 \leq i \leq p \}|;$
+			\item \emph{False negative: }$FN_J = |\{x_i | y_j \in Y_i \wedge y_j \notin h(x_i), 1 \leq i \leq p \}|;$
 		\end{itemize}
+		The label-based metrics are also separated in two perspectives:
+		\begin{itemize}
+			\item \textbf{Classification: }Let $B(TP_j, FP_j, TN_J, FN_J)$ represent some specific binary classification metric $(B \in \{Accuracy, Precision, Recall, F^ \beta \})$. The metrics from classification perspective are the following:
+			\begin{itemize}
+				\item \emph{Macro-averaging: }$B_{macro}(h) = \frac{1}{q} \sum_{1}^{q} B(TP_j, FP_j, TN_J, FN_J)$
+				\item \emph{Micro-averaging: }$B_{micro}(h) = B(\sum_{1}^{q}TP_j, \sum_{1}^{q}FP_j, \sum_{1}^{q}TN_j, \sum_{1}^{q}FN_j)$
+			\end{itemize}
+			\item \textbf{Ranking:}
+			\begin{itemize}
+				\item \emph{AUC macro: }$AUC_{macro} = \frac{1}{q} \sum_{1}^{q} \frac{|\{(x', x'') | f(x',Y_j) \geq f(x'',Y_j), (x',x'') \in Z_j \times \overset{\sim}{|Z_j|} \}|}{|Z_j|{\overset{\sim}{|Z_j|}}}$
+				\item \emph{AUC micro: }$AUC_{micro} = \frac{|\{(x',x'',y',y'') | f(x',y') \geq f(x'',y''), (x',y') \in S^+, (x'',y'') \in S^- \}|}{|S^+||S^-|}$
+			\end{itemize}
+		\end{itemize} 
 	\end{itemize}
 	
 	\section*{Multi-label learning algorithms}

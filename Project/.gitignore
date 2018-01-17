@@ -3,3 +3,4 @@
 input_folder/
 output_folder/
 *.pyc
+.project
