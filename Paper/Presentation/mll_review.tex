@@ -192,8 +192,8 @@ Grouped into two categories and perspectives:
 \begin{itemize}
 \item[$\circ$] \emph{Classification perspective:}
 \begin{itemize}
-\item[$\star$] Subset Accuracy, Hamming Loss
-\item[$\star$] Precision, Recall,  F$^\beta$ -measure
+\item[$-$] Subset Accuracy, Hamming Loss
+\item[$-$] Precision, Recall,  F$^\beta$ -measure
 \end{itemize}
 \item[$\circ$] \emph{Ranking perspective:} one-error, coverage, ranking loss, average precision
 \end{itemize}
@@ -363,13 +363,13 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Multi-Label k-Nearest Neighbour}
 \begin{itemize}
-	\item[$\bullet$] Let $H_j \equiv (y_j \in Y_i)$, $C_j = \sum_{x_k \in N(x_i)} [\delta(y_j \in Y_k)]$
+	\item[$\bullet$] Consider events $H_j \equiv (y_j \in Y_i)$, $C_j \equiv (\sum_{x_k \in N(x_i)} [\delta(y_j \in Y_k)])$
 \item[$\bullet$] Compares the MAP probabilities: $P(K|C_j), K \in \{H_j, \neg H_j\}$ to decide if to include $y_j$ in the prediction. Compute with the Bayes' theorem.
 \item[$\bullet$] Single-label priors $P(K)$ computed by smoothed frequency counting in the training data
 \item[$\bullet$] Likelihoods $P(C_j|K)$ are computed as a function of:
 \begin{itemize}
-\item[$\circ$] $\kappa(r)$, the number of examples labelled $y_j$ with $r$ neighbours labelled $y_j$
-\item[$\circ$] $\overset{\sim}{\kappa}(r)$, the number of examples not labelled $y_j$ with $r$ neighbours labelled $y_j$
+\item[$\circ$] $\kappa_j(r)$, the number of examples labelled $y_j$ with $r$ neighbours labelled $y_j$
+\item[$\circ$] $\overset{\sim}{\kappa_j}(r)$, the number of examples not labelled $y_j$ with $r$ neighbours labelled $y_j$
 \end{itemize}
 \end{itemize}
 
@@ -388,8 +388,9 @@ Pros \& cons:
 \frametitle{Multi-label Decision Tree}
 \begin{itemize}
 \item[$\bullet$] Multi-label entropy is used to build a decision tree recursively
-\item[$\bullet$] Split $x$ at the $l$-th feature\footnote{$x$ has to contain distinct features} s.t. the information gain criterion is maximized
-\item[$\bullet$] Dataset $T$ is split on the $l$-th feature valued $\theta$ to branches ($T^-$ \& $T^+$), where $ x_{il} \leq \theta, x_i \in T^-$ and $ x_{il} > \theta, x_i \in T^+$
+\item[$\bullet$] Split node at the $l$-th feature of $x$ such that the information gain
+  criterion is maximized. Node partitions data according to $x_l = \theta$:
+ $T \rightarrow \{T^-,T^+\}$, where $ x_{il} \leq \theta, x_i \in T^-$ and $ x_{il} > \theta, x_i \in T^+$
 \item[$\bullet$] Recurse on subtrees until a stopping criterion is met (e.g. child size)
 \item[$\bullet$] Single-label entropy is computed by considering labelsets as new classes
 \item[$\bullet$] Assumes independence among labels to ensure low computational cost
@@ -407,12 +408,13 @@ Pros \& cons:
 \frametitle{Ranking Support Vector Machine}
 \begin{itemize}
 	\item[$\bullet$] $q$ linear classifiers $h_i(x)$, optimized with the empirical ranking loss
+	\item[$\bullet$] Combine classifiers to discriminate label \emph{pairs}. Label
+    pair $(j, k)$ decision hyperplane is: $h_{jk} = g(h_j, h_k) = \left<w_j-w_k, x_i \right> + b_j - b_k=0$
 \item[$\bullet$] Consider signed distance of $x_i$ from the boundary of every
-  relevant-nonrelevant label pair $(y_j,y_k) \in Y_i \times \bar Y_i$. The
-  pair's decision hyperplane is: $h_j, h_k$: $\left<w_j-w_k, x_i \right> + b_j - b_k=0$
+  relevant-nonrelevant label pair $(y_j,y_k) \in Y_i \times \bar Y_i$.
+  % The pair's decision hyperplane is: $h_j, h_k$: $\left<w_j-w_k, x_i \right> + b_j - b_k=0$
 \item[$\bullet$] The M-L margin is the minimum distance of $x_i$ from every  $Y_i \times \bar Y_i$
 \item[$\bullet$] SVM $\rightarrow$ minimize loss \emph{and} maximize margin.
-  Approximate $max(\cdot)$ and introduce slack variables.
 
 \item[$\bullet$] Ranks labels according to the singed distance
 \item[$\bullet$] Non-linearity achievable through feature mapping and the kernel trick
@@ -420,8 +422,8 @@ Pros \& cons:
 Pros \& cons:
 \begin{itemize}
 \item[$\bullet$] Second-order approach, maximum margin strategy
-\item[$\bullet$] Convex quadratic programming problem, solved by any QP solver
-\item[$\bullet$] Extensible by kernel learning: kernel selection can be overcome by Multiple Kernel Learning techniques
+\item[$\bullet$] Optimization is a convex QP problem, solved by any QP solver
+\item[$\bullet$] Kernel SVM, kernel selection can be done with MKL techniques
 \item[$\bullet$] Adaptable learning by selecting an appropriate loss function
 \end{itemize}
 
@@ -430,15 +432,18 @@ Pros \& cons:
 \begin{frame}
 \frametitle{Collective Multi-Label Classifier}
 \begin{itemize}
-\item[$\bullet$] Encodes labels as binary random vectors $\bm{y}=\{-1,1\}\}^q$
-\item[$\bullet$] For data $x,\bm{y}$ learn joint probability distribution $p(x,\bm{y})$
-\item[$\bullet$] Learn pdf $p(x,\bm{y})$ via the principle of maximun entropy
+\item[$\bullet$] A Conditional Random Field model for M-L classification
+\item[$\bullet$] Encodes $y$ as binary random vectors $\bm{y}=\{-1,1\}^q$.
+  Learn joint probability distribution $p(x,\bm{y})$
+\item[$\bullet$] Compute conditional $p(\bm{y} | x)$ with the maximum entropy criterion:
   \begin{itemize}
     \item Maximize $H_p(x,y)$ subject to $K$ constraints $\mathbb{E}[f_k(x,\bm{y})] = F_k$
-    \item $f_k$ models label correlations with $F_k$ learned from the training data
+    \item $f_k(\cdot)$ directly model label correlations - the $F_k$ values are learned from the training data
+  \item[$\bullet$] Solve with Lagrange multipliers, assuming gaussian priors
+  \item[$\bullet$] Optimal solution is in the form of a Gibbs probability distribution
   \end{itemize}
-\item[$\bullet$] Optimize via Lagrange multipliers, arrive at $p(\bm{y} | x)$
-\item[$\bullet$] Unseen instances labelled with $Y = \underset{y}{\text{argmax }} p(y | x)$
+%\item[$\bullet$] Unseen instances labelled with $Y = \underset{y}{\text{argmax }} p(y | x)$
+\item[$\bullet$] Unseen instances labelled with $Y = \text{argmax}_y\text{ } p(y | x)$
 \end{itemize}
 Pros \& cons:
 \begin{itemize}
@@ -446,6 +451,7 @@ Pros \& cons:
 \item[$\bullet$] Convex constraint optimization problem $\rightarrow$ solvable by any
   CP solver
 \item[$\bullet$] Intractable $\text{argmax}$ operation for a large label space without pruning.
+\item[$\bullet$] Extensible: Different forms of constraints yield various CML variants
 \end{itemize}
 \end{frame}
 %------------------------------------------------
@@ -465,19 +471,16 @@ Pros \& cons:
 \frametitle{\insertsection}
 \begin{itemize}
 \item[$\bullet$] Multi-instance learning
-  % https://en.wikipedia.org/wiki/Multiple-instance_learning
 \begin{itemize}
 \item[$\circ$] Instead of labeled instances, get binary-labeled \emph{bags of instances}
 \item[$\circ$] Assign positive label to bag if at least one member is positive
 \item[$\circ$] Models complex semantics of $x_i$ in input space, rather than its output
 \end{itemize}
 \item[$\bullet$] Ordinal classification
-  % https://en.wikipedia.org/wiki/Ordinal_regression
 \begin{itemize}
-\item[$\circ$] Assume labels are related through a natural ordering
-\item[$\circ$] Instead of explicit class relevance, assume an ordering of
-  relevance between labels via a membership vector
-\item[$\circ$] Transform ML problem to a set of ordinal set of problems
+\item[$\circ$] Assume label relevance is not binary, but soft
+\item[$\circ$] Produce a vector of ordinal graded membership
+\item[$\circ$] Transform M-L problem to a set of ordinal set of problems
 \end{itemize}
 \item[$\bullet$] Multi-task learning
 \begin{itemize}
@@ -543,8 +546,12 @@ Future goals:
 \begin{frame}
 \frametitle{\insertsection : \insertsubsection}
 \begin{itemize}
+\item[$\bullet$] Vens, Celine, et al. "Decision trees for hierarchical multi-label classification." Machine Learning 73.2 (2008): 185-214.
+\item[$\bullet$] Tsoumakas, Grigorios, and Ioannis Vlahavas. "Random k-labelsets: An ensemble method for multilabel classification." Machine learning: ECML 2007 (2007): 406-417.
+\item[$\bullet$] Zhang, Min-Ling, and Zhi-Hua Zhou. "ML-KNN: A lazy learning approach to multi-label learning." Pattern recognition 40.7 (2007): 2038-2048.
 \item[$\bullet$] Elisseeff, André, and Jason Weston. "A kernel method for multi-labelled classification." Advances in neural information processing systems. 2002.
 \item[$\bullet$]  Ghamrawi, Nadia, and Andrew McCallum. "Collective multi-label classification." Proceedings of the 14th ACM international conference on Information and knowledge management. ACM, 2005.
+\item[$\bullet$]  Cheng, Weiwei, Eyke Hüllermeier, and Krzysztof J. Dembczynski. "Graded multilabel classification: The ordinal case." Proceedings of the 27th international conference on machine learning (ICML-10). 2010.
 \end{itemize}
 \end{frame}
 %------------------------------------------------
