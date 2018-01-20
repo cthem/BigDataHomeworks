@@ -64,20 +64,7 @@ def preprocess_train_data(feature_df, seed):
         targets.append(row["journeyId"])
         train_points = row["points"]
         train_points = eval(train_points)
-        points = []
-        for point in train_points:
-            points.append(point[1])
-        data.append(points)
-
-    # get maximum length of feature lists
-    maxlen = len(max(data, key=lambda x: len(x)))
-    print("Padding training features to a max length of", maxlen)
-    # keep the numeric part of the text features
-    data = [[int(d[1:]) for d in dlist] for dlist in data]
-    # pad to the maximum length
-    for i, datum in enumerate(data):
-        if len(datum) < maxlen:
-            data[i] = datum + [3 for _ in range(maxlen - len(datum))]
+        data.append(train_points)
 
     # convert journey ids to numbers
     num_ids = {}
@@ -190,7 +177,7 @@ def improve_classification(features_file, num_folds, output_folder, classifier, 
     return mean_accuracies
 
 
-def test(logreg_object, best_technique, features, jid_mapping, output_file):
+def test(logreg_object, classifier_name, best_technique, features, jid_mapping, output_file):
     jids = [j for j in jid_mapping]
     numeric_ids = [jid_mapping[j] for j in jids]
     if best_technique.startswith("norm"):

@@ -49,7 +49,8 @@ def question_b(train_file, number_of_cells, output_folder):
     # save grid and transform data
     with open(grid_file, "wb") as f:
         pickle.dump(grid, f)
-    gvp.map_to_features(train_df, grid, feature_file)
+    # gvp.map_to_features(train_df, grid, feature_file)
+    gvp.map_to_features_bow(train_df, grid, feature_file)
     return feature_file, grid_file
 
 
@@ -94,10 +95,10 @@ def question_c(features_file, grid_file, test_file, output_folder, seed, classif
     with open(grid_file,"rb") as f:
         grid = pickle.load(f)
     print("Transforming test data to features...")
-    test_features = gvp.map_to_features(test_data_df, grid, None)
-    test_features = jcp.preprocess_test_data(test_features)
-    print("Running test on",best_classifier,"-",best_technique)
-    jcp.test(impr_classifier_name, best_technique, test_features, jid_mapping, classif_file)
+    test_features = gvp.map_to_features_bow(test_data_df, grid, None)
+    # test_features = jcp.preprocess_test_data(test_features)
+    print("Running test on",impr_classifier_name,"-",best_technique)
+    jcp.test(best_classifier, impr_classifier_name, best_technique, test_features, jid_mapping, classif_file)
     print("Done!")
 
 

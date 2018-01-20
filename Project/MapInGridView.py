@@ -65,6 +65,39 @@ def create_cell_names(number_of_cells):
     return cell_names
 
 
+def map_to_features_bow(data_df, grid, output_file):
+    rows, columns, cell_names = grid
+
+    points_header = "points" if "points" in data_df else "Trajectory"
+
+    features = []
+    for index,row in data_df.iterrows():
+        bow_vector = [0 for cc in cell_names for c in cc]
+        train_points = row[points_header]
+        train_points = eval(train_points)
+
+        train_lonlats = utils.idx_to_lonlat(train_points, format="tuples")
+        for i,lonlat in enumerate(train_lonlats):
+            lon = lonlat[0]  # for columns
+            lat = lonlat[1]  # for rows
+            row_idx = find_index(rows, lat)
+            col_idx = find_index(columns, lon)
+            linear_idx = row_idx * len(columns) + col_idx
+            bow_vector[linear_idx] += 1
+
+        features.append(bow_vector)
+    # show stats
+    # TODO
+
+    for i,feats in enumerate(features):
+        data_df.at[i,points_header] = feats
+    if output_file is not None:
+        data_df.to_csv(output_file)
+    else:
+        return features
+
+
+
 def map_to_features(data_df, grid, output_file):
     rows, columns, cell_names = grid
     raw_features, timestamps = map_to_features_pointwise(data_df, grid)
