@@ -49,7 +49,8 @@ def question_b(train_file, number_of_cells, output_folder):
     # save grid and transform data
     with open(grid_file, "wb") as f:
         pickle.dump(grid, f)
-    gvp.map_to_features(train_df, grid, feature_file)
+    # gvp.map_to_features(train_df, grid, feature_file)
+    gvp.map_to_features_bow(train_df, grid, feature_file)
     return feature_file, grid_file
 
 
