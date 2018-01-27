@@ -35,7 +35,7 @@ def question_2(opts):
     features_file, grid_file = qp2.question_b(opts["cleanfile"], cellgrid, opts["outdir"])
 
     print("\n>>> Running question 2c - Classification")
-    qp2.question_c(features_file, grid_file, opts["testfiles"][2], opts["classifdir"], opts["seed"], opts["classiffile"], opts["folds"])
+    qp2.question_c(opts["cleanfile"],features_file, grid_file, opts["testfiles"][2], opts["classifdir"], opts["seed"], opts["classiffile"], opts["folds"])
 
 
 def check_dependencies():

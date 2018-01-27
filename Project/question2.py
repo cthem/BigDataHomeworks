@@ -54,7 +54,7 @@ def question_b(train_file, number_of_cells, output_folder):
     return feature_file, grid_file
 
 
-def question_c(features_file, grid_file, test_file, output_folder, seed, classif_file, num_folds):
+def question_c(clean_file, features_file, grid_file, test_file, output_folder, seed, classif_file, num_folds):
     df_features = pd.read_csv(features_file)
     features, jid_mapping, targets = jcp.preprocess_train_data(df_features, seed)
     classifiers = ["knn", "logreg", "randfor"]
@@ -73,7 +73,7 @@ def question_c(features_file, grid_file, test_file, output_folder, seed, classif
     best_accuracy, best_classifier, best_technique = -1, None, None
     print()
     print("Improving classification for classifier", impr_classifier_name)
-    mean_accuracies = jcp.improve_classification(features_file, num_folds, output_folder, impr_classifier_name, seed)
+    mean_accuracies = jcp.improve_classification(clean_file, grid_file, features_file, num_folds, output_folder, impr_classifier_name, seed)
 
     print()
     print("Performance comparison:")
@@ -98,7 +98,7 @@ def question_c(features_file, grid_file, test_file, output_folder, seed, classif
     test_features = gvp.map_to_features_bow(test_data_df, grid, None)
     # test_features = jcp.preprocess_test_data(test_features)
     print("Running test on",impr_classifier_name,"-",best_technique)
-    jcp.test(best_classifier, impr_classifier_name, best_technique, test_features, jid_mapping, classif_file)
+    jcp.test(best_classifier, impr_classifier_name, best_technique, test_file, jid_mapping, classif_file)
     print("Done!")
 
 

@@ -250,3 +250,5 @@ def subsets(seq):
         j+=1
     return subseqs
 
+def euc_dist(pt1, pt2):
+    return np.sqrt(np.sum([pow(x-y,2) for (x,y) in zip(pt1,pt2)]))

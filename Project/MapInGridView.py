@@ -1,6 +1,8 @@
 import os
 import matplotlib.pyplot as plt
 import utils
+import numpy as np
+import math
 from collections import OrderedDict
 
 
@@ -64,6 +66,57 @@ def create_cell_names(number_of_cells):
             cell_names[-1].append(str(i) + str(j))
     return cell_names
 
+
+def map_to_features_vlad(data_df, grid, output_file):
+    print("Computing VLAD encoding")
+    rows, columns, cell_names = grid
+    # internal midpoints
+    r_dists = [u-d for (u, d) in zip(rows[1:],rows[:-1])]
+    c_dists = [u-d for (u, d) in zip(columns[1:],columns[:-1])]
+    r_mids = [r+m/2 for (r,m) in zip(rows[:-1],r_dists)]
+    c_mids = [r+m/2 for (r,m) in zip(columns[:-1],c_dists)]
+    # edge midpoints, with distance the mean of the internals
+    r_dists, c_dists = np.mean(r_dists), np.mean(c_dists)
+    r_mids = [rows[0] - r_dists/2] + r_mids + [rows[-1] + r_dists/2]
+    c_mids = [columns[0] - c_dists/2] + c_mids + [columns[-1] + c_dists/2]
+
+    centroids = [(c,r) for c in c_mids for r in r_mids]
+
+
+    points_header = "points" if "points" in data_df else "Trajectory"
+
+    features = []
+    for index,row in data_df.iterrows():
+        vlad_vector = [0 for _ in centroids]
+        train_points = row[points_header]
+        train_points = eval(train_points)
+
+        train_lonlats = utils.idx_to_lonlat(train_points, format="tuples")
+        for i,lonlat in enumerate(train_lonlats):
+            lon = lonlat[0]  # for columns
+            lat = lonlat[1]  # for rows
+            dists = []
+            # get distance from each centroid
+            for centroid in centroids:
+                dists.append(utils.euc_dist(centroid,lonlat))
+
+            dnorm = np.sqrt(sum([pow(d,2) for d in dists]))
+            dists = [1 - d/dnorm for d in dists]
+            vlad_vector = [v + d for (v,d) in zip(vlad_vector, dists)]
+
+        dnorm = np.sqrt(sum([pow(d,2) for d in dists]))
+        vlad_vector = [1 - d/dnorm for d in vlad_vector]
+        features.append(vlad_vector)
+    # show stats
+    # TODO
+
+    print("Done computing VLAD encoding")
+    for i,feats in enumerate(features):
+        data_df.at[i,points_header] = feats
+    if output_file is not None:
+        data_df.to_csv(output_file)
+    else:
+        return features
 
 def map_to_features_bow(data_df, grid, output_file):
     rows, columns, cell_names = grid

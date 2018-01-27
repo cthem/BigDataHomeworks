@@ -1,12 +1,14 @@
 import numpy as np
 import pandas as pd
 import sklearn
+import pickle
 import random
 from sklearn.model_selection import KFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
+import MapInGridView as gvp
 from sklearn.metrics import classification_report
 import utils
 import os
@@ -147,11 +149,12 @@ def randfor_classification(train, val):
 
 
 # test file in the same format as the features file
-def improve_classification(features_file, num_folds, output_folder, classifier, seed):
+def improve_classification(clean_trips_file, grid_file, bow_features_file, num_folds, output_folder, classifier, seed):
+
     print()
-    print("Reading features:",features_file)
-    train_df = pd.read_csv(features_file)
-    grid_features, jid_mapping, targets = preprocess_train_data(train_df, seed)
+    #print("Reading features:",features_file)
+    features = pd.read_csv(bow_features_file)
+    features, jid_mapping, targets = preprocess_train_data(features, seed)
     # try various techniques for improvement
     mean_accuracies = {}
 
@@ -161,8 +164,8 @@ def improve_classification(features_file, num_folds, output_folder, classifier, 
         tag = "norm_%s" % norm
         print("\nTrying strategy: %s" % tag, end='')
         classifier_obj = LogisticRegression()
-        grid_features = sklearn.preprocessing.normalize(grid_features, norm = norm, copy=False)
-        mean_acc = train(grid_features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
+        proc_features = sklearn.preprocessing.normalize(features, norm = norm, copy=False)
+        mean_acc = train(proc_features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
 
     # try various regularization strengths
@@ -171,13 +174,42 @@ def improve_classification(features_file, num_folds, output_folder, classifier, 
         tag = "C_%1.3f" % c
         print("\nTrying strategy: %s" % tag, end='')
         classifier_obj = LogisticRegression(C=c)
-        mean_acc = train(grid_features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
+        mean_acc = train(features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
+
+    # try VLAD encoding, instead of BoW
+    # in bow, you just count the number of times points fall into a bin
+    # in vlad, instead of just counting (adding 1 per instance that falls in), you add the distance.
+    # i.e. for bow bins: [(1,2),(2,3)] and points 1.5, 1.9, 2.9
+    # produce vlad points from bow bins: (1.5, 2.5)
+    # get distances from each center
+    # TODO
+    # in bow you get: [1,1,2]
+    # in vlad you get: []
+    # read clean trips
+    with open(grid_file,"rb") as fg:
+        grid =pickle.load(fg)
+    features = pd.read_csv(clean_trips_file)
+    vlad_features = gvp.map_to_features_vlad(features, grid, None)
+    classifier_obj = LogisticRegression()
+    tag = "vlad"
+    mean_acc = train(vlad_features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
+    mean_accuracies[tag] = (mean_acc, classifier_obj)
+
 
     return mean_accuracies
 
 
-def test(logreg_object, classifier_name, best_technique, features, jid_mapping, output_file):
+def test(logreg_object, classifier_name, best_technique, test_file, grid_file, jid_mapping, output_file):
+
+    # read and featurify data
+    print("Reading test data...")
+    test_data_df = pd.read_csv(test_file,delimiter=";")
+    with open(grid_file,"rb") as f:
+        grid = pickle.load(f)
+    print("Transforming test data to features...")
+    features = gvp.map_to_features_bow(test_data_df, grid, None)
+
     jids = [j for j in jid_mapping]
     numeric_ids = [jid_mapping[j] for j in jids]
     if best_technique.startswith("norm"):
