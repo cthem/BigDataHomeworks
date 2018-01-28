@@ -26,7 +26,7 @@ def question_a1(output_folder, clean_file, test_file, paropts, k):
         nn.preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, index)
 
 
-def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts):
+def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, verbosity, unique_jids = True):
     print("Extracting %d subroutes for each test trip" % k)
     test_df = pd.read_csv(test_file, delimiter="\n")
     train_df = pd.read_csv(train_file)
@@ -34,7 +34,7 @@ def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts):
         print("Extracting subroutes for test trip %d/%d" % (index + 1, len(test_df)))
         file_name = os.path.join(output_folder, "subroutes_%d_" % (index + 1))
         test_points = eval(row["Trajectory"])
-        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, conseq_lcss)
+        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, conseq_lcss, verbosity, unique_jids)
         ns.preprocessing_for_visualisation(test_points, max_subseqs, file_name, index)
 
 
@@ -98,7 +98,7 @@ def question_c(clean_file, features_file, grid_file, test_file, output_folder, s
     test_features = gvp.map_to_features_bow(test_data_df, grid, None)
     # test_features = jcp.preprocess_test_data(test_features)
     print("Running test on",impr_classifier_name,"-",best_technique)
-    jcp.test(best_classifier, impr_classifier_name, best_technique, test_file, jid_mapping, classif_file)
+    jcp.test(best_classifier, impr_classifier_name, best_technique, test_file, grid_file, jid_mapping, classif_file)
     print("Done!")
 
 

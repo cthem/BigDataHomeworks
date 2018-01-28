@@ -48,6 +48,7 @@ def run_with_processes(numpar, test_lonlat, train_df):
     print("Joined.")
     for i in range(len(tasks)):
         rres[i] = tasks[i].get()
+        print("Processed %d/%d" %(i,len(train_df)))
         # merge results
         nns = []
         for r in rres:

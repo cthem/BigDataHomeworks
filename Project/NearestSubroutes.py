@@ -4,7 +4,7 @@ import threading
 import question1 as qp1
 
 
-def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None, conseq_lcss = True):
+def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None, conseq_lcss = True, verbosity = False, unique_jids = True):
     if paropts:
         print("Parallelizing with", paropts)
         partype, numpar = paropts
@@ -16,17 +16,17 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None,
     if partype:
         # num threads or processes
         if partype == "processes":
-            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k, conseq_lcss)
+            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k, conseq_lcss, unique_jids)
         elif partype == "threads":
-            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k, conseq_lcss)
+            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k, conseq_lcss, unique_jids)
     else:
-        max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss)
+        max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss, verbosity = verbosity, unique_jids = unique_jids)
     if len(max_subseqs) != k:
         print("WARNING: Specified %d subseqs!" % k)
     return max_subseqs
 
 
-def serial_execution(df, test_lonlat, k, conseq_lcss):
+def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_jids = True):
     max_subseqs = []
     for index, row in df.iterrows():
         train_points = row["points"]
@@ -38,10 +38,15 @@ def serial_execution(df, test_lonlat, k, conseq_lcss):
         elapsed = utils.tictoc(timestart)
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
+        if unique_jids:
+            subseqs_idx = subseqs_idx[0:1]
+
         # update the list of the longest subsequences
         if subseqs:
             max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
             # print("Updated max subseqs, len now:",len(max_subseqs))
+    if verbosity:
+        print("Got %d subseqs:" % len(max_subseqs), max_subseqs)
     return max_subseqs
 
 
@@ -213,6 +218,9 @@ def update_current_maxsubseq(current, new_seqs, k, elapsed, row):
     """
     count = 0
     for seq in new_seqs:
+        # if the same seq is, for some reason, already in the list, continue
+        if seq in [x[0] for x in current]:
+            continue
         should_sort = False
         count += 1
         if len(current) < k:
@@ -254,7 +262,7 @@ def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
         point_idxs = sseq[0]
         # get the points data from the pandas dataframe
         train_points = sseq[2]["points"]
-        train_points = utils.idx_to_lonlat(eval(train_points))
+        train_points = utils.idx_to_lonlat(eval(train_points), format='tuples')
         # color matching points in red. Remaining points are drawn in blue.
         # get the points from the beginning up to the match
         b1 = train_points[0:point_idxs[0]+1]

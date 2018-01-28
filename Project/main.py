@@ -24,10 +24,11 @@ def question_2(opts):
     print("=====================")
     # Question 2
     print("\n>>> Running question 2a1 - Nearest neighbours computation")
-    qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"])
+    # qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"])
 
     print("\n>>> Running question 2a2 - Nearest subroutes computation")
-    qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],opts["conseq_lcss"], opts["k"], opts["paropts"])
+    qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],\
+                    opts["conseq_lcss"], opts["k"], opts["paropts"], opts["verbosity"], options["unique_subroute_jids"])
 
     print("\n>>> Running question 2b - Cell grid quantization")
     cellgrid = opts["grid"]
@@ -59,6 +60,7 @@ if __name__ == '__main__':
 
     # create an options dict object to pass around
     options = {}
+    options["verbosity"] = True
     options["indir"] = abspath(sys.argv[1])
     options["outdir"] = abspath(sys.argv[2])
     options["conseq_lcss"] = True
@@ -67,15 +69,15 @@ if __name__ == '__main__':
     np.random.seed(options["seed"])
     random.seed(options["seed"])
 
-    paropts = ("processes", 10)
+    #paropts = ("processes", 10)
     # paropts = ("threads", 10)
-    #paropts = None
+    paropts = None
     options["paropts"] = paropts
 
     # question 1
     ############
 
-    # prepare files
+    # prepare files and parameters
     options["trainfile"]  = join(options["indir"], "train_set.csv")
     options["tripsfile"]  = join(options["outdir"], "trips.csv")
     options["cleanfile"]  = join(options["outdir"], "trips_clean.csv")
@@ -90,15 +92,16 @@ if __name__ == '__main__':
     os.makedirs(options["classifdir"], exist_ok=True)
 
     # run
-    question_1(options)
+    # question_1(options)
 
     # question 2
     ############
 
-    # prepare files
+    # prepare files and parameters
     test_files = [join(options["indir"], "test_set_a%d.csv" % t) for t in [1,2]] + ["test_set.csv"]
     test_files = [join(options["indir"],t) for t in test_files]
     options["testfiles"] = test_files
+    options["unique_subroute_jids"] = True
     options["k"] = 5
 
     # run
