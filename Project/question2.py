@@ -12,6 +12,7 @@ def question_a1(output_folder, clean_file, test_file, paropts, k):
     test_df = pd.read_csv(test_file, delimiter="\n")
     train_df = pd.read_csv(clean_file)
     print("Extracting %d nearest neighbours out of %d cleaned train data, for each test trip" % (k,len(train_df)))
+    print("Using parallelization options:", paropts)
     for index, row in test_df.iterrows():
         print("Examining test element %d / %d" % (index + 1, len(test_df)))
         outfile_name = os.path.join(output_folder, "nn_%d_" % (index + 1))

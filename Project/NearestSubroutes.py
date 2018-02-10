@@ -287,7 +287,7 @@ def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
         points.append(pts)
         # as said above, the color sequence is blue, red, blue
         colors.append(cols)
-        print("Added pts:", pts)
-        print("Added cols:", cols)
+        # print("Added pts:", pts)
+        # print("Added cols:", cols)
     # send the whole parameter bundle to be drawn
     utils.visualize_point_sequences(points, colors, labels, file_name)

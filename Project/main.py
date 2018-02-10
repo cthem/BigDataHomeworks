@@ -24,7 +24,7 @@ def question_2(opts):
     print("=====================")
     # Question 2
     print("\n>>> Running question 2a1 - Nearest neighbours computation")
-    # qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"])
+    qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"])
 
     print("\n>>> Running question 2a2 - Nearest subroutes computation")
     qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],\
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     os.makedirs(options["classifdir"], exist_ok=True)
 
     # run
-    # question_1(options)
+    question_1(options)
 
     # question 2
     ############
