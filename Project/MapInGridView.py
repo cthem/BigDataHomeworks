@@ -107,8 +107,6 @@ def map_to_features_vlad(data_df, grid, output_file):
         dnorm = np.sqrt(sum([pow(d,2) for d in dists]))
         vlad_vector = [1 - d/dnorm for d in vlad_vector]
         features.append(vlad_vector)
-    # show stats
-    # TODO
 
     print("Done computing VLAD encoding")
     for i,feats in enumerate(features):
@@ -139,8 +137,6 @@ def map_to_features_bow(data_df, grid, output_file):
             bow_vector[linear_idx] += 1
 
         features.append(bow_vector)
-    # show stats
-    # TODO
 
     for i,feats in enumerate(features):
         data_df.at[i,points_header] = feats

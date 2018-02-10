@@ -11,6 +11,7 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None,
     else:
         partype, numpar = None, None
 
+    timestart = utils.tic();
     test_lonlat = utils.idx_to_lonlat(test_points, format="tuples")
     max_subseqs = []
     if partype:
@@ -23,11 +24,13 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None,
         max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss, verbosity = verbosity, unique_jids = unique_jids)
     if len(max_subseqs) != k:
         print("WARNING: Specified %d subseqs!" % k)
+    print("Extracted %d nearest subsequences in: %s" % (k, utils.tictoc(timestart)))
     return max_subseqs
 
 
 def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_jids = True):
     max_subseqs = []
+    # for each trip in the training data
     for index, row in df.iterrows():
         train_points = row["points"]
         train_points = eval(train_points)
@@ -39,18 +42,18 @@ def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
         if unique_jids:
+            # keep at most one (the longest) subroute for each training trip 
             subseqs_idx = subseqs_idx[0:1]
-
         # update the list of the longest subsequences
         if subseqs:
-            max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
+            max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_jids = unique_jids)
             # print("Updated max subseqs, len now:",len(max_subseqs))
     if verbosity:
-        print("Got %d subseqs:" % len(max_subseqs), max_subseqs)
+        print("Got %d subseqs:" % len(max_subseqs), [ (x,y,z["journeyId"]) for (x,y,z) in max_subseqs])
     return max_subseqs
 
 
-def exec_with_processes(df, process_num, test_lonlat, k):
+def exec_with_processes(df, process_num, test_lonlat, k, unique_jids = True):
     max_subseqs = []
     pool = ThreadPool(processes=process_num)
     for index, row in df.iterrows():
@@ -65,14 +68,14 @@ def exec_with_processes(df, process_num, test_lonlat, k):
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
         # update the list of the longest subsequences
-        max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
+        max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_jids = unique_jids)
     print("Got %d common subsequences" % len(max_subseqs))
     pool.close()
     pool.join()
     return max_subseqs
 
-# TODO error with row
-def exec_with_threads(df, numpar, test_lonlat, k):
+
+def exec_with_threads(df, numpar, test_lonlat, k, unique_jids = True):
     max_subseqs = []
     res1 = [[] for _ in range(numpar)]
     res2 = [[] for _ in range(numpar)]
@@ -145,6 +148,7 @@ def calc_lcss_noconseq(t1, t2, subseqs=None, subseqs_idx=None):
     idxs = utils.subsets(idxs)
     return seqs,list(idxs)
 
+
 def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = False):
     '''
     :param t1: list of lonlat coordinate tuples
@@ -196,6 +200,7 @@ def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = False):
 
     return seqs, list(idxs)
 
+
 if __name__ == '__main__':
     s1 = "datter"
     s2 = "dogger"
@@ -207,7 +212,7 @@ if __name__ == '__main__':
     utils.subsets([1,2,7,1,3,9])
 
 
-def update_current_maxsubseq(current, new_seqs, k, elapsed, row):
+def update_current_maxsubseq(current, new_seqs, k, elapsed, row, unique_jids = True):
     """
     Updates current sequence with longest elements of new_seq, if applicable, i.e. if there's space left or a longer subseq
     is available
@@ -216,6 +221,24 @@ def update_current_maxsubseq(current, new_seqs, k, elapsed, row):
     :param k:
     :return:
     """
+    if unique_jids:
+        new_jid = row['journeyId']
+        current_jids = [r['journeyId'] for (_,_,r) in current]
+        if new_jid in current_jids:
+            # replace only if new sequence length is larger
+            existing_item = [item for item in current if item[2]['journeyId'] == new_jid]
+            if len(existing_item) > 1:
+                print("Found more than one item with jid",new_jid,"impossible!")
+                exit(1)
+            # get the item, its position and its sequence length
+            existing_item = existing_item[0]
+            existing_idx = current.index(existing_item)
+            old_len = len(existing_item[0])
+            if len(new_seqs[0]) > old_len:
+                current[existing_idx] = (new_seqs[0], elapsed, row)
+                current = sorted(current, key = lambda x : len(x[0]), reverse=True)
+            return current
+
     count = 0
     for seq in new_seqs:
         # if the same seq is, for some reason, already in the list, continue

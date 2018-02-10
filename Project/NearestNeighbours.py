@@ -13,7 +13,7 @@ def calculate_nns(test_points, train_df, paropts=None, k=5):
     else:
         partype, numpar = None, None
 
-    tic = utils.tic()
+    timestart = utils.tic()
     test_lonlat = utils.idx_to_lonlat(test_points, format="tuples")
     nearest_neighbours = [-1 for _ in range(len(train_df.index))]
 
@@ -29,9 +29,9 @@ def calculate_nns(test_points, train_df, paropts=None, k=5):
     # sort the list to increasing distance
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])
     # return the top 5
-    print("Elapsed for parallelization: ", str(partype), numpar, " is:", utils.tictoc(tic))
     nearest_neighbours = nearest_neighbours[:k]
     print("Neighbours:",[n[0] for n in nearest_neighbours])
+    print("Extracted %d nearest neighbours in: %s" % (k, utils.tictoc(timestart)))
     return nearest_neighbours
 
 

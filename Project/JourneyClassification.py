@@ -55,7 +55,7 @@ def train(features, targets, num_folds, classifiers, output_folder, filename_tag
 
     return mean_accuracies
 
-# TODO improve classification
+
 def preprocess_train_data(feature_df, seed):
     print("Preprocessing training data")
     targets = []
@@ -177,16 +177,6 @@ def improve_classification(clean_trips_file, grid_file, bow_features_file, num_f
         mean_acc = train(features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
 
-    # try VLAD encoding, instead of BoW
-    # in bow, you just count the number of times points fall into a bin
-    # in vlad, instead of just counting (adding 1 per instance that falls in), you add the distance.
-    # i.e. for bow bins: [(1,2),(2,3)] and points 1.5, 1.9, 2.9
-    # produce vlad points from bow bins: (1.5, 2.5)
-    # get distances from each center
-    # TODO
-    # in bow you get: [1,1,2]
-    # in vlad you get: []
-    # read clean trips
     with open(grid_file,"rb") as fg:
         grid =pickle.load(fg)
     features = pd.read_csv(clean_trips_file)
