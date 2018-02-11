@@ -94,7 +94,7 @@ def calculate_dists(test_lonlat, train_df, ret_container = None, paropts = None)
 
 def calculate_dynamic_time_warping(latlons1, latlons2, paropts = None, impl = "diy_initial"):
     '''
-    Calculate the DTW of two points, used in order find the nearest neighbours
+    Calculate the DTW of two sequences, used in order find the nearest neighbours
     :param latlons1:
     :param latlons2:
     :return:
@@ -155,7 +155,7 @@ def compute_dists(points_list, paropts):
     return reslist
 
 
-def preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, i):
+def visualize_nns(test_points, nns_ids_distances, outfile_name, elapsed, i):
     '''
     :param test_trip: the given test trip from the test file
     :param nearest_neighbours: the 5 nearest neighbours of this test trip, in format id, distance

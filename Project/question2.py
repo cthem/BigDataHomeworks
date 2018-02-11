@@ -24,11 +24,12 @@ def question_a1(output_folder, clean_file, test_file, paropts, k):
         # get time elapsed
         elapsed = utils.tictoc(millis_start)
         # visualize
-        nn.preprocessing_for_visualization(test_points, nns_ids_distances, outfile_name, elapsed, index)
+        nn.visualize_nns(test_points, nns_ids_distances, outfile_name, elapsed, index)
 
 
 def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, verbosity, unique_jids = True):
-    print("Extracting %d subroutes for each test trip" % k)
+    lcss_type = "consequtive" if conseq_lcss else "non-consequtive"
+    print("Extracting %d %s subroutes for each test trip" % (k, lcss_type))
     test_df = pd.read_csv(test_file, delimiter="\n")
     train_df = pd.read_csv(train_file)
     for index, row in test_df.iterrows():

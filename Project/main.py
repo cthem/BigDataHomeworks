@@ -27,8 +27,8 @@ def question_2(opts):
     # qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"])
 
     print("\n>>> Running question 2a2 - Nearest subroutes computation")
-    qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],\
-                    opts["conseq_lcss"], opts["k"], opts["paropts"], opts["verbosity"], options["unique_subroute_jids"])
+    # qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],\
+    #                opts["conseq_lcss"], opts["k"], opts["paropts"], opts["verbosity"], options["unique_subroute_jids"])
 
     print("\n>>> Running question 2b - Cell grid quantization")
     cellgrid = opts["grid"]

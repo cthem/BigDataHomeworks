@@ -131,8 +131,8 @@ def map_to_features_bow(data_df, grid, output_file):
         for i,lonlat in enumerate(train_lonlats):
             lon = lonlat[0]  # for columns
             lat = lonlat[1]  # for rows
-            row_idx = find_index(rows, lat)
-            col_idx = find_index(columns, lon)
+            row_idx = find_cell_index(rows, lat)
+            col_idx = find_cell_index(columns, lon)
             linear_idx = row_idx * len(columns) + col_idx
             bow_vector[linear_idx] += 1
 
@@ -191,8 +191,8 @@ def map_to_features_pointwise(data_df, grid):
         for i,lonlat in enumerate(train_lonlats):
             lon = lonlat[0]  # for columns
             lat = lonlat[1]  # for rows
-            row_idx = find_index(rows, lat)
-            col_idx = find_index(columns, lon)
+            row_idx = find_cell_index(rows, lat)
+            col_idx = find_cell_index(columns, lon)
             cell_name = 'C'+cell_names[row_idx][col_idx]
             # visualize_grid(rows,columns,None,None,[[lon],[lat]])
             grid_hist[cell_name] += 1
@@ -209,7 +209,7 @@ def map_to_features_pointwise(data_df, grid):
         ssum += grid_hist[name]
     return features, timestamps
 
-def find_index(points_list, point):
+def find_cell_index(points_list, point):
     count = 0
     for p in points_list:
         if point < p:

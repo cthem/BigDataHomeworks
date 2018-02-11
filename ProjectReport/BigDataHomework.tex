@@ -26,7 +26,7 @@
 \usepackage{todonotes}
 \usepackage{menukeys}
 
-\title{Spatiotemporal Data Classification}   % Title
+\title{Project report}   % Title
 \author{ Nikiforos Pittaras, M1422 \\ 
 		 Chrysoula Themeli, M1423}                               % Authors
 \date{\today}  % Date
@@ -87,71 +87,171 @@
     This is the report related to the Python project for the course "Large-Scale Data Analysis Techniques". In the below sections, the implemented logic will be explicitly analyzed. The project is divided in two parts: in the first part the goals are: to preprocess and clean the given data as well as to visualize five of the given trips in the train\_set file. In the second part, the tasks are: to find for all test trips the k nearest neighbors from the given train trips, to find the train trips with the longest similar sub-route for each test trip, to use 10-fold cross validation to the training data and classify them with three different methods (k-nearest neighbors, logistic regression and random forest), to choose one of the above classification methods and improve the result and finally to test the classifier on some given test data.
     
     In the \texttt{main.py} file, it is required to provide the path to the input folder (containing the training and test files) and the output folder where all results will be stored. Afterwards, an object containing all the necessary for the program options is created. This object includes options such as the given input and output directories, the train and the required test files, the number of cells in the grid to be constructed, the number of nearest neighbors etc. There are two ways in order to run this project, either add these folders in the edit configurations choice from the menu, or use the run.sh in order to provide these args. Finally, the dependencies are checked and the folders and files are prepared before starting to run the application.
+
+  Some unclear points in the project instructions where dealt with respective
+  variables and multiple implementations. These points where:
+  \begin{itemize}
+  \item Unique journey ids in subroutes (\texttt{unique\_jids} parameter,
+    default true.)
+    \item Consequtive common subsequences (\texttt{conseq\_lcss} parameter,
+      default true.)
+    \end{itemize}
     
 	\section{Exercise 1}
 	In this section, further details are provided related to the preprocessing and cleaning of the training data as well as to the trip's visualization. All files implementing the requirements of this part are in the file \texttt{question1.py}.
 	
 	\subsection{Data Preprocessing (question A)}
-	The requirement in this part is to preprocess the input training data and create a new file with 3 columns, containing the trip\_id (a number incrementing by 1 for each trip), the journey\_id(excluding trips with null id) and all points and timestamps in the format: [[timestamp1, longitude1, latitude1], [timestamp2, longitude2, latitude2],...]. The given csv file with the training data was transformed to a dataframe using the pandas library. The data with null journeyPatternId should be removed from the dataframe, therefore the lines are checked for NaN and "null" journey id. Then, the columns vehicleID and journeyPatternId are grouped by three times in order to create three different dataframes. For example, the first dataframe contains the columns: vehicleID, journeyPatternId and timpestamp. In a similar way, the two remaining dataframes were formatted. By concatenating them, the final dataframe contains five columns, where the three last columns contain a list of timestamps, a list of longitudes and a list of latitudes respectively.
+	The goal in this part is to preprocess the input training data and create a
+  new file with 3 columns:
+  \begin{itemize}
+  \item  the trip\_id (a number incrementing by 1 for each trip)
+  \item the journey\_id(excluding trips with null id)
+  \item all points and timestamps in the format: [[timestamp1, longitude1,
+    latitude1], [timestamp2, longitude2, latitude2],...].
+  \end{itemize}
+  The given csv file with the training data was transformed to a dataframe using
+  the pandas library. Data with null journey ids are removed from the dataframe,
+  therefore lines with NaN or "null" journey ids are discarded. All data is
+  subsequently grouped by the vehicleID and the journeyPatternId. The final dataframe contains five columns, where the three last columns contain a list of timestamps, a list of longitudes and a list of latitudes respectively.
 	
-	By iterating to each dataframe's row, the three lists are now concatenated in one column and therefore the other two are dropped from the dataframe. Then, the column vehicleID is replaced by the tripId column which is the index of this dataframe, starting from 0 and incrementing by 1. Finally, the column points, which now contains the list of lists with the timestamps and the points, is sorted based on the timestamp of each list item. The final result is exported in a file with the requested format.
+	To produce the required final format [timestamp, longitude, latitude], we
+  iterate each row, producing a column with the appropriate list data.
+  % the three lists are now concatenated in one column and therefore the other two are dropped from the dataframe. Then, the column vehicleID is replaced by the tripId column which is the index of this dataframe, starting from 0 and incrementing by 1. Finally, the column points, which now contains the list of lists with the timestamps and the points, is sorted based on the timestamp of each list item. The final result is exported in a file with the requested format.
 	
 	\subsection{Clean Data (question B)}
-	The second goal was to clean the given data, based on two criteria: total trip distance should not be less than 2km while max distance between two successive points should not exceed 2km.
+	We clean the given data based on two criteria:
+  \begin{enumerate}
+  \item the total trip distance should not be less than 2km
+  \item the max distance between two successive points should not exceed 2km.
+    \end{enumerate}
 	
-	The above logic is implemented in function \texttt{filter\_trips}. The two lists (\texttt{trips\_too\_small and trips\_too\_big}) will keep the excluded trips due to either not valid total distance or to invalid max distance between successive points. For each trip in the training dataset the total distance is calculated, using the function \texttt{calculate\_lonlat\_distance}, which returns the distance between two successive points using the haversine formula. Following the same logic, the max distance between successive points of a trip is calculated and a distance is found more than 2km, the trip is excluded.
+	The above logic is implemented in function \texttt{filter\_trips}. The two
+  lists (\texttt{trips\_too\_small and trips\_too\_big}) will keep the trips
+  discarded due to the aforementioned criteria. For each trip in the training
+  dataset the total distance is calculated using the function
+  \texttt{calculate\_total\_distance}, which uses the
+  \texttt{calculate\_lonlat\_distance} function that returns the distance
+  between two points using the haversine formula. Using these functions we
+  compute the required distances and discard the trips that match the exclusion
+  criteria.
 	
-	Finally, the distances are checked and rows with invalid trips are removed from the dataframe, which is, afterwards, exported in a new file (\texttt{trips\_clean.csv}).
+	The resulting filtered trips are stored in the file \texttt{trips\_clean.csv}.
 	
 	\subsection{Trip Visualization (question C)}
-	This task is implemented in the function \texttt{visualize\_trips} and the created output is stored in the output folder in the gmplots directory. The requirement is to visualize five of the given train trips. For this purpose, the trips list is shuffled in order to visualize random trips and then iterated only for 5 trips. Then, a points list is created having two tuples with all the longitudes and latitudes(function \texttt{idx\_to\_lonlat} in the \texttt{utils.py}). 
-	
-	Finally, the function \texttt{write\_group\_gml} from the \texttt{utils.py} file is called. In this function, it is calculated the mean for both longitudes and latitudes and then gmplot is used so as to visualize the selected trips. Below, there is an example of a trip shown on map is presented:
+	This trip visualization task is implemented in the function
+  \texttt{visualize\_trips} and the created output is stored in the output
+  folder in the \texttt{gmplot} directory. The trips list is shuffled in order
+  to show random items, the first 5 of which are fetched for
+  visualization. For each trip, we generate a tuple of longitudes and latitudes
+  with the function \texttt{utils.idx\_to\_lonlat} which we pass on to the
+  plotting function \texttt{utils.write\_group\_gml}. There, the longitude and
+  latitude means are calculated as a visualization centroid for the produced map, and the gmplot
+  library is used so as to visualize the respective point sequence. See the
+  following figure for a visualization example. 
 	
 	\begin{figure} [H]
 		\begin{center}
 			\includegraphics [scale = 0.75] {questionCexample.jpg}
-			\caption{Example of trip visualization}
+			\caption{Example of a trip visualization.}
 		\end{center}
+    \label{gmlplot_example}
 	\end{figure} 
 	
 	\section{Exercise 2}
-	The files implementing the requirements of this part are in the file question2.py and some functions implementing the logic for this question are in the files: \texttt{NearestNeighbors.py, NearestSubroutes.py, MapInGridView, JourneyClassification.py}.
+	This exercise is implemented in the file question2.py and some functions implementing the logic for this question are in the files: \texttt{NearestNeighbors.py, NearestSubroutes.py, MapInGridView, JourneyClassification.py}.
 	
 	\subsection{Nearest Neighbors (question A1)}
-	For this part a test file is given (test\_set\_a1.csv, included in the input folder) containing additional trips. For each of these trips, the k nearest neighbors are targeted (in this exercise k=5) and an image file is produced, showing all six trips (the test trip and the trips from the training file) on six different maps. Under each map, the test or neighbor index, the journey\_id, the dynamic time warping and the time needed to process the neighbors of this test trip in millisecond.
+	For this part, a test file is given (test\_set\_a1.csv, included in the input
+  folder) containing additional test trip data. For each test trip, the k
+  nearest neighbors are extracted (in this exercise k=5) and an image file is
+  produced, showing all six trips (the test trip and its 5 neighbour trips from the training file) on six different maps. Under each map, the test or neighbor index, the journey\_id, the dynamic time warping and the time needed to process the neighbors of this test trip in millisecond.
 	
-	In the function \texttt{question\_a1}, two dataframes are created for both the test and the training trips. The test dataframe's rows are iterated and for each row the function \texttt{calculate\_nns} from the file NearestNeighbors.py is called in order to get the nearest neighbors, calculating also the time needed for this action.
+	In the function \texttt{question\_a1}, two dataframes are created for both the
+  test and the training trips. For each test trip, \texttt{calculate\_nns} from
+  the file NearestNeighbors.py is called in order to get the nearest neighbors
+  with respect to all training trips, calculating also the time needed for this calculation.
 	
-	There are three ways to execute this task: using processes, threads or serial execution. This information is provided as input giving the kind of execution and the number of processes/threads as well. In the function \texttt{run\_with\_processes} an async task is executed for each process and then the result is stored in a list, while in the function \texttt{run\_with\_threads}, the dataframe is splitted in sub dataframes (the number is specified by the number of threads) and then distance is calculated for each subdataframe. After thread join, the result is also stored in the \texttt{nearest\_neighbors} list.
+	In \texttt{calculate\_nns}, we explored parallelization options to compute the neighbours,
+  due to the computational intensivenes of the task.
+  \begin{enumerate}
+  \item using multiple processes (\texttt{run\_with\_processes} function) with the
+    \texttt{multiprocessing} module, where an async task is executed for each process.
+  \item multiple threads (\texttt{run\_with\_threads} function) with the \texttt{threading} module, where the task is
+    broken to multiple threads with separate result containers.
+  \item standard serial execution, where each training datum is examined iteratively.
+  \end{enumerate}
+  This parallelization type and parameter (i.e. number of processes or threads) is contained in tie \texttt{paropts} variable in main.
 	
-	In the function \texttt{calculate\_dists}, the 3rd column of the dataframe is provided and it is transformed in tuples with the latitudes and longitudes. The list nearest neighbors will keep in tuples for each train trip the trip\_id, the calculated distance (which is calculated using the dynamic time wraping algorithm), the journeyId and finally all the points of the journey. 
+	In the function \texttt{calculate\_dists}, the 3rd column of the dataframe is
+  provided and
+  In the function, each training trip's time series data is transformed to a
+  list of (longitude, latitude) tuples, which is passed to the \texttt{calculate\_dynamic\_time\_warping}
+  function to calculate the DTW distance. The latter is computed using the
+  harvesine distance calculation function and the DTW wikipedia lemma. The
+  resulting list contains the training instance information along with its distance to
+  the test trip. Sorting the list to increasing distance and keeping its k first
+  elements provides the k nearest neighbours.
 	
-	The algorithm dynamic time warping is implemented with two ways based on the input (diy or diy\_initial). \todo{diy and diyinitial}
 	
-	The final list is sorted and only the 5 nearest neighbours are kept for visualization. However, before the visualization, the \texttt{preprocessing\_for\_visualization function} is used, where three list are created: a list with all the points (longitudes and latitudes) of the test trip and its neighbours, a list with the labels and a list with the colors (in this question the only color is the blue). All this data is provided to the function \texttt{visualize\_paths} in the \texttt{utils.py} file in order to export the trips as map images.
-	
-	In order to be able to create an image containing all the six maps each time, the \texttt{rasterize.js} file is required as well as \texttt{phantomjs}. In this function, both .html and .jpg files are created. First of all, the function \texttt{write\_group\_gml} is used so as to create the html files (this function is described above in question c). These html files are converted to images using the function \texttt{html\_to\_png}. File names are kept in a list and when the final image file is created (containing all six maps) these files are deleted. Afterwards, images as displayed as collection of plots and exported in the .jpg format.
-	
+  To visualize the neighbours, the \texttt{visualize\_nns}
+  function is used, where three lists are created:
+  \begin{enumerate}
+    \item a list with all the route points (longitudes and latitudes) of the
+      test trip and its neighbours
+    \item a list with the journey labels and the nn computation data
+      \item a list with the colors with which to draw (all blue in this
+        question).
+      \end{enumerate}
+      All this data is provided to the
+      \texttt{utils.visualize\_point\_sequences} function. This function is
+      supplied with point sequences with corresponding color sequences, and
+      produces colored gml plot maps with the \texttt{write\_group\_gml}
+      function. Each html output map is converted to a png image using a conversion tool in the \texttt{html\_to\_png} function, in
+order to automate image creation from the generated maps (the tool is the
+\texttt{rasterize.js} utility from the \texttt{phantomjs} module).
+However we found the gml plot zoom difficult to automatically configure correctly so that
+all points are visible, and thus the images in the report were fetched with a printscreen.
+The converted images are used to create 6 subplots (1 test trip + k=5 nearest
+neighbours). All plotting is done with the pylab package.
+l 
 	An example of this question image output can be found below:
 	
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.50] {question2a1example.jpg}
+			\includegraphics [scale = 0.40] {question2a1example.jpg}
 			\caption{Example of nearest neighbours trips visualization}
 		\end{center}
 	\end{figure} 
 	
 	\subsection{Nearest Sub-routes (question A2)}
-	Following the same logic as above, in the function \texttt{question\_a2}, two dataframes are created for the test and the training dataset using pandas library. The test dataframe is iterated row by row, in order to find the 5 trips from the training dataset which have the longest common subsequence with the specific test trip.
+	Following the same logic as above, in the function \texttt{question\_a2} we
+  compute the nearest subroutes of each test trip with the following key
+  differences:
+  \begin{itemize}
+    \item Instead of DTW, we use the LCSS algorithm in the \texttt{calc\_lcss}
+      method, using the harvesine formula for pointwise distance as before. Give
+      a test and train point sequence, the LCSS function returns a list of all
+      common subsequence points and indexes of the two sequence inputs. The
+      parameter \texttt{unique\_jids} controls wether more than one subsequence
+      is allowed per training trip (default false). Based on the exercise
+      requirements, two points are considered as equals if their distance is less than 200 metres.
+
+      \item The collection of longest subsequences is updated on-line in the
+        \\ \texttt{update\_current\_maxsubseq} function. Each new subsequences list
+        from a training trip is sorted length-wise, and the current max k
+        subsequences list is updated accordingly (i.e. if there is enough space
+        or if thew new entries are longer than existing ones). Special care is
+        taken to keep unique journey ids, if the \texttt{unique\_jids} is activated.
+      \end{itemize}
 	
-	Similarly to the above question, the points are stored as tuples and the required time is calculated using the relevant methods from the \texttt{utils.py} file. To begin with, the method \texttt{calc\_lcss} is called. In this function, the list of lonlat coordinate tuples are given as input. We keep all similar point values and indexes in two lists while iterating the two given lists. The distance between two points is calculated using the method \texttt{calculate\_lonlat\_distance} in the \texttt{question1.py} file. Based on the exercise requirements, two points are considered as equals if their distance is less than 200 metres. Therefore, if the points are equal, and the indexes are the first point of one of the given lists the cell is marked to unit cost and a new similar sequence is started. Otherwise, we continue to an existing similar sequence, increasing by 1 its length, keeping the current cost in the z variable. On the other hand, if points are not equal, then a new subsequence should start, and therefore L[i][j] is set to zero.
+	Finally, a similar data preparation is followed as with the nearest neighbour
+  case to visualize the data. For each training trip, the points belonging to
+  the subroute are colored red, while the others are plotted in blue, by storing
+  corresponding point lists and colors to lists. The required metadata are
+  supplied as labels to the \texttt{utils.visualize\_point\_sequences} function,
+  as before.
 	
-	Having now found the longest subsequences, we sort the indexes based on the length of the subsequences and we call the \texttt{update\_current\_maxsubseq} in order to update our result comparing previous subsequences. First of all, the new sequences found are iterated, checking if the length of the subsequence list has reached the given number (in our case 5). If there is still space to add the subsequence, then it is added, otherwise we check if the new subsequence is longer from those kept in the list and therefore it should replace it.
-	
-	Finally, a similar data preprocessing is followed before visualize the data. This time the points are separated so as to show which of them belong to the nearest sub-route and color them with red color. The function for the visualization is the same that was used for the \texttt{question 2a1} in the \texttt{utils.py} file.
-	
-	Below, there is an example of the 6 produced maps, showing the nearest sub-routes related to a test trip:
+	Below there is an example of the 6 produced maps, showing the nearest sub-routes related to a test trip:
 	
 	\begin{figure} [H]
 		\begin{center}
@@ -160,24 +260,103 @@
 		\end{center}
 	\end{figure} 
 	
-	\subsection{Features extraction (question B)}
-	The purpose of this task was to export features for classification for the training dataset. In short, a grid should be created and the points of each trip trace should be replaced by a specific square of the grid. The output file where the exported features are stored is the tripFeatures.csv.
+  
+	\subsection{Feature extraction (question B)}
+	The purpose of this task was to extract features for classification from the
+  training dataset. In short, a quantization grid should be created and the points of each trip trace should be replaced by a specific square of the grid. The output file where the exported features are stored is \texttt{tripFeatures.csv}.
 	
-	In order to be able to draw the grid, it was necessary to find the min and max longitudes and latitudes (function: \texttt{find\_min\_max\_latlong}, file: \texttt{MapInGridView.py}). Having now this information, the next function called is the create\_grid giving as input the \texttt{number\_of\_cells} and the result of the previous method. The distance per cell in the grid is calculated as the difference between the max and the min lat/long divided by the total number of cells. The next step is to create the lines of the rows and the columns and then to provide a name for each cell.
+The grid is assumed to be rectangular, with dimensions specified in the options
+dictionary. In order to be able to draw the grid, we find the min and max
+longitudes and latitudes (function: \texttt{find\_min\_max\_latlong}, file:
+\texttt{MapInGridView.py}). The next function called is the
+\texttt{create\_grid}, parameterized with the discovered bounds and the grid
+dimensions. The next step is to create the lines of the rows and the columns and
+then to provide a name for each cell. The training points and grid structure is
+visualized with the \texttt{visualize\_grid} function, and illustrated in the
+figures below.
 	
-	For the features extraction, we have used two methods. In the first method, all points in the trip dataframe should be replaced by the cell names that each point corresponds to. This logic is implemented in the methods \texttt{map\_to\_features} and \texttt{map\_to\_features\_pointwise}. For each row in the dataframe, all coordinates are transformed in tuples format and using the \texttt{find\_index} function a name is mapped to this point. After having replaced all points with their new names, the dataframe is exported in .csv format. In order to be able to easily check the created grid, the method \texttt{visualize\_grid} is implemented so as to plot the grid. 
-	
-	The second method is implemented in the function \texttt{map\_to\_features\_bow}. The difference here is that we create a vector for each trip with size equal to the number of cells in the grid. The vector is populated with the number of points that belong to the respective cell. All these vectors are added in a list which is exported in a csv file.
-	
+
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.70] {data_minmax_grid_extent.png}
+			\caption{Training data for grid creation.}
+		\end{center}
+	\end{figure} 
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.70] {grid.png}
+			\caption{Example rectangular quantization grid of 5 cells, resulting in 4
+        row and column lines.}
+		\end{center}
+	\end{figure} 
+
+
+
+  Feature construction uses the bag-of-words technique with the \texttt{map\_to\_features\_bow} function. A histogram vector is
+  initialized to zeros for each trip, and each coordinate point in the trip is 
+  mapped to a grid cell as a function of the grid rows, grid columns and the
+  point's coordinates (funtion \texttt{find\_cell\_index}). This assignment increases the accumulation on that
+  cell in the histogram vector. The resulting feature fectors are saved in a csv file.
+
 	\subsection{Classification (question C)}
-	In the method \texttt{question\_c}, a new dataframe is created from the features file, containing the grid cell names. All functions used in this question are in the file \texttt{JourneyClassification.py}. Before starting the classification, the method \texttt{preprocess\_train\_data} was used in order to get the journey\_id of all trips as numbers and also to remove the letter C from the cell names. 
+ All functions used in this question are in the file \texttt{JourneyClassification.py}. 
+	In the method \texttt{question\_c}, a new dataframe is created from the
+  features file, containing the quantized features.
+  Data is prepared for classification in the method
+  \texttt{preprocess\_train\_data}. There, data is shuffled and the target
+  journey ids are uniquely mapped to integers to serve as target classes.
+
+  The \texttt{train} function uses the numpy scikit-learn libraries to perform training.
+  Data are converted to numpy arrays, partitioned to K=10 cross-validation folds
+  and training is performed for each fold using the appropriate scikit-learn
+  implementations for the Logistic Regression, Random Forests K-Nearest Neighbours (K=5)
+  classifiers and the cross-validation itself. In summary, each classifier is
+  implemented as an object, is trained and evaluated with the \texttt{fit} and
+  \texttt{predict} functions respectively. Prediction produces the predicted
+  classes in all classifiers but the Logistic Regression, which outputs class
+  probabilities - there, the predicted class index is extracted by considering
+  the argmax of the output. Training and validation accuracy
+  is collected per fold and classifier with the \texttt{accuracy\_score} function
+  of scikit-learn, both illustrated in a barchart, constructed using
+  pylab and matplotlib. The mean accuracies accross folds is returned and printed.
+
+  For beating the benchmark we have selected the Logistic Regression classifier,
+  and attempted to improve its performance by the following techniques:
+  \begin{itemize}
+    \item Feature normalization, where we reduce the variance in the data by
+      applying feature normalization techniques, using the $L_1, L_2$ and $max$ norms.
+      \item Feature scaling, where the features are scaled to zero mean and unit variance.
+    \item Varying the regularization term ($C$) in the Logistic Regression hyperplane
+      to attempt to find a better fit in the data. We tested values from $0.2$ to $2$.
+     \item Replace the bag-of-words feature with the VLAD (Vector of Locally
+       Aggregated Descriptors) feature. In VLAD,
+       instead of considering frequency histograms, we accumulate difference
+       from the representative elements in the quantization vector. For example,
+       if a point $p$ is assigned to cell $c_n$, in bag-of-words the $n$-th
+       coordinate in the quantization vector is incremented by $1$. In VLAD, the
+       increment equals $d(p,c_n)$, where $d(\cdot,\cdot)$ is a distance function.
+       We used the cell centroid as the cell representative point and the
+       harvesine distance. 
+     
+  \end{itemize}
+  Results for all methods are in the table below.
 	
-	Afterwards, the \texttt{train} function we use 10-fold cross validation, therefore the \texttt{KFold} class is used providing the required folds number and then the training dataset is splitted in training and test folds. It worths to be mentioned here, that method \texttt{asarrays} from \texttt{numpy} was used to the, necessary for this question, lists. In addition, a list with the names of the three classifiers is created and for each of them, the relevant function is called in order to train the classifier and then count the predictions' accuracy on the test dataset. 
-	
-	In this question, the \texttt{scikit learn} library was used. Firstly, for the knn classifier the class \texttt{KNeighborsClassifier} was used, and more specifically the fit and predict methods. In order to calculate the accuracy of the classifiers we have used the \texttt{accuracy\_score} method (this result is return from each classification function in the \texttt{JourneyClassification.py}), but also the \texttt{classification\_report} in order to print the precision and recall values for each prediction of the classifier. The same logic is followed for the other two classifiers(logistic regression and random forest). What should be mentioned, though, is that the \texttt{LogisticRegression} class implements the \texttt{predict\_proba} method, which returns a list with probabilities and \texttt{argmax} from \texttt{numpy} was used in order to determine the result with the max probability.
-	
-	\subsubsection{Improve classification}
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+      method & train & val \\ \hline
+      logreg & 0.123 & 0.0123 \\ \hline
+
+      % ...
+\hline
+      improvements & & \\ \hline
+       impr.method1 & 123123 & 3412312 \\ \hline
+    \end{tabular}
+    \end{table}
 	\subsection{Test improved classifier}
+  We tested the improved classifier in the test data. The results are attached
+  in the specified format to the file \texttt{testSet\_journeyPatternIDs.csv}.
 	
 	\newpage
 	\addcontentsline{toc}{section}{References}

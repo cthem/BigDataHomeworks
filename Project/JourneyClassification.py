@@ -168,6 +168,15 @@ def improve_classification(clean_trips_file, grid_file, bow_features_file, num_f
         mean_acc = train(proc_features, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
 
+    # try feature scaling
+    tag = "scaling"
+    print("\nTrying strategy: %s" % tag, end='')
+    classifier_obj = LogisticRegression()
+    features_scaled = sklearn.preprocessing.scale(features)
+    mean_acc = train(features_scaled, targets, num_folds, classifier, output_folder, tag, classifier_obj=classifier_obj)
+    mean_accuracies[tag] = (mean_acc, classifier_obj)
+
+
     # try various regularization strengths
     Cs = [0.2, 0.5 , 1.5, 2.0]
     for c in Cs:
@@ -187,6 +196,7 @@ def improve_classification(clean_trips_file, grid_file, bow_features_file, num_f
     mean_accuracies[tag] = (mean_acc, classifier_obj)
 
 
+
     return mean_accuracies
 
 
@@ -199,6 +209,7 @@ def test(logreg_object, classifier_name, best_technique, test_file, grid_file, j
         grid = pickle.load(f)
     print("Transforming test data to features...")
     features = gvp.map_to_features_bow(test_data_df, grid, None)
+    # mean subtraction
 
     jids = [j for j in jid_mapping]
     numeric_ids = [jid_mapping[j] for j in jids]
