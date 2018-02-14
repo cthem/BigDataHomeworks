@@ -24,7 +24,7 @@ def question_2(opts):
     print("=====================")
     # Question 2
     print("\n>>> Running question 2a1 - Nearest neighbours computation")
-    qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"])
+    qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"], options["unique_subroute_jids"])
 
     print("\n>>> Running question 2a2 - Nearest subroutes computation")
     qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],\

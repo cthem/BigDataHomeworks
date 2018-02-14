@@ -5,7 +5,7 @@ from dtw import dtw as libdtw
 import question1 as qp1
 
 
-def calculate_nns(test_points, train_df, paropts=None, k=5):
+def calculate_nns(test_points, train_df, paropts=None, k=5, unique_jids = False):
     # parallelization type
     if paropts:
         print("Parallelizing with", paropts)
@@ -28,6 +28,19 @@ def calculate_nns(test_points, train_df, paropts=None, k=5):
         nearest_neighbours = calculate_dists(test_lonlat, train_df)
     # sort the list to increasing distance
     nearest_neighbours = sorted(nearest_neighbours, key=lambda k: k[1])
+    # keep unique jids, if needed
+    if unique_jids:
+        print("Restricting to single neighbour per jid")
+        keep = [0 for _ in range(len(nearest_neighbours))]
+        already_encountered = []
+        for i, nn in enumerate(nearest_neighbours):
+            jid = nn[2]
+            if jid not in already_encountered:
+                already_encountered.append(jid)
+                keep[i] = True
+                continue
+        nearest_neighbours = [ nearest_neighbours[i] for i in range(len(nearest_neighbours)) if keep[i]]
+
     # return the top 5
     nearest_neighbours = nearest_neighbours[:k]
     print("Neighbours:",[n[0] for n in nearest_neighbours])

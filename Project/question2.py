@@ -8,7 +8,7 @@ import os
 import pickle
 
 
-def question_a1(output_folder, clean_file, test_file, paropts, k):
+def question_a1(output_folder, clean_file, test_file, paropts, k, unique_jids = False):
     test_df = pd.read_csv(test_file, delimiter="\n")
     train_df = pd.read_csv(clean_file)
     print("Extracting %d nearest neighbours out of %d cleaned train data, for each test trip" % (k,len(train_df)))
@@ -20,7 +20,7 @@ def question_a1(output_folder, clean_file, test_file, paropts, k):
         millis_start = utils.tic()
         # compute nearest neighbours
         test_points = eval(row["Trajectory"])
-        nns_ids_distances = nn.calculate_nns(test_points, train_df, paropts=paropts)
+        nns_ids_distances = nn.calculate_nns(test_points, train_df, paropts=paropts, unique_jids = unique_jids)
         # get time elapsed
         elapsed = utils.tictoc(millis_start)
         # visualize
