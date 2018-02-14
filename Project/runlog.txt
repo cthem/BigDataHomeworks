@@ -1,0 +1,361 @@
+/usr/bin/python3 /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/main.py ./input_folder ./output_folder
+Running main.py with arguments: ['/home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/main.py', './input_folder', './output_folder']
+
+Running question #1
+=====================
+
+>>> Running question 1a - parsing the training data
+Reading training file /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/input_folder/train_set.csv  - will ignore null journey ids
+Parsing csv...
+Removing nulls and NaNs ...
+Done reading training file!
+Transforming data to the required format
+Done transforming data!
+
+>>> Running question 1b - cleaning the training data
+Filtering 3154 trips...
+Deleted 63 due to having total distance less than 2km
+Deleted 1811 trips due having to max distance between two points more than 2km
+Writing 1280 cleaned trips to /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/trips_clean.csv
+
+>>> Running question 1c - visualizing the training data
+Randomly selected 5 trips to visualize, with indexes [998, 413, 334, 790, 612]
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/mapplot0.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/mapplot1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/mapplot2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/mapplot3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/mapplot4.html
+
+Finished question1!
+
+Running question #2
+=====================
+
+>>> Running question 2a1 - Nearest neighbours computation
+Extracting 5 nearest neighbours out of 1280 cleaned train data, for each test trip
+Using parallelization options: None
+Examining test element 1 / 5
+Neighbours: [309, 1599, 1575, 608, 1477]
+Extracted 5 nearest neighbours in: 00:02:151:704
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_6.html
+Producing plots...
+Examining test element 2 / 5
+Neighbours: [929, 955, 582, 2291, 1970]
+Extracted 5 nearest neighbours in: 00:01:83:013
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_6.html
+Producing plots...
+Examining test element 3 / 5
+Neighbours: [2060, 567, 901, 554, 571]
+Extracted 5 nearest neighbours in: 00:02:156:328
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_6.html
+Producing plots...
+Examining test element 4 / 5
+Neighbours: [2415, 603, 2407, 786, 753]
+Extracted 5 nearest neighbours in: 00:01:89:669
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_6.html
+Producing plots...
+Examining test element 5 / 5
+Neighbours: [740, 1304, 2686, 3138, 1435]
+Extracted 5 nearest neighbours in: 00:01:92:362
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_6.html
+Producing plots...
+
+>>> Running question 2a2 - Nearest subroutes computation
+Extracting 5 consequtive subroutes for each test trip
+Extracting subroutes for test trip 1/5
+Got 5 subseqs: [([66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96], '00:00:00:044', 491), ([39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69], '00:00:00:076', 667), ([130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151], '00:00:00:057', 1366), ([17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37], '00:00:00:050', 503), ([19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37], '00:00:00:036', 426)]
+Extracted 5 nearest subsequences in: 00:01:67:626
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_1_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_1_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_1_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_1_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_1_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_1_6.html
+Producing plots...
+Extracting subroutes for test trip 2/5
+Got 5 subseqs: [([105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146], '00:00:00:038', 2620), ([132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168], '00:00:00:058', 510), ([67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], '00:00:00:075', 1093), ([105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135], '00:00:00:039', 426), ([55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84], '00:00:00:062', 363)]
+Extracted 5 nearest subsequences in: 00:01:75:533
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_2_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_2_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_2_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_2_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_2_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_2_6.html
+Producing plots...
+Extracting subroutes for test trip 3/5
+Got 5 subseqs: [([84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123], '00:00:00:016', 200), ([90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129], '00:00:00:046', 1885), ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], '00:00:00:027', 2763), ([34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72], '00:00:00:024', 142), ([41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75], '00:00:00:024', 135)]
+Extracted 5 nearest subsequences in: 00:00:38:428
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_3_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_3_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_3_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_3_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_3_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_3_6.html
+Producing plots...
+Extracting subroutes for test trip 4/5
+Got 5 subseqs: [([49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80], '00:00:00:023', 566), ([47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67], '00:00:00:023', 1269), ([168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187], '00:00:00:053', 227), ([10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], '00:00:00:029', 2561), ([111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125], '00:00:00:041', 252)]
+Extracted 5 nearest subsequences in: 00:00:53:543
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_4_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_4_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_4_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_4_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_4_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_4_6.html
+Producing plots...
+Extracting subroutes for test trip 5/5
+Got 5 subseqs: [([104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136], '00:00:00:045', 940), ([142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163], '00:00:00:049', 1932), ([44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64], '00:00:00:070', 1384), ([56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76], '00:00:00:053', 1606), ([35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54], '00:00:00:049', 1822)]
+Extracted 5 nearest subsequences in: 00:01:68:911
+Producing html and png files...
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_5_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_5_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_5_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_5_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_5_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/subroutes_5_6.html
+Producing plots...
+
+>>> Running question 2b - Cell grid quantization
+Using cell grid with dimensions (5, 5)
+
+>>> Running question 2c - Classification
+Preprocessing training data
+10 Jids with most data:
+0 : ('00181001', 18)
+1 : ('00180001', 17)
+2 : ('00411001', 15)
+3 : ('00661001', 14)
+4 : ('00270001', 14)
+5 : ('00260001', 14)
+6 : ('015B1001', 14)
+7 : ('00660001', 14)
+8 : ('039A0001', 13)
+9 : ('066A1001', 13)
+Done preprocessing data
+
+Testing classifier [knn]
+	Classifying fold 1/10 - accuracies train/val: (0.43836805555555558, 0.34375)
+	Classifying fold 2/10 - accuracies train/val: (0.4513888888888889, 0.296875)
+	Classifying fold 3/10 - accuracies train/val: (0.44878472222222221, 0.2734375)
+	Classifying fold 4/10 - accuracies train/val: (0.4513888888888889, 0.1796875)
+	Classifying fold 5/10 - accuracies train/val: (0.4435763888888889, 0.140625)
+	Classifying fold 6/10 - accuracies train/val: (0.4453125, 0.1953125)
+	Classifying fold 7/10 - accuracies train/val: (0.44618055555555558, 0.2109375)
+	Classifying fold 8/10 - accuracies train/val: (0.4435763888888889, 0.2109375)
+	Classifying fold 9/10 - accuracies train/val: (0.44097222222222221, 0.1640625)
+	Classifying fold 10/10 - accuracies train/val: (0.453125, 0.1953125)
+
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
+	Classifying fold 2/10 - accuracies train/val: (0.1545138888888889, 0.1171875)
+	Classifying fold 3/10 - accuracies train/val: (0.26822916666666669, 0.1953125)
+	Classifying fold 4/10 - accuracies train/val: (0.2890625, 0.1953125)
+	Classifying fold 5/10 - accuracies train/val: (0.3064236111111111, 0.1640625)
+	Classifying fold 6/10 - accuracies train/val: (0.3142361111111111, 0.1875)
+	Classifying fold 7/10 - accuracies train/val: (0.32899305555555558, 0.2265625)
+	Classifying fold 8/10 - accuracies train/val: (0.34027777777777779, 0.21875)
+	Classifying fold 9/10 - accuracies train/val: (0.34635416666666669, 0.2109375)
+	Classifying fold 10/10 - accuracies train/val: (0.34461805555555558, 0.1875)
+
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.96961805555555558, 0.328125)
+	Classifying fold 2/10 - accuracies train/val: (0.96614583333333337, 0.3203125)
+	Classifying fold 3/10 - accuracies train/val: (0.97395833333333337, 0.2578125)
+	Classifying fold 4/10 - accuracies train/val: (0.96006944444444442, 0.2578125)
+	Classifying fold 5/10 - accuracies train/val: (0.97135416666666663, 0.2265625)
+	Classifying fold 6/10 - accuracies train/val: (0.96875, 0.3359375)
+	Classifying fold 7/10 - accuracies train/val: (0.96875, 0.2578125)
+	Classifying fold 8/10 - accuracies train/val: (0.97048611111111116, 0.328125)
+	Classifying fold 9/10 - accuracies train/val: (0.96788194444444442, 0.2109375)
+	Classifying fold 10/10 - accuracies train/val: (0.96875, 0.2890625)
+
+knn accuracy train/val: [0.44626736111111109, 0.22109375000000001]
+logreg accuracy train/val: [0.26927083333333329, 0.17031250000000001]
+randfor accuracy train/val: [0.96857638888888897, 0.28125]
+
+Improving classification for classifier logreg
+
+Preprocessing training data
+10 Jids with most data:
+0 : ('00181001', 18)
+1 : ('00180001', 17)
+2 : ('00411001', 15)
+3 : ('00661001', 14)
+4 : ('00270001', 14)
+5 : ('00260001', 14)
+6 : ('015B1001', 14)
+7 : ('00660001', 14)
+8 : ('039A0001', 13)
+9 : ('066A1001', 13)
+Done preprocessing data
+
+Trying strategy: norm_l2
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0078125, 0.0234375)
+	Classifying fold 2/10 - accuracies train/val: (0.073784722222222224, 0.046875)
+	Classifying fold 3/10 - accuracies train/val: (0.1310763888888889, 0.0703125)
+	Classifying fold 4/10 - accuracies train/val: (0.1484375, 0.078125)
+	Classifying fold 5/10 - accuracies train/val: (0.14322916666666666, 0.078125)
+	Classifying fold 6/10 - accuracies train/val: (0.15190972222222221, 0.0546875)
+	Classifying fold 7/10 - accuracies train/val: (0.15885416666666666, 0.0703125)
+	Classifying fold 8/10 - accuracies train/val: (0.15885416666666666, 0.0625)
+	Classifying fold 9/10 - accuracies train/val: (0.14409722222222221, 0.0859375)
+	Classifying fold 10/10 - accuracies train/val: (0.1545138888888889, 0.0625)
+
+Trying strategy: norm_l1
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0078125, 0.0234375)
+	Classifying fold 2/10 - accuracies train/val: (0.051215277777777776, 0.0390625)
+	Classifying fold 3/10 - accuracies train/val: (0.095486111111111105, 0.0546875)
+	Classifying fold 4/10 - accuracies train/val: (0.109375, 0.0625)
+	Classifying fold 5/10 - accuracies train/val: (0.098090277777777776, 0.0546875)
+	Classifying fold 6/10 - accuracies train/val: (0.1111111111111111, 0.046875)
+	Classifying fold 7/10 - accuracies train/val: (0.10677083333333333, 0.0390625)
+	Classifying fold 8/10 - accuracies train/val: (0.11979166666666667, 0.046875)
+	Classifying fold 9/10 - accuracies train/val: (0.11371527777777778, 0.0546875)
+	Classifying fold 10/10 - accuracies train/val: (0.12413194444444445, 0.0625)
+
+Trying strategy: norm_max
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.004340277777777778, 0.015625)
+	Classifying fold 2/10 - accuracies train/val: (0.084201388888888895, 0.046875)
+	Classifying fold 3/10 - accuracies train/val: (0.1345486111111111, 0.078125)
+	Classifying fold 4/10 - accuracies train/val: (0.16666666666666666, 0.09375)
+	Classifying fold 5/10 - accuracies train/val: (0.15538194444444445, 0.09375)
+	Classifying fold 6/10 - accuracies train/val: (0.16927083333333334, 0.0625)
+	Classifying fold 7/10 - accuracies train/val: (0.15972222222222221, 0.1015625)
+	Classifying fold 8/10 - accuracies train/val: (0.16753472222222221, 0.0703125)
+	Classifying fold 9/10 - accuracies train/val: (0.17274305555555555, 0.109375)
+	Classifying fold 10/10 - accuracies train/val: (0.16666666666666666, 0.0546875)
+
+Trying strategy: scaling
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
+	Classifying fold 2/10 - accuracies train/val: (0.1328125, 0.109375)
+	Classifying fold 3/10 - accuracies train/val: (0.2126736111111111, 0.125)
+	Classifying fold 4/10 - accuracies train/val: (0.24913194444444445, 0.171875)
+	Classifying fold 5/10 - accuracies train/val: (0.25260416666666669, 0.1328125)
+	Classifying fold 6/10 - accuracies train/val: (0.2560763888888889, 0.1484375)
+	Classifying fold 7/10 - accuracies train/val: (0.25086805555555558, 0.171875)
+	Classifying fold 8/10 - accuracies train/val: (0.25868055555555558, 0.1484375)
+	Classifying fold 9/10 - accuracies train/val: (0.26475694444444442, 0.171875)
+	Classifying fold 10/10 - accuracies train/val: (0.27690972222222221, 0.1328125)
+
+Trying strategy: C_0.200
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
+	Classifying fold 2/10 - accuracies train/val: (0.13194444444444445, 0.09375)
+	Classifying fold 3/10 - accuracies train/val: (0.23177083333333334, 0.1796875)
+	Classifying fold 4/10 - accuracies train/val: (0.25434027777777779, 0.1484375)
+	Classifying fold 5/10 - accuracies train/val: (0.2717013888888889, 0.1484375)
+	Classifying fold 6/10 - accuracies train/val: (0.28211805555555558, 0.15625)
+	Classifying fold 7/10 - accuracies train/val: (0.28559027777777779, 0.2109375)
+	Classifying fold 8/10 - accuracies train/val: (0.27430555555555558, 0.1796875)
+	Classifying fold 9/10 - accuracies train/val: (0.29774305555555558, 0.1875)
+	Classifying fold 10/10 - accuracies train/val: (0.29253472222222221, 0.1953125)
+
+Trying strategy: C_0.500
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
+	Classifying fold 2/10 - accuracies train/val: (0.14149305555555555, 0.109375)
+	Classifying fold 3/10 - accuracies train/val: (0.25347222222222221, 0.1953125)
+	Classifying fold 4/10 - accuracies train/val: (0.27256944444444442, 0.1484375)
+	Classifying fold 5/10 - accuracies train/val: (0.2907986111111111, 0.15625)
+	Classifying fold 6/10 - accuracies train/val: (0.29427083333333331, 0.1640625)
+	Classifying fold 7/10 - accuracies train/val: (0.30902777777777779, 0.21875)
+	Classifying fold 8/10 - accuracies train/val: (0.30381944444444442, 0.203125)
+	Classifying fold 9/10 - accuracies train/val: (0.32118055555555558, 0.1953125)
+	Classifying fold 10/10 - accuracies train/val: (0.3203125, 0.1796875)
+
+Trying strategy: C_1.500
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
+	Classifying fold 2/10 - accuracies train/val: (0.16145833333333334, 0.1171875)
+	Classifying fold 3/10 - accuracies train/val: (0.2734375, 0.1953125)
+	Classifying fold 4/10 - accuracies train/val: (0.30034722222222221, 0.203125)
+	Classifying fold 5/10 - accuracies train/val: (0.3203125, 0.171875)
+	Classifying fold 6/10 - accuracies train/val: (0.328125, 0.203125)
+	Classifying fold 7/10 - accuracies train/val: (0.34027777777777779, 0.2265625)
+	Classifying fold 8/10 - accuracies train/val: (0.35243055555555558, 0.2265625)
+	Classifying fold 9/10 - accuracies train/val: (0.35503472222222221, 0.2109375)
+	Classifying fold 10/10 - accuracies train/val: (0.34809027777777779, 0.1953125)
+
+Trying strategy: C_2.000
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
+	Classifying fold 2/10 - accuracies train/val: (0.16493055555555555, 0.1171875)
+	Classifying fold 3/10 - accuracies train/val: (0.27777777777777779, 0.203125)
+	Classifying fold 4/10 - accuracies train/val: (0.3046875, 0.21875)
+	Classifying fold 5/10 - accuracies train/val: (0.328125, 0.1875)
+	Classifying fold 6/10 - accuracies train/val: (0.3376736111111111, 0.1953125)
+	Classifying fold 7/10 - accuracies train/val: (0.34288194444444442, 0.234375)
+	Classifying fold 8/10 - accuracies train/val: (0.3654513888888889, 0.2265625)
+	Classifying fold 9/10 - accuracies train/val: (0.3654513888888889, 0.2109375)
+	Classifying fold 10/10 - accuracies train/val: (0.359375, 0.1953125)
+Computing VLAD encoding
+Done computing VLAD encoding
+
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.0026041666666666665, 0.0)
+	Classifying fold 2/10 - accuracies train/val: (0.029513888888888888, 0.0078125)
+	Classifying fold 3/10 - accuracies train/val: (0.045138888888888888, 0.0)
+	Classifying fold 4/10 - accuracies train/val: (0.040798611111111112, 0.0)
+	Classifying fold 5/10 - accuracies train/val: (0.039930555555555552, 0.0078125)
+	Classifying fold 6/10 - accuracies train/val: (0.033854166666666664, 0.0078125)
+	Classifying fold 7/10 - accuracies train/val: (0.045138888888888888, 0.0)
+	Classifying fold 8/10 - accuracies train/val: (0.043402777777777776, 0.0)
+	Classifying fold 9/10 - accuracies train/val: (0.043402777777777776, 0.0)
+	Classifying fold 10/10 - accuracies train/val: (0.042534722222222224, 0.015625)
+
+Performance comparison:
+logreg , technique norm_l2 , validation accuracy : 0.06328125 change over baseline: -62.84%
+logreg , technique norm_l1 , validation accuracy : 0.0484375 change over baseline: -71.56%
+logreg , technique norm_max , validation accuracy : 0.07265625 change over baseline: -57.34%
+logreg , technique scaling , validation accuracy : 0.13125 change over baseline: -22.94%
+logreg , technique C_0.200 , validation accuracy : 0.15 change over baseline: -11.93%
+logreg , technique C_0.500 , validation accuracy : 0.15703125 change over baseline: -7.80%
+logreg , technique C_1.500 , validation accuracy : 0.175 change over baseline: 2.75%
+logreg , technique C_2.000 , validation accuracy : 0.17890625 change over baseline: 5.05%
+logreg , technique vlad , validation accuracy : 0.00390625 change over baseline: -97.71%
+Reading test data...
+Transforming test data to features...
+Running test on logreg - vlad
+Reading test data...
+Transforming test data to features...
+Writing results on /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/​testSet_JourneyPatternIDs.csv
+Done!
+
+Process finished with exit code 0

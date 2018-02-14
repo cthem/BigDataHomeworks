@@ -49,7 +49,7 @@ def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_
             max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_jids = unique_jids)
             # print("Updated max subseqs, len now:",len(max_subseqs))
     if verbosity:
-        print("Got %d subseqs:" % len(max_subseqs), [ (x,y,z["journeyId"]) for (x,y,z) in max_subseqs])
+        print("Got %d subseqs:" % len(max_subseqs), [ (x,y,z["tripId"]) for (x,y,z) in max_subseqs])
     return max_subseqs
 
 

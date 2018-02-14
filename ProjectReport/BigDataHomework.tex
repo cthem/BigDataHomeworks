@@ -78,8 +78,6 @@
     \newpage
 	\listoffigures
 	\newpage
-	\listoftodos
-	\newpage
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -151,11 +149,43 @@
 	
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.75] {questionCexample.jpg}
-			\caption{Example of a trip visualization.}
+			\includegraphics [scale = 0.55] {questionC1.png}
+			\caption{First trip visualization.}
 		\end{center}
     \label{gmlplot_example}
-	\end{figure} 
+	\end{figure}
+
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.60] {questionC2.png}
+			\caption{Second trip visualization.}
+		\end{center}
+		\label{gmlplot_example}
+	\end{figure}
+
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.75] {questionC3.png}
+			\caption{Third trip visualization.}
+		\end{center}
+		\label{gmlplot_example}
+	\end{figure}
+
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.75] {questionC4.png}
+			\caption{Third trip visualization.}
+		\end{center}
+		\label{gmlplot_example}
+	\end{figure}
+
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.75] {questionC5.png}
+			\caption{Third trip visualization.}
+		\end{center}
+		\label{gmlplot_example}
+	\end{figure}
 	
 	\section{Exercise 2}
 	This exercise is implemented in the file question2.py and some functions implementing the logic for this question are in the files: \texttt{NearestNeighbors.py, NearestSubroutes.py, MapInGridView, JourneyClassification.py}.
@@ -213,15 +243,53 @@ However we found the gml plot zoom difficult to automatically configure correctl
 all points are visible, and thus the images in the report were fetched with a printscreen.
 The converted images are used to create 6 subplots (1 test trip + k=5 nearest
 neighbours). All plotting is done with the pylab package.
-l 
-	An example of this question image output can be found below:
+
+	Below we present the results from this question in the requested format:
 	
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.40] {question2a1example.jpg}
-			\caption{Example of nearest neighbours trips visualization}
+			\includegraphics [scale = 0.40] {nn1.jpg}
+			\caption{Nearest neighbours for the first test trip}
 		\end{center}
 	\end{figure} 
+
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.40] {nn2.jpg}
+			\caption{Nearest neighbours for the second test trip}
+		\end{center}
+	\end{figure}
+
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.40] {nn3.jpg}
+			\caption{Nearest neighbours for the third test trip}
+		\end{center}
+	\end{figure} 
+
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.40] {nn4.jpg}
+			\caption{Nearest neighbours for the fourth test trip}
+		\end{center}
+	\end{figure} 
+
+	In \ref{nnresults}, we show the total results for the Nearest Neighbors.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\textbf{}  & \textbf{Time} & \textbf{id1} & \textbf{d1} & \textbf{id2} & \textbf{d2} & \textbf{id3} & \textbf{d3} & \textbf{id4} & \textbf{d4} & \textbf{id5} & \textbf{d5} \\ \hline
+			\textbf{1} & 02:129:716    & 309          & 5.2           & 1599         & 6.6           & 1575         & 6.7           & 608          & 6.9           & 1477         & 8.2           \\ \hline
+			\textbf{2} & 01:66:739     & 929          & 4.1           & 955          & 65.5          & 582          & 85.3          & 2291         & 105.6         & 1970         & 106.7         \\ \hline
+			\textbf{3} & 02:127:758    & 2060         & 4.8           & 567          & 5.8           & 901          & 6.0           & 554          & 7.8           & 571          & 16.0          \\ \hline
+			\textbf{4} & 01:83:246     & 2415         & 2.5           & 603          & 3.5           & 2407         & 3.5           & 786          & 64.4          & 753          & 65.7          \\ \hline
+			\textbf{5} & 01:80:492     & 740          & 6.6           & 1304         & 32.4          & 2686         & 46.1          & 3138         & 72.3          & 1435         & 145.1         \\ \hline
+		\end{tabular}
+	\caption{Nearest Neighbors results}
+	\label{nnresults}
+	\end{table}
 	
 	\subsection{Nearest Sub-routes (question A2)}
 	Following the same logic as above, in the function \texttt{question\_a2} we
@@ -251,16 +319,60 @@ l
   supplied as labels to the \texttt{utils.visualize\_point\_sequences} function,
   as before.
 	
-	Below there is an example of the 6 produced maps, showing the nearest sub-routes related to a test trip:
+  Below, we present the nearest subroutes for each given test trip:
 	
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.50] {question2a2example.jpg}
-			\caption{Example of nearest sub-routes trips visualization}
+			\includegraphics [scale = 0.40] {subroutes1.jpg}
+			\caption{Nearest subroutes for the first test trip}
 		\end{center}
 	\end{figure} 
 	
-  
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.40] {subroutes2.jpg}
+			\caption{Nearest subroutes for the second test trip}
+		\end{center}
+	\end{figure}
+	
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.40] {subroutes3.jpg}
+			\caption{Nearest subroutes for the third test trip}
+		\end{center}
+	\end{figure} 
+	
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.40] {subroutes4.jpg}
+			\caption{Nearest subroutes for the fourth test trip}
+		\end{center}
+	\end{figure} 
+	
+	\begin{figure} [H]
+		\begin{center}
+			\includegraphics [scale = 0.40] {subroutes5.jpg}
+			\caption{Nearest subroutes for the fifth test trip}
+		\end{center}
+	\end{figure}
+
+	As in the Nearest Neighbours case, we have also included the html files in the gmplot folder. in \ref{subres} we show the total results for Nearest Subroutes.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\textbf{}  & \textbf{Time} & \textbf{id1} & \textbf{pts1} & \textbf{id2} & \textbf{pts2} & \textbf{id3} & \textbf{pts3} & \textbf{id4} & \textbf{pts4} & \textbf{id5} & \textbf{pts5} \\ \hline
+			\textbf{1} & 01:62:303     & 491          & 31            & 667          & 31            & 1366         & 22            & 503          & 21            & 426          & 19            \\ \hline
+			\textbf{2} & 01:63:755     & 2620         & 42            & 510          & 37            & 1093         & 34            & 426          & 31            & 363          & 30            \\ \hline
+			\textbf{3} & 00:32:319     & 200          & 40            & 1885         & 40            & 2763         & 40            & 142          & 39            & 135          & 35            \\ \hline
+			\textbf{4} & 00:46:297     & 566          & 32            & 1269         & 21            & 227          & 20            & 2561         & 17            & 252          & 15            \\ \hline
+			\textbf{5} & 00:57:303     & 940          & 33            & 1932         & 22            & 1384         & 21            & 1606         & 21            & 1822         & 20            \\ \hline
+		\end{tabular}
+	\caption{Nearest subroutes results}
+	\label{subres}
+	\end{table}
+	
 	\subsection{Feature extraction (question B)}
 	The purpose of this task was to extract features for classification from the
   training dataset. In short, a quantization grid should be created and the points of each trip trace should be replaced by a specific square of the grid. The output file where the exported features are stored is \texttt{tripFeatures.csv}.
@@ -340,21 +452,42 @@ figures below.
      
   \end{itemize}
   Results for all methods are in the table below.
-	
-  \begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|}
-    \hline
-      method & train & val \\ \hline
-      logreg & 0.123 & 0.0123 \\ \hline
+ 
+ \begin{table}[H]
+ 	\centering
+ 	\begin{tabular}{|c|c|c|}
+ 		\hline
+ 		\textbf{Strategy}            & \textbf{Train Accuracy} & \textbf{Validation Accuracy} \\ \hline
+ 		\textbf{KNN}                 & 0.446                   & 0.221                        \\ \hline
+ 		\textbf{Logistic Regression} & 0.269                   & 0.170                        \\ \hline
+ 		\textbf{Random Forest}       & 0.969                   & 0.281                        \\ \hline
+ 	\end{tabular}
+ \caption{Classification using KNN, logreg and random forest}
+ \label{class}
+ \end{table}
 
-      % ...
-\hline
-      improvements & & \\ \hline
-       impr.method1 & 123123 & 3412312 \\ \hline
-    \end{tabular}
-    \end{table}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|c|}
+		\hline
+		strategy & validaton accuracy & change  \\ \hline
+		norm\_l2 &  0.063  &  -62.84\%  \\ \hline
+		norm\_l1 &  0.048  &  -71.56\%  \\ \hline
+		norm\_max &  0.072  &  -57.34\%  \\ \hline
+		scaling &  0.131  &  -22.94\%  \\ \hline
+		C\_0.200 &  0.15  &  -11.93\%  \\ \hline
+		C\_0.500 &  0.157  &  -7.80\%  \\ \hline
+		C\_1.500 &  0.175  &  2.75\%  \\ \hline
+		C\_2.000 &  0.178  &  5.05\%  \\ \hline
+		vlad &  0.003  &  -97.71\%  \\ \hline
+		
+	\end{tabular}
+	\label{impr}
+	\caption{Classification improvements using logistic regression}
+\end{table}
+
 	\subsection{Test improved classifier}
+	
   We tested the improved classifier in the test data. The results are attached
   in the specified format to the file \texttt{testSet\_journeyPatternIDs.csv}.
 	
