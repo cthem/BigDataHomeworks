@@ -57,6 +57,7 @@ def question_b(train_file, number_of_cells, output_folder):
 
 
 def question_c(clean_file, features_file, grid_file, test_file, output_folder, seed, classif_file, num_folds):
+    total_start = utils.tic()
     df_features = pd.read_csv(features_file)
     features, jid_mapping, targets = jcp.preprocess_train_data(df_features, seed)
     classifiers = ["knn", "logreg", "randfor"]
@@ -101,6 +102,7 @@ def question_c(clean_file, features_file, grid_file, test_file, output_folder, s
     # test_features = jcp.preprocess_test_data(test_features)
     print("Running test on",impr_classifier_name,"-",best_technique)
     jcp.test(best_classifier, impr_classifier_name, best_technique, test_file, grid_file, jid_mapping, classif_file)
-    print("Done!")
+    elapsed = utils.tictoc(total_start)
+    print("Done in:", elapsed)
 
 

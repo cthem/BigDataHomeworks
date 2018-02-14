@@ -177,6 +177,7 @@ Testing classifier [knn]
 	Classifying fold 8/10 - accuracies train/val: (0.4435763888888889, 0.2109375)
 	Classifying fold 9/10 - accuracies train/val: (0.44097222222222221, 0.1640625)
 	Classifying fold 10/10 - accuracies train/val: (0.453125, 0.1953125)
+Done in: 00:00:00:842
 
 Testing classifier [logreg]
 	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
@@ -189,6 +190,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.34027777777777779, 0.21875)
 	Classifying fold 9/10 - accuracies train/val: (0.34635416666666669, 0.2109375)
 	Classifying fold 10/10 - accuracies train/val: (0.34461805555555558, 0.1875)
+Done in: 00:00:26:935
 
 Testing classifier [randfor]
 	Classifying fold 1/10 - accuracies train/val: (0.96961805555555558, 0.328125)
@@ -201,6 +203,7 @@ Testing classifier [randfor]
 	Classifying fold 8/10 - accuracies train/val: (0.97048611111111116, 0.328125)
 	Classifying fold 9/10 - accuracies train/val: (0.96788194444444442, 0.2109375)
 	Classifying fold 10/10 - accuracies train/val: (0.96875, 0.2890625)
+Done in: 00:00:01:711
 
 knn accuracy train/val: [0.44626736111111109, 0.22109375000000001]
 logreg accuracy train/val: [0.26927083333333329, 0.17031250000000001]
@@ -234,6 +237,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.15885416666666666, 0.0625)
 	Classifying fold 9/10 - accuracies train/val: (0.14409722222222221, 0.0859375)
 	Classifying fold 10/10 - accuracies train/val: (0.1545138888888889, 0.0625)
+Done in: 00:00:08:796
 
 Trying strategy: norm_l1
 Testing classifier [logreg]
@@ -247,6 +251,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.11979166666666667, 0.046875)
 	Classifying fold 9/10 - accuracies train/val: (0.11371527777777778, 0.0546875)
 	Classifying fold 10/10 - accuracies train/val: (0.12413194444444445, 0.0625)
+Done in: 00:00:08:205
 
 Trying strategy: norm_max
 Testing classifier [logreg]
@@ -260,6 +265,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.16753472222222221, 0.0703125)
 	Classifying fold 9/10 - accuracies train/val: (0.17274305555555555, 0.109375)
 	Classifying fold 10/10 - accuracies train/val: (0.16666666666666666, 0.0546875)
+Done in: 00:00:09:554
 
 Trying strategy: scaling
 Testing classifier [logreg]
@@ -273,6 +279,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.25868055555555558, 0.1484375)
 	Classifying fold 9/10 - accuracies train/val: (0.26475694444444442, 0.171875)
 	Classifying fold 10/10 - accuracies train/val: (0.27690972222222221, 0.1328125)
+Done in: 00:00:20:190
 
 Trying strategy: C_0.200
 Testing classifier [logreg]
@@ -286,6 +293,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.27430555555555558, 0.1796875)
 	Classifying fold 9/10 - accuracies train/val: (0.29774305555555558, 0.1875)
 	Classifying fold 10/10 - accuracies train/val: (0.29253472222222221, 0.1953125)
+Done in: 00:00:18:357
 
 Trying strategy: C_0.500
 Testing classifier [logreg]
@@ -299,9 +307,11 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.30381944444444442, 0.203125)
 	Classifying fold 9/10 - accuracies train/val: (0.32118055555555558, 0.1953125)
 	Classifying fold 10/10 - accuracies train/val: (0.3203125, 0.1796875)
+Done in: 00:00:19:484
 
 Trying strategy: C_1.500
 Testing classifier [logreg]
+  np.exp(prob, prob)
 	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
 	Classifying fold 2/10 - accuracies train/val: (0.16145833333333334, 0.1171875)
 	Classifying fold 3/10 - accuracies train/val: (0.2734375, 0.1953125)
@@ -312,6 +322,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.35243055555555558, 0.2265625)
 	Classifying fold 9/10 - accuracies train/val: (0.35503472222222221, 0.2109375)
 	Classifying fold 10/10 - accuracies train/val: (0.34809027777777779, 0.1953125)
+Done in: 00:00:21:200
 
 Trying strategy: C_2.000
 Testing classifier [logreg]
@@ -325,6 +336,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.3654513888888889, 0.2265625)
 	Classifying fold 9/10 - accuracies train/val: (0.3654513888888889, 0.2109375)
 	Classifying fold 10/10 - accuracies train/val: (0.359375, 0.1953125)
+Done in: 00:00:21:528
 Computing VLAD encoding
 Done computing VLAD encoding
 
@@ -339,6 +351,7 @@ Testing classifier [logreg]
 	Classifying fold 8/10 - accuracies train/val: (0.043402777777777776, 0.0)
 	Classifying fold 9/10 - accuracies train/val: (0.043402777777777776, 0.0)
 	Classifying fold 10/10 - accuracies train/val: (0.042534722222222224, 0.015625)
+Done in: 00:00:53:081
 
 Performance comparison:
 logreg , technique norm_l2 , validation accuracy : 0.06328125 change over baseline: -62.84%
@@ -356,6 +369,6 @@ Running test on logreg - vlad
 Reading test data...
 Transforming test data to features...
 Writing results on /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/​testSet_JourneyPatternIDs.csv
-Done!
+Done in: 00:06:388:849
 
 Process finished with exit code 0

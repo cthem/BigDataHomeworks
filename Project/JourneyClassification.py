@@ -27,6 +27,7 @@ def train(features, targets, num_folds, classifiers, output_folder, filename_tag
     mean_accuracies = {}
     # classify
     for classifier in classifiers:
+        classif_start = utils.tic()
         accuracies[classifier] = []
         print("\nTesting classifier [%s]" % classifier)
         # train & test each classifier
@@ -44,6 +45,8 @@ def train(features, targets, num_folds, classifiers, output_folder, filename_tag
                 accTrain, accVal = randfor_classification(train, val)
             accuracies[classifier].append((accTrain, accVal))
             print("- accuracies train/val:",accuracies[classifier][-1])
+        elapsed = utils.tictoc(classif_start)
+        print("Done in:", elapsed)
 
         # accuracy across all folds
         mean_accuracies[classifier] = [np.mean([x[0] for x in accuracies[classifier]]), \
