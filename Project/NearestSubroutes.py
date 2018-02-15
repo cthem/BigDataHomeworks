@@ -222,13 +222,13 @@ def update_current_maxsubseq(current, new_seqs, k, elapsed, row, unique_jids = T
     :return:
     """
     if unique_jids:
-        new_jid = row['journeyId']
-        current_jids = [r['journeyId'] for (_,_,r) in current]
+        new_jid = row['tripId']
+        current_jids = [r['tripId'] for (_,_,r) in current]
         if new_jid in current_jids:
             # replace only if new sequence length is larger
-            existing_item = [item for item in current if item[2]['journeyId'] == new_jid]
+            existing_item = [item for item in current if item[2]['tripId'] == new_jid]
             if len(existing_item) > 1:
-                print("Found more than one item with jid",new_jid,"impossible!")
+                print("Found more than one item with tripId",new_jid,"impossible!")
                 exit(1)
             # get the item, its position and its sequence length
             existing_item = existing_item[0]

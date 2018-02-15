@@ -113,7 +113,7 @@
   subsequently grouped by the vehicleID and the journeyPatternId. The final dataframe contains five columns, where the three last columns contain a list of timestamps, a list of longitudes and a list of latitudes respectively.
 	
 	To produce the required final format [timestamp, longitude, latitude], we
-  iterate each row, producing a column with the appropriate list data.
+  iterate each row, producing a column with the appropriate list data. The total number of trips extracted to the trips.csv file is 6651.
   % the three lists are now concatenated in one column and therefore the other two are dropped from the dataframe. Then, the column vehicleID is replaced by the tripId column which is the index of this dataframe, starting from 0 and incrementing by 1. Finally, the column points, which now contains the list of lists with the timestamps and the points, is sorted based on the timestamp of each list item. The final result is exported in a file with the requested format.
 	
 	\subsection{Clean Data (question B)}
@@ -133,7 +133,7 @@
   compute the required distances and discard the trips that match the exclusion
   criteria.
 	
-	The resulting filtered trips are stored in the file \texttt{trips\_clean.csv}.
+	The resulting filtered trips are stored in the file \texttt{trips\_clean.csv}. The total number of filtered trips is 6020 (192 are deleted due to having total distance less than 2km while 439 are excluded due having to max distance between two points more than 2km).
 	
 	\subsection{Trip Visualization (question C)}
 	This trip visualization task is implemented in the function
@@ -248,35 +248,35 @@ neighbours). All plotting is done with the pylab package.
 	
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.80] {nn1.png}
+			\includegraphics [scale = 0.60] {nn1.png}
 			\caption{Nearest neighbours for the first test trip}
 		\end{center}
 	\end{figure} 
 
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.80] {nn2.png}
+			\includegraphics [scale = 0.60] {nn2.png}
 			\caption{Nearest neighbours for the second test trip}
 		\end{center}
 	\end{figure}
 
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.80] {nn3.png}
+			\includegraphics [scale = 0.60] {nn3.png}
 			\caption{Nearest neighbours for the third test trip}
 		\end{center}
 	\end{figure} 
 
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.80] {nn4.png}
+			\includegraphics [scale = 0.60] {nn4.png}
 			\caption{Nearest neighbours for the fourth test trip}
 		\end{center}
 	\end{figure} 
 
 	\begin{figure} [H]
 		\begin{center}
-			\includegraphics [scale = 0.80] {nn5.png}
+			\includegraphics [scale = 0.60] {nn5.png}
 			\caption{Nearest neighbours for the fifth test trip}
 		\end{center}
 	\end{figure} 
@@ -288,11 +288,11 @@ neighbours). All plotting is done with the pylab package.
 		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
 			\hline
 			\textbf{}  & \textbf{Time} & \textbf{id1} & \textbf{d1} & \textbf{id2} & \textbf{d2} & \textbf{id3} & \textbf{d3} & \textbf{id4} & \textbf{d4} & \textbf{id5} & \textbf{d5} \\ \hline
-			\textbf{1} & 02:135:695    & 309          & 5.2           & 1599         & 6.6           & 1899         & 6.7           & 153          & 6.9           & 9         & 8.2           \\ \hline
-			\textbf{2} & 01:81:384     & 929          & 4.1           & 955          & 65.5          & 582          & 85.3          & 2291         & 105.6         & 2834         & 106.7         \\ \hline
-			\textbf{3} & 02:139:475    & 2060         & 4.8           & 1270          & 5.8           & 1846          & 6.0           & 2065          & 7.8           & 1279          & 16.0          \\ \hline
-			\textbf{4} & 01:88:780     & 2415         & 2.5           & 786          & 3.5           & 753         & 3.5           & 1691          & 64.4          & 983          & 65.7          \\ \hline
-			\textbf{5} & 01:86:359     & 740          & 6.6           & 1304         & 32.4          & 2686         & 46.1          & 3138         & 72.3          & 1435         & 145.1         \\ \hline
+			\textbf{1} & 11:694:365    & 4139          & 0.0           & 1756         & 3.5           & 584         & 3.8           & 3119          & 4.0           & 3428         & 4.1           \\ \hline
+			\textbf{2} & 05:358:252     & 1554          & 0.0           & 6461          & 2.8          & 1985          & 3.4          & 611         & 3.4         & 1434         & 3.5         \\ \hline
+			\textbf{3} & 12:732:353    & 3317         & 0.0           & 1939          & 4.7           & 3200          & 4.8           & 5374          & 4.8           & 1508          & 4.8          \\ \hline
+			\textbf{4} & 07:475:129     & 603         & 0.0           & 559          & 2.5           & 951         & 2.8           & 1118          & 3.2          & 684          & 3.5          \\ \hline
+			\textbf{5} & 07:444:862     & 1497          & 0.0           & 1688         & 4.3          & 927         & 4.5          & 2578         & 4.6          & 6252         & 4.7         \\ \hline
 		\end{tabular}
 	\caption{Nearest Neighbors results}
 	\label{nnresults}
@@ -370,7 +370,7 @@ neighbours). All plotting is done with the pylab package.
 		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
 			\hline
 			\textbf{}  & \textbf{Time} & \textbf{id1} & \textbf{pts1} & \textbf{id2} & \textbf{pts2} & \textbf{id3} & \textbf{pts3} & \textbf{id4} & \textbf{pts4} & \textbf{id5} & \textbf{pts5} \\ \hline
-			\textbf{1} & 01:62:303     & 491          & 31            & 667          & 31            & 1366         & 22            & 503          & 21            & 426          & 19            \\ \hline
+			\textbf{1} & 05:346:265     & 211          & 31            & 728          & 31            & 3590         & 22            & 4985          & 21            & 843          & 19            \\ \hline
 			\textbf{2} & 01:63:755     & 2620         & 42            & 510          & 37            & 1093         & 34            & 426          & 31            & 363          & 30            \\ \hline
 			\textbf{3} & 00:32:319     & 200          & 40            & 1885         & 40            & 2763         & 40            & 142          & 39            & 135          & 35            \\ \hline
 			\textbf{4} & 00:46:297     & 566          & 32            & 1269         & 21            & 227          & 20            & 2561         & 17            & 252          & 15            \\ \hline

@@ -11,6 +11,7 @@ Removing nulls and NaNs ...
 Done reading training file!
 Transforming data to the required format
 Done transforming data!
+Time: 13 min
 
 >>> Running question 1b - cleaning the training data
 Filtering 6651 trips...
@@ -32,62 +33,62 @@ Running question #2
 =====================
 
 >>> Running question 2a1 - Nearest neighbours computation
-Extracting 5 nearest neighbours out of 1280 cleaned train data, for each test trip
+Extracting 5 nearest neighbours out of 6020 cleaned train data, for each test trip
 Using parallelization options: None
 Examining test element 1 / 5
-Neighbours: [309, 1599, 1899, 153, 9]
-Extracted 5 nearest neighbours in: 00:02:135:695
+Neighbours: [4139, 1756, 584, 3119, 3428]
+Extracted 5 nearest neighbours in: 00:11:694:365
 Producing html and png files...
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_1_1.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_1_2.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_1_3.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_1_4.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_1_5.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_1_6.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_1_6.html
 Producing plots...
 Examining test element 2 / 5
-Neighbours: [929, 955, 582, 2291, 2834]
-Extracted 5 nearest neighbours in: 00:01:81:384
+Neighbours: [1554, 6461, 1985, 611, 1434]
+Extracted 5 nearest neighbours in: 00:05:358:252
 Producing html and png files...
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_2_1.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_2_2.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_2_3.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_2_4.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_2_5.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_2_6.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_2_6.html
 Producing plots...
 Examining test element 3 / 5
-Neighbours: [2060, 1270, 1846, 2065, 1279]
-Extracted 5 nearest neighbours in: 00:02:139:475
+Neighbours: [3317, 1939, 3200, 5374, 1508]
+Extracted 5 nearest neighbours in: 00:12:732:353
 Producing html and png files...
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_3_1.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_3_2.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_3_3.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_3_4.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_3_5.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_3_6.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_3_6.html
 Producing plots...
 Examining test element 4 / 5
-Neighbours: [2415, 786, 753, 1691, 983]
-Extracted 5 nearest neighbours in: 00:01:88:780
+Neighbours: [603, 559, 951, 1118, 684]
+Extracted 5 nearest neighbours in: 00:07:475:129
 Producing html and png files...
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_4_1.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_4_2.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_4_3.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_4_4.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_4_5.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_4_6.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_4_6.html
 Producing plots...
 Examining test element 5 / 5
-Neighbours: [740, 1304, 2686, 3138, 1435]
-Extracted 5 nearest neighbours in: 00:01:86:359
+Neighbours: [1497, 1688, 927, 2578, 6252]
+Extracted 5 nearest neighbours in: 00:07:444:862
 Producing html and png files...
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_5_1.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_5_2.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_5_3.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_5_4.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_5_5.html
-Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder_test/gmplots/nn_5_6.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_1.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_2.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_3.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_4.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_5.html
+Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/nn_5_6.html
 Producing plots...
 
 >>> Running question 2a2 - Nearest subroutes computation
