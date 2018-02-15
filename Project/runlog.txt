@@ -13,13 +13,13 @@ Transforming data to the required format
 Done transforming data!
 
 >>> Running question 1b - cleaning the training data
-Filtering 3154 trips...
-Deleted 63 due to having total distance less than 2km
-Deleted 1811 trips due having to max distance between two points more than 2km
-Writing 1280 cleaned trips to /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/trips_clean.csv
+Filtering 6651 trips...
+Deleted 192 due to having total distance less than 2km
+Deleted 439 trips due having to max distance between two points more than 2km
+Writing 6020 cleaned trips to /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/trips_clean.csv
 
 >>> Running question 1c - visualizing the training data
-Randomly selected 5 trips to visualize, with indexes [998, 413, 334, 790, 612]
+Randomly selected 5 trips to visualize, with indexes [5381, 4969, 1905, 2443, 4585]
 Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/mapplot0.html
 Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/mapplot1.html
 Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester3/BigData/BigDataHomeworks/Project/output_folder/gmplots/mapplot2.html
