@@ -27,7 +27,7 @@ def question_a1(output_folder, clean_file, test_file, paropts, k, unique_jids = 
         nn.visualize_nns(test_points, nns_ids_distances, outfile_name, elapsed, index)
 
 
-def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, verbosity, unique_jids = True):
+def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, verbosity, unique_trip = True):
     lcss_type = "consequtive" if conseq_lcss else "non-consequtive"
     print("Extracting %d %s subroutes for each test trip" % (k, lcss_type))
     test_df = pd.read_csv(test_file, delimiter="\n")
@@ -36,7 +36,7 @@ def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, v
         print("Extracting subroutes for test trip %d/%d" % (index + 1, len(test_df)))
         file_name = os.path.join(output_folder, "subroutes_%d_" % (index + 1))
         test_points = eval(row["Trajectory"])
-        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, conseq_lcss, verbosity, unique_jids)
+        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, conseq_lcss, verbosity, unique_trip)
         ns.preprocessing_for_visualisation(test_points, max_subseqs, file_name, index)
 
 

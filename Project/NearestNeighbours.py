@@ -144,12 +144,13 @@ def calculate_dynamic_time_warping(latlons1, latlons2, paropts = None, impl = "d
         cache = {}
         for i in range(1, 1 + len(latlons1)):
             for j in range(1, 1 + len(latlons2)):
-                cost = qp1.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
-                # if (i-1,j-1) not in cache:
-                #     cost = qp1.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
-                #     cache[(i-1,j-1)] = cost
-                # else:
-                #     cost = cache[(i-1, j-1)]
+                # cost = qp1.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
+                if (i-1,j-1) not in cache:
+                    cost = qp1.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
+                    cache[(i-1,j-1)] = cost
+                    cache[(j-1,i-1)] = cost
+                else:
+                    cost = cache[(i-1, j-1)]
                 dtw[i][j] = cost + min(dtw[i - 1][j], dtw[i][j - 1], dtw[i - 1][j - 1])
         return dtw[-1][-1]
 

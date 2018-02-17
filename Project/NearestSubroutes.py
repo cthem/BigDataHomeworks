@@ -5,7 +5,7 @@ import question1 as qp1
 import pprint
 
 
-def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None, conseq_lcss = True, verbosity = False, unique_jids = True):
+def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None, conseq_lcss = True, verbosity = False, unique_trip = True):
     if paropts:
         print("Parallelizing with", paropts)
         partype, numpar = paropts
@@ -18,18 +18,18 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None,
     if partype:
         # num threads or processes
         if partype == "processes":
-            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k, conseq_lcss, unique_jids)
+            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k, conseq_lcss, unique_trip)
         elif partype == "threads":
-            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k, conseq_lcss, unique_jids)
+            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k, conseq_lcss, unique_trip)
     else:
-        max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss, verbosity = verbosity, unique_jids = unique_jids)
+        max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss, verbosity = verbosity, unique_trip = unique_trip)
     if len(max_subseqs) != k:
         print("WARNING: Specified %d subseqs!" % k)
     print("Extracted %d nearest subsequences of a %d-long test tring in: %s" % (len(test_points), k, utils.tictoc(timestart)))
     return max_subseqs
 
 
-def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_jids = True):
+def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_trip = True):
     max_subseqs = []
     # for each trip in the training data
     for index, row in df.iterrows():
@@ -45,20 +45,25 @@ def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_
         # keep k largest
         subseqs_idx = subseqs_idx[:k]
         if subseqs_idx:
-            print("Train trip #", 1+index,"/",len(df), "%d largest sub-routes:" % k, subseqs_idx)
-        if unique_jids:
+            #print("Train trip #", 1+index,"/",len(df), " of length %d | %d largest sub-routes:" % (len(train_points),k), subseqs_idx)
+            pass
+        if unique_trip:
             # keep at most one (the longest) subroute for each training trip 
             subseqs_idx = subseqs_idx[0:1]
         # update the list of the longest subsequences
         if subseqs:
-            max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_jids = unique_jids)
-            # print("Updated max subseqs, len now:",len(max_subseqs))
+            max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_trip = unique_trip)
+            #print("Updated max subseqs, lens now:",[len(x[0]) for x in max_subseqs])
     if verbosity:
         print("Got %d subseqs:" % len(max_subseqs), [ (x,y,z["tripId"]) for (x,y,z) in max_subseqs])
+    max_subseqs = check_reverse_lcss(max_subseqs, test_lonlat)
     return max_subseqs
 
 
-def exec_with_processes(df, process_num, test_lonlat, k, unique_jids = True):
+def check_reverse_lcss(max_subseqs, test_lonlat):
+    pass
+
+def exec_with_processes(df, process_num, test_lonlat, k, unique_trip = True):
     max_subseqs = []
     pool = ThreadPool(processes=process_num)
     for index, row in df.iterrows():
@@ -73,14 +78,14 @@ def exec_with_processes(df, process_num, test_lonlat, k, unique_jids = True):
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
         # update the list of the longest subsequences
-        max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_jids = unique_jids)
+        max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_trip = unique_trip)
     print("Got %d common subsequences" % len(max_subseqs))
     pool.close()
     pool.join()
     return max_subseqs
 
 
-def exec_with_threads(df, numpar, test_lonlat, k, unique_jids = True):
+def exec_with_threads(df, numpar, test_lonlat, k, unique_trip = True):
     max_subseqs = []
     res1 = [[] for _ in range(numpar)]
     res2 = [[] for _ in range(numpar)]
@@ -122,13 +127,19 @@ def calc_lcss_noconseq(t1, t2, subseqs=None, subseqs_idx=None):
         idxs = []
 
     curr_len = 0
+    cache = {}
     L = [ [0 for _ in t2 + [0]] for _ in t1 + [0]]
     for i in range(1,len(t1) + 1):
         for j in range(1,len(t2) + 1):
-            p1, p2 = t1[i-1], t2[j-1]
-            # dist = qp1.calculate_lonlat_distance(t1[i],t2[j])
-            # equal = dist < 200
-            equal = p1 == p2
+            if (i,j) not in cache:
+                p1, p2 = t1[i-1], t2[j-1]
+                dist = qp1.calculate_lonlat_distance(t1[i],t2[j])
+                cache[(i,j)] = dist
+                cache[(j,i)] = dist
+            else:
+                dist = cache[(i,j)]
+
+            equal = dist < 200
             if equal:
                 L[i][j] =  L[i-1][j-1] + 1
             else:
@@ -185,15 +196,13 @@ def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = False):
     for i, p1 in enumerate(t1):
         for j, p2 in enumerate(t2):
             # calculate the dist
-            # if (i,j) not in dist_cache:
-            #     dist = qp1.calculate_lonlat_distance(p1, p2)
-            #     dist_cache[(i,j)] = dist
-            #     dist_cache[(j,i)] = dist
-            # else:
-            #     dist = dist_cache[(i,j)]
-            # D[i][j] = dist
-            # equal = dist < 200
-            equal = p1 == p2
+            if (i,j) not in dist_cache:
+                dist = qp1.calculate_lonlat_distance(p1, p2)
+                dist_cache[(i,j)] = dist
+                dist_cache[(j,i)] = dist
+            else:
+                dist = dist_cache[(i,j)]
+            equal = dist < 200
             if equal:
                 # the points are equal enough
                 if i == 0 or j == 0:
@@ -261,7 +270,7 @@ if __name__ == '__main__':
     utils.subsets([1,2,7,1,3,9])
 
 
-def update_current_maxsubseq(current, new_seqs, k, elapsed, row, unique_jids = True):
+def update_current_maxsubseq(current, new_seqs, k, elapsed, row, unique_trip = True):
     """
     Updates current sequence with longest elements of new_seq, if applicable, i.e. if there's space left or a longer subseq
     is available
@@ -270,12 +279,12 @@ def update_current_maxsubseq(current, new_seqs, k, elapsed, row, unique_jids = T
     :param k:
     :return:
     """
-    if unique_jids:
-        new_jid = row['tripId']
-        current_jids = [r['tripId'] for (_,_,r) in current]
-        if new_jid in current_jids:
+    if unique_trip:
+        new_trip = row['tripId']
+        current_trip_ids = [r['tripId'] for (_,_,r) in current]
+        if new_trip in current_trip_ids:
             # replace only if new sequence length is larger
-            existing_item = [item for item in current if item[2]['tripId'] == new_jid]
+            existing_item = [item for item in current if item[2]['tripId'] == new_trip]
             if len(existing_item) > 1:
                 print("Found more than one item with tripId",new_jid,"impossible!")
                 exit(1)

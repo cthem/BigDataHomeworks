@@ -25,10 +25,10 @@ def question_2(opts):
     # Question 2
     print("\n>>> Running question 2a1 - Nearest neighbours computation")
     # qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"], options["unique_subroute_jids"])
-    qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"], False)
+    # qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"], False)
     print("\n>>> Running question 2a2 - Nearest subroutes computation")
-    # qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],\
-                   # opts["conseq_lcss"], opts["k"], opts["paropts"], opts["verbosity"], options["unique_subroute_jids"])
+    qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"], opts["conseq_lcss"], opts["k"], opts["paropts"], opts["verbosity"], options["unique_subroute_ids"])
+    return
     print("\n>>> Running question 2b - Cell grid quantization")
     cellgrid = opts["grid"]
     print("Using cell grid with dimensions", cellgrid)
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     test_files = [join(options["indir"], "test_set_a%d.csv" % t) for t in [1,2]] + ["test_set.csv"]
     test_files = [join(options["indir"],t) for t in test_files]
     options["testfiles"] = test_files
-    options["unique_subroute_jids"] = True
+    options["unique_subroute_ids"] = True
     options["k"] = 5
 
     # run
