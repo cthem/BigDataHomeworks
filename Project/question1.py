@@ -9,44 +9,46 @@ import utils
 #################
 
 def create_trips_file(input_file, output_file):
+    df = pd.read_csv(input_file)
     print("Reading training file", input_file, " - will ignore null journey ids")
     print("Parsing csv...")
-    df = pd.read_csv(input_file)
-    # remove potential NaNs and "null" jids
     print("Removing nulls and NaNs ...")
     df = df[pd.notnull(df['journeyPatternId'])]
     df = df[df['journeyPatternId'] != "null"].reindex()
-    timestamps = df.groupby(["vehicleID", "journeyPatternId"])["timestamp"].apply(list)
-    lons = df.groupby(["vehicleID", "journeyPatternId"])["longitude"].apply(list)
-    lats = df.groupby(["vehicleID", "journeyPatternId"])["latitude"].apply(list)
-    df = pd.concat([timestamps, lons, lats], axis=1, ignore_index=False)
-    print("Done reading training file!")
+    vids = {}
+    trips = []
     print("Transforming data to the required format")
     for index, row in df.iterrows():
-        tslist, lonslist, latslist = [], [], []
-        tslist = row["timestamp"]
-        lonslist = row["longitude"]
-        latslist = row["latitude"]
-        data_list = []
-        for i,timestamp in enumerate(tslist):
-            new_list = []
-            new_list.append(timestamp)
-            new_list.append(lonslist[i])
-            new_list.append(latslist[i])
-            data_list.append(new_list)
-        row["timestamp"] = data_list
-    new_df = create_new_dataframe()
-    new_df = pd.concat([new_df, df["timestamp"]], axis=1, ignore_index=False)
-    new_df.to_csv(output_file)
-    df = pd.read_csv(output_file)
-    df = df.drop(["vehicleID", "tripId"], axis=1)
-    df.index.name = "tripId"
-    df.columns = ["journeyId", "points"]
-    df = sort_timestamps(df)
+        vid = row["vehicleID"]
+        jid = row["journeyPatternId"]
+        data = [row["timestamp"], row["longitude"], row["latitude"]]
+        if vid not in vids:
+            vids[vid] = []
+        if not vids[vid]:
+            vids[vid] = [jid, [data]]
+        else:
+            if vids[vid][0] == row["journeyPatternId"]:
+                vids[vid][1].append(data)
+            else:
+                trips.append(vids[vid])
+                vids[vid] = []
+                vids[vid] = [jid, [data]]
+    points = []
+    jids = []
+    tripids = []
+    print("Producing new dataframe")
+    for i, trip in enumerate(trips):
+        points.append(trip[1])
+        jids.append(trip[0])
+        tripids.append(i)
+    df1 = pd.DataFrame({'tripId': tripids})
+    df2 = pd.DataFrame({'journeyId': jids})
+    df3 = pd.DataFrame({'points': points})
+    df = pd.concat([df1, df2, df3], axis=1, ignore_index=False)
     df.to_csv(output_file)
-    trips_list = df.to_dict(orient='dict')
+    # trips_list = df.to_dict(orient='dict')
     print("Done transforming data!")
-    return trips_list, df
+    return df
 
 
 def create_new_dataframe():
@@ -88,8 +90,8 @@ def filter_trips(output_file, df):
     print("Deleted %d trips due having to max distance between two points more than 2km" % len(trips_too_big))
     print("Writing",len(df),"cleaned trips to", output_file)
     df.to_csv(output_file)
-    trips_list = df.to_dict(orient='dict')
-    return trips_list, df
+   # trips_list = df.to_dict(orient='dict')
+    return  df
 
 
 def calculate_total_distance_per_trip(points):

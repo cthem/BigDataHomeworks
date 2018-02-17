@@ -150,220 +150,690 @@ Writing plot /home/sissy/Documents/Professional/University/UOA/graduate/Semester
 Producing plots...
 
 >>> Running question 2b - Cell grid quantization
-Using cell grid with dimensions (5, 5)
+Using cell grid with dimensions (30, 30)
+Generated features in 00:00:20:036
 
 >>> Running question 2c - Classification
 Preprocessing training data
 10 Jids with most data:
-0 : ('00181001', 18)
-1 : ('00180001', 17)
-2 : ('00411001', 15)
-3 : ('00661001', 14)
-4 : ('00270001', 14)
-5 : ('00260001', 14)
-6 : ('015B1001', 14)
-7 : ('00660001', 14)
-8 : ('039A0001', 13)
-9 : ('066A1001', 13)
+0 : ('046A1001', 103)
+1 : ('046A0001', 97)
+2 : ('039A1001', 88)
+3 : ('01301001', 83)
+4 : ('01231001', 82)
+5 : ('01230001', 82)
+6 : ('00150001', 80)
+7 : ('039A0001', 78)
+8 : ('00151001', 77)
+9 : ('01300001', 77)
 Done preprocessing data
 
 Testing classifier [knn]
-	Classifying fold 1/10 - accuracies train/val: (0.43836805555555558, 0.34375)
-	Classifying fold 2/10 - accuracies train/val: (0.4513888888888889, 0.296875)
-	Classifying fold 3/10 - accuracies train/val: (0.44878472222222221, 0.2734375)
-	Classifying fold 4/10 - accuracies train/val: (0.4513888888888889, 0.1796875)
-	Classifying fold 5/10 - accuracies train/val: (0.4435763888888889, 0.140625)
-	Classifying fold 6/10 - accuracies train/val: (0.4453125, 0.1953125)
-	Classifying fold 7/10 - accuracies train/val: (0.44618055555555558, 0.2109375)
-	Classifying fold 8/10 - accuracies train/val: (0.4435763888888889, 0.2109375)
-	Classifying fold 9/10 - accuracies train/val: (0.44097222222222221, 0.1640625)
-	Classifying fold 10/10 - accuracies train/val: (0.453125, 0.1953125)
-Done in: 00:00:00:842
+	Classifying fold 1/10 - accuracies train/val: (0.90531561461794019, 0.85880398671096347)
+	Classifying fold 2/10 - accuracies train/val: (0.90771502399409376, 0.83887043189368771)
+	Classifying fold 3/10 - accuracies train/val: (0.9023624953857512, 0.87541528239202659)
+	Classifying fold 4/10 - accuracies train/val: (0.9008859357696567, 0.87707641196013286)
+	Classifying fold 5/10 - accuracies train/val: (0.90494647471391654, 0.86212624584717612)
+	Classifying fold 6/10 - accuracies train/val: (0.90420819490586934, 0.83388704318936879)
+	Classifying fold 7/10 - accuracies train/val: (0.90476190476190477, 0.86378737541528239)
+	Classifying fold 8/10 - accuracies train/val: (0.90254706533776297, 0.87043189368770768)
+	Classifying fold 9/10 - accuracies train/val: (0.90107050572166847, 0.87209302325581395)
+	Classifying fold 10/10 - accuracies train/val: (0.90383905500184569, 0.86046511627906974)
+Done in: 00:03:201:248
 
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
-	Classifying fold 2/10 - accuracies train/val: (0.1545138888888889, 0.1171875)
-	Classifying fold 3/10 - accuracies train/val: (0.26822916666666669, 0.1953125)
-	Classifying fold 4/10 - accuracies train/val: (0.2890625, 0.1953125)
-	Classifying fold 5/10 - accuracies train/val: (0.3064236111111111, 0.1640625)
-	Classifying fold 6/10 - accuracies train/val: (0.3142361111111111, 0.1875)
-	Classifying fold 7/10 - accuracies train/val: (0.32899305555555558, 0.2265625)
-	Classifying fold 8/10 - accuracies train/val: (0.34027777777777779, 0.21875)
-	Classifying fold 9/10 - accuracies train/val: (0.34635416666666669, 0.2109375)
-	Classifying fold 10/10 - accuracies train/val: (0.34461805555555558, 0.1875)
-Done in: 00:00:26:935
+	Classifying fold 1/10 - accuracies train/val: (0.28792912513842744, 0.36378737541528239)
+	Classifying fold 2/10 - accuracies train/val: (0.9008859357696567, 0.85548172757475083)
+	Classifying fold 3/10 - accuracies train/val: (0.92100406053894424, 0.87707641196013286)
+	Classifying fold 4/10 - accuracies train/val: (0.93429309708379471, 0.89534883720930236)
+	Classifying fold 5/10 - accuracies train/val: (0.94444444444444442, 0.87209302325581395)
+	Classifying fold 6/10 - accuracies train/val: (0.94813584348468072, 0.86378737541528239)
+	Classifying fold 7/10 - accuracies train/val: (0.95016611295681064, 0.8986710963455149)
+	Classifying fold 8/10 - accuracies train/val: (0.94942783314876333, 0.90199335548172754)
+	Classifying fold 9/10 - accuracies train/val: (0.95127353266888148, 0.90365448504983392)
+	Classifying fold 10/10 - accuracies train/val: (0.95496493170911778, 0.88205980066445178)
+Done in: 00:17:1034:929
 
 Testing classifier [randfor]
-	Classifying fold 1/10 - accuracies train/val: (0.96961805555555558, 0.328125)
-	Classifying fold 2/10 - accuracies train/val: (0.96614583333333337, 0.3203125)
-	Classifying fold 3/10 - accuracies train/val: (0.97395833333333337, 0.2578125)
-	Classifying fold 4/10 - accuracies train/val: (0.96006944444444442, 0.2578125)
-	Classifying fold 5/10 - accuracies train/val: (0.97135416666666663, 0.2265625)
-	Classifying fold 6/10 - accuracies train/val: (0.96875, 0.3359375)
-	Classifying fold 7/10 - accuracies train/val: (0.96875, 0.2578125)
-	Classifying fold 8/10 - accuracies train/val: (0.97048611111111116, 0.328125)
-	Classifying fold 9/10 - accuracies train/val: (0.96788194444444442, 0.2109375)
-	Classifying fold 10/10 - accuracies train/val: (0.96875, 0.2890625)
-Done in: 00:00:01:711
+	Classifying fold 1/10 - accuracies train/val: (0.99520118124769286, 0.88039867109634551)
+	Classifying fold 2/10 - accuracies train/val: (0.99557032115171651, 0.87541528239202659)
+	Classifying fold 3/10 - accuracies train/val: (0.99446290143964566, 0.89036544850498334)
+	Classifying fold 4/10 - accuracies train/val: (0.99501661129568109, 0.90033222591362128)
+	Classifying fold 5/10 - accuracies train/val: (0.9948320413436692, 0.87043189368770768)
+	Classifying fold 6/10 - accuracies train/val: (0.99464747139165743, 0.86544850498338866)
+	Classifying fold 7/10 - accuracies train/val: (0.99575489110372828, 0.87707641196013286)
+	Classifying fold 8/10 - accuracies train/val: (0.99538575119970474, 0.89202657807308972)
+	Classifying fold 9/10 - accuracies train/val: (0.99557032115171651, 0.89202657807308972)
+	Classifying fold 10/10 - accuracies train/val: (0.99464747139165743, 0.88205980066445178)
+Done in: 00:00:09:519
 
-knn accuracy train/val: [0.44626736111111109, 0.22109375000000001]
-logreg accuracy train/val: [0.26927083333333329, 0.17031250000000001]
-randfor accuracy train/val: [0.96857638888888897, 0.28125]
+knn accuracy train/val: [0.90376522702104101, 0.86129568106312282]
+logreg accuracy train/val: [0.87425249169435215, 0.83139534883720922]
+randfor accuracy train/val: [0.99510889627168686, 0.88255813953488382]
 
+Improving classification for classifier randfor
+Preprocessing training data
+10 Jids with most data:
+0 : ('046A1001', 103)
+1 : ('046A0001', 97)
+2 : ('039A1001', 88)
+3 : ('01301001', 83)
+4 : ('01231001', 82)
+5 : ('01230001', 82)
+6 : ('00150001', 80)
+7 : ('039A0001', 78)
+8 : ('00151001', 77)
+9 : ('01300001', 77)
+Done preprocessing data
+
+
+Trying strategy: estimator_5
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99409376153562201, 0.87375415282392022)
+	Classifying fold 2/10 - accuracies train/val: (0.99557032115171651, 0.8687707641196013)
+	Classifying fold 3/10 - accuracies train/val: (0.99649317091177558, 0.88538205980066442)
+	Classifying fold 4/10 - accuracies train/val: (0.99280177187153928, 0.89534883720930236)
+	Classifying fold 5/10 - accuracies train/val: (0.99427833148763378, 0.88870431893687707)
+	Classifying fold 6/10 - accuracies train/val: (0.99335548172757471, 0.87375415282392022)
+	Classifying fold 7/10 - accuracies train/val: (0.99593946105574016, 0.87873754152823924)
+	Classifying fold 8/10 - accuracies train/val: (0.99427833148763378, 0.9169435215946844)
+	Classifying fold 9/10 - accuracies train/val: (0.99612403100775193, 0.89036544850498334)
+	Classifying fold 10/10 - accuracies train/val: (0.99557032115171651, 0.88870431893687707)
+Done in: 00:00:10:889
+
+Trying strategy: estimator_20
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99427833148763378, 0.87541528239202659)
+	Classifying fold 2/10 - accuracies train/val: (0.99557032115171651, 0.86544850498338866)
+	Classifying fold 3/10 - accuracies train/val: (0.99557032115171651, 0.90365448504983392)
+	Classifying fold 4/10 - accuracies train/val: (0.99464747139165743, 0.88870431893687707)
+	Classifying fold 5/10 - accuracies train/val: (0.99464747139165743, 0.87375415282392022)
+	Classifying fold 6/10 - accuracies train/val: (0.99409376153562201, 0.8687707641196013)
+	Classifying fold 7/10 - accuracies train/val: (0.99667774086378735, 0.89368770764119598)
+	Classifying fold 8/10 - accuracies train/val: (0.9963086009597637, 0.91362126245847175)
+	Classifying fold 9/10 - accuracies train/val: (0.99538575119970474, 0.89202657807308972)
+	Classifying fold 10/10 - accuracies train/val: (0.99612403100775193, 0.89036544850498334)
+Done in: 00:00:10:882
+
+Trying strategy: estimator_25
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99446290143964566, 0.88538205980066442)
+	Classifying fold 2/10 - accuracies train/val: (0.99538575119970474, 0.87043189368770768)
+	Classifying fold 3/10 - accuracies train/val: (0.9948320413436692, 0.90199335548172754)
+	Classifying fold 4/10 - accuracies train/val: (0.99372462163159836, 0.89368770764119598)
+	Classifying fold 5/10 - accuracies train/val: (0.99557032115171651, 0.8870431893687708)
+	Classifying fold 6/10 - accuracies train/val: (0.99649317091177558, 0.8687707641196013)
+	Classifying fold 7/10 - accuracies train/val: (0.99557032115171651, 0.88538205980066442)
+	Classifying fold 8/10 - accuracies train/val: (0.99520118124769286, 0.9169435215946844)
+	Classifying fold 9/10 - accuracies train/val: (0.99520118124769286, 0.87873754152823924)
+	Classifying fold 10/10 - accuracies train/val: (0.99557032115171651, 0.8687707641196013)
+Done in: 00:00:11:463
+
+Trying strategy: max_feature_strategy_sqrt
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99501661129568109, 0.89202657807308972)
+	Classifying fold 2/10 - accuracies train/val: (0.99575489110372828, 0.85880398671096347)
+	Classifying fold 3/10 - accuracies train/val: (0.99446290143964566, 0.8986710963455149)
+	Classifying fold 4/10 - accuracies train/val: (0.99538575119970474, 0.89202657807308972)
+	Classifying fold 5/10 - accuracies train/val: (0.99446290143964566, 0.8870431893687708)
+	Classifying fold 6/10 - accuracies train/val: (0.99464747139165743, 0.88372093023255816)
+	Classifying fold 7/10 - accuracies train/val: (0.99538575119970474, 0.89368770764119598)
+	Classifying fold 8/10 - accuracies train/val: (0.99649317091177558, 0.90531561461794019)
+	Classifying fold 9/10 - accuracies train/val: (0.99501661129568109, 0.88538205980066442)
+	Classifying fold 10/10 - accuracies train/val: (0.99612403100775193, 0.89534883720930236)
+Done in: 00:00:11:037
+
+Trying strategy: max_feature_strategy_log2
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99427833148763378, 0.8870431893687708)
+	Classifying fold 2/10 - accuracies train/val: (0.99372462163159836, 0.86544850498338866)
+	Classifying fold 3/10 - accuracies train/val: (0.99575489110372828, 0.89368770764119598)
+	Classifying fold 4/10 - accuracies train/val: (0.99446290143964566, 0.8986710963455149)
+	Classifying fold 5/10 - accuracies train/val: (0.9948320413436692, 0.88205980066445178)
+	Classifying fold 6/10 - accuracies train/val: (0.99557032115171651, 0.87043189368770768)
+	Classifying fold 7/10 - accuracies train/val: (0.99612403100775193, 0.87541528239202659)
+	Classifying fold 8/10 - accuracies train/val: (0.99686231081579924, 0.90863787375415284)
+	Classifying fold 9/10 - accuracies train/val: (0.99575489110372828, 0.8986710963455149)
+	Classifying fold 10/10 - accuracies train/val: (0.99557032115171651, 0.8870431893687708)
+Done in: 00:00:11:245
+
+Trying strategy: max_feature_strategy_None
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99593946105574016, 0.88039867109634551)
+	Classifying fold 2/10 - accuracies train/val: (0.9963086009597637, 0.8687707641196013)
+	Classifying fold 3/10 - accuracies train/val: (0.9963086009597637, 0.89534883720930236)
+	Classifying fold 4/10 - accuracies train/val: (0.99612403100775193, 0.88538205980066442)
+	Classifying fold 5/10 - accuracies train/val: (0.99317091177556294, 0.89700996677740863)
+	Classifying fold 6/10 - accuracies train/val: (0.99501661129568109, 0.87873754152823924)
+	Classifying fold 7/10 - accuracies train/val: (0.99686231081579924, 0.89036544850498334)
+	Classifying fold 8/10 - accuracies train/val: (0.9948320413436692, 0.89700996677740863)
+	Classifying fold 9/10 - accuracies train/val: (0.99446290143964566, 0.89368770764119598)
+	Classifying fold 10/10 - accuracies train/val: (0.99501661129568109, 0.88870431893687707)
+Done in: 00:00:11:178
+
+Trying strategy: max_depth_strategy_10
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99464747139165743, 0.87541528239202659)
+	Classifying fold 2/10 - accuracies train/val: (0.99520118124769286, 0.87375415282392022)
+	Classifying fold 3/10 - accuracies train/val: (0.99520118124769286, 0.89202657807308972)
+	Classifying fold 4/10 - accuracies train/val: (0.99427833148763378, 0.90863787375415284)
+	Classifying fold 5/10 - accuracies train/val: (0.99427833148763378, 0.88039867109634551)
+	Classifying fold 6/10 - accuracies train/val: (0.99557032115171651, 0.87043189368770768)
+	Classifying fold 7/10 - accuracies train/val: (0.99575489110372828, 0.89368770764119598)
+	Classifying fold 8/10 - accuracies train/val: (0.99557032115171651, 0.9102990033222591)
+	Classifying fold 9/10 - accuracies train/val: (0.99409376153562201, 0.89202657807308972)
+	Classifying fold 10/10 - accuracies train/val: (0.99612403100775193, 0.8687707641196013)
+Done in: 00:00:11:059
+
+Trying strategy: max_depth_strategy_50
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99538575119970474, 0.89534883720930236)
+	Classifying fold 2/10 - accuracies train/val: (0.9948320413436692, 0.88372093023255816)
+	Classifying fold 3/10 - accuracies train/val: (0.99427833148763378, 0.89700996677740863)
+	Classifying fold 4/10 - accuracies train/val: (0.9948320413436692, 0.90199335548172754)
+	Classifying fold 5/10 - accuracies train/val: (0.99520118124769286, 0.88205980066445178)
+	Classifying fold 6/10 - accuracies train/val: (0.99427833148763378, 0.87209302325581395)
+	Classifying fold 7/10 - accuracies train/val: (0.99501661129568109, 0.8870431893687708)
+	Classifying fold 8/10 - accuracies train/val: (0.9963086009597637, 0.90697674418604646)
+	Classifying fold 9/10 - accuracies train/val: (0.99446290143964566, 0.89368770764119598)
+	Classifying fold 10/10 - accuracies train/val: (0.99520118124769286, 0.88039867109634551)
+Done in: 00:00:11:195
+
+Trying strategy: max_depth_strategy_100
+Testing classifier [randfor]
+	Classifying fold 1/10 - accuracies train/val: (0.99501661129568109, 0.87209302325581395)
+	Classifying fold 2/10 - accuracies train/val: (0.9948320413436692, 0.86710963455149503)
+	Classifying fold 3/10 - accuracies train/val: (0.99280177187153928, 0.89368770764119598)
+	Classifying fold 4/10 - accuracies train/val: (0.99593946105574016, 0.89202657807308972)
+	Classifying fold 5/10 - accuracies train/val: (0.99335548172757471, 0.87541528239202659)
+	Classifying fold 6/10 - accuracies train/val: (0.9948320413436692, 0.86378737541528239)
+	Classifying fold 7/10 - accuracies train/val: (0.99427833148763378, 0.8870431893687708)
+	Classifying fold 8/10 - accuracies train/val: (0.99354005167958659, 0.90199335548172754)
+	Classifying fold 9/10 - accuracies train/val: (0.99686231081579924, 0.89700996677740863)
+	Classifying fold 10/10 - accuracies train/val: (0.9948320413436692, 0.87707641196013286)
+Done in: 00:00:11:046
+
+Performance comparison using randfor and 30x30 grid:
+randfor , technique estimator_5 , validation accuracy : 0.886046511628 change over baseline: 0.40%
+randfor , technique estimator_20 , validation accuracy : 0.886544850498 change over baseline: 0.45%
+randfor , technique estimator_25 , validation accuracy : 0.885714285714 change over baseline: 0.36%
+randfor , technique max_feature_strategy_sqrt , validation accuracy : 0.886710963455 change over baseline: 0.47%
+randfor , technique max_feature_strategy_log2 , validation accuracy : 0.886877076412 change over baseline: 0.49%
+randfor , technique max_feature_strategy_None , validation accuracy : 0.890697674419 change over baseline: 0.92%
+randfor , technique max_depth_strategy_10 , validation accuracy : 0.886544850498 change over baseline: 0.45%
+randfor , technique max_depth_strategy_50 , validation accuracy : 0.887541528239 change over baseline: 0.56%
+randfor , technique max_depth_strategy_100 , validation accuracy : 0.887873754153 change over baseline: 0.60%
+=================================================================================================================
+Performance comparison using randfor and 20x20 grid:
+randfor , technique estimator_5 , validation accuracy : 0.882392026578 change over baseline: 0.08%
+randfor , technique max_feature_strategy_sqrt , validation accuracy : 0.886544850498 change over baseline: 0.55%
+randfor , technique max_feature_strategy_log2 , validation accuracy : 0.884053156146 change over baseline: 0.26%
+randfor , technique max_feature_strategy_None , validation accuracy : 0.885714285714 change over baseline: 0.45%
+randfor , technique max_depth_strategy_10 , validation accuracy : 0.882890365449 change over baseline: 0.13%
+randfor , technique max_depth_strategy_50 , validation accuracy : 0.884551495017 change over baseline: 0.32%
+randfor , technique max_depth_strategy_100 , validation accuracy : 0.887043189369 change over baseline: 0.60%
+randfor , technique estimator_20 , validation accuracy : 0.884219269103 change over baseline: 0.28%
+randfor , technique estimator_25 , validation accuracy : 0.885382059801 change over baseline: 0.41%
+==================================================================================================================
+Performance comparison using randfor and 50x50 grid:
+randfor , technique estimator_5 , validation accuracy : 0.895182724252 change over baseline: -0.04%
+randfor , technique max_feature_strategy_sqrt , validation accuracy : 0.893355481728 change over baseline: -0.24%
+randfor , technique max_feature_strategy_log2 , validation accuracy : 0.896013289037 change over baseline: 0.06%
+randfor , technique max_feature_strategy_None , validation accuracy : 0.893023255814 change over baseline: -0.28%
+randfor , technique max_depth_strategy_10 , validation accuracy : 0.894518272425 change over baseline: -0.11%
+randfor , technique max_depth_strategy_50 , validation accuracy : 0.888704318937 change over baseline: -0.76%
+randfor , technique max_depth_strategy_100 , validation accuracy : 0.893023255814 change over baseline: -0.28%
+randfor , technique estimator_20 , validation accuracy : 0.894352159468 change over baseline: -0.13%
+randfor , technique estimator_25 , validation accuracy : 0.892026578073 change over baseline: -0.39%
+
+===================================================================================================================
 Improving classification for classifier logreg
 
 Preprocessing training data
 10 Jids with most data:
-0 : ('00181001', 18)
-1 : ('00180001', 17)
-2 : ('00411001', 15)
-3 : ('00661001', 14)
-4 : ('00270001', 14)
-5 : ('00260001', 14)
-6 : ('015B1001', 14)
-7 : ('00660001', 14)
-8 : ('039A0001', 13)
-9 : ('066A1001', 13)
+0 : ('046A1001', 103)
+1 : ('046A0001', 97)
+2 : ('039A1001', 88)
+3 : ('01301001', 83)
+4 : ('01231001', 82)
+5 : ('01230001', 82)
+6 : ('00150001', 80)
+7 : ('039A0001', 78)
+8 : ('00151001', 77)
+9 : ('01300001', 77)
 Done preprocessing data
 
 Trying strategy: norm_l2
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.0078125, 0.0234375)
-	Classifying fold 2/10 - accuracies train/val: (0.073784722222222224, 0.046875)
-	Classifying fold 3/10 - accuracies train/val: (0.1310763888888889, 0.0703125)
-	Classifying fold 4/10 - accuracies train/val: (0.1484375, 0.078125)
-	Classifying fold 5/10 - accuracies train/val: (0.14322916666666666, 0.078125)
-	Classifying fold 6/10 - accuracies train/val: (0.15190972222222221, 0.0546875)
-	Classifying fold 7/10 - accuracies train/val: (0.15885416666666666, 0.0703125)
-	Classifying fold 8/10 - accuracies train/val: (0.15885416666666666, 0.0625)
-	Classifying fold 9/10 - accuracies train/val: (0.14409722222222221, 0.0859375)
-	Classifying fold 10/10 - accuracies train/val: (0.1545138888888889, 0.0625)
-Done in: 00:00:08:796
+	Classifying fold 1/10 - accuracies train/val: (0.27703949796973054, 0.35215946843853818)
+	Classifying fold 2/10 - accuracies train/val: (0.84643779992617207, 0.82890365448504988)
+	Classifying fold 3/10 - accuracies train/val: (0.84791435954226657, 0.845514950166113)
+	Classifying fold 4/10 - accuracies train/val: (0.85455887781469175, 0.845514950166113)
+	Classifying fold 5/10 - accuracies train/val: (0.8571428571428571, 0.84219269102990035)
+	Classifying fold 6/10 - accuracies train/val: (0.85658914728682167, 0.82392026578073085)
+	Classifying fold 7/10 - accuracies train/val: (0.85382059800664456, 0.84219269102990035)
+	Classifying fold 8/10 - accuracies train/val: (0.85622000738279813, 0.86378737541528239)
+	Classifying fold 9/10 - accuracies train/val: (0.85603543743078625, 0.85215946843853818)
+	Classifying fold 10/10 - accuracies train/val: (0.85695828719084532, 0.83887043189368771)
+Done in: 00:02:121:961
 
 Trying strategy: norm_l1
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.0078125, 0.0234375)
-	Classifying fold 2/10 - accuracies train/val: (0.051215277777777776, 0.0390625)
-	Classifying fold 3/10 - accuracies train/val: (0.095486111111111105, 0.0546875)
-	Classifying fold 4/10 - accuracies train/val: (0.109375, 0.0625)
-	Classifying fold 5/10 - accuracies train/val: (0.098090277777777776, 0.0546875)
-	Classifying fold 6/10 - accuracies train/val: (0.1111111111111111, 0.046875)
-	Classifying fold 7/10 - accuracies train/val: (0.10677083333333333, 0.0390625)
-	Classifying fold 8/10 - accuracies train/val: (0.11979166666666667, 0.046875)
-	Classifying fold 9/10 - accuracies train/val: (0.11371527777777778, 0.0546875)
-	Classifying fold 10/10 - accuracies train/val: (0.12413194444444445, 0.0625)
-Done in: 00:00:08:205
+	Classifying fold 1/10 - accuracies train/val: (0.22812846068660023, 0.26744186046511625)
+	Classifying fold 2/10 - accuracies train/val: (0.66629752676264309, 0.63953488372093026)
+	Classifying fold 3/10 - accuracies train/val: (0.66279069767441856, 0.68106312292358806)
+	Classifying fold 4/10 - accuracies train/val: (0.66352897748246586, 0.6727574750830565)
+	Classifying fold 5/10 - accuracies train/val: (0.66611295681063121, 0.66112956810631229)
+	Classifying fold 6/10 - accuracies train/val: (0.67238833517903285, 0.62790697674418605)
+	Classifying fold 7/10 - accuracies train/val: (0.66925064599483208, 0.65116279069767447)
+	Classifying fold 8/10 - accuracies train/val: (0.66279069767441856, 0.64950166112956809)
+	Classifying fold 9/10 - accuracies train/val: (0.66703580657069028, 0.65282392026578073)
+	Classifying fold 10/10 - accuracies train/val: (0.66352897748246586, 0.654485049833887)
+Done in: 00:01:95:612
 
 Trying strategy: norm_max
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.004340277777777778, 0.015625)
-	Classifying fold 2/10 - accuracies train/val: (0.084201388888888895, 0.046875)
-	Classifying fold 3/10 - accuracies train/val: (0.1345486111111111, 0.078125)
-	Classifying fold 4/10 - accuracies train/val: (0.16666666666666666, 0.09375)
-	Classifying fold 5/10 - accuracies train/val: (0.15538194444444445, 0.09375)
-	Classifying fold 6/10 - accuracies train/val: (0.16927083333333334, 0.0625)
-	Classifying fold 7/10 - accuracies train/val: (0.15972222222222221, 0.1015625)
-	Classifying fold 8/10 - accuracies train/val: (0.16753472222222221, 0.0703125)
-	Classifying fold 9/10 - accuracies train/val: (0.17274305555555555, 0.109375)
-	Classifying fold 10/10 - accuracies train/val: (0.16666666666666666, 0.0546875)
-Done in: 00:00:09:554
+/usr/lib/python3.6/site-packages/sklearn/linear_model/base.py:340: RuntimeWarning: overflow encountered in exp
+  np.exp(prob, prob)
+	Classifying fold 1/10 - accuracies train/val: (0.27943890734588411, 0.35714285714285715)
+	Classifying fold 2/10 - accuracies train/val: (0.8615725359911407, 0.82558139534883723)
+	Classifying fold 3/10 - accuracies train/val: (0.87689184200812109, 0.8571428571428571)
+	Classifying fold 4/10 - accuracies train/val: (0.8863049095607235, 0.84053156146179397)
+	Classifying fold 5/10 - accuracies train/val: (0.8986710963455149, 0.83222591362126241)
+	Classifying fold 6/10 - accuracies train/val: (0.9008859357696567, 0.80564784053156147)
+	Classifying fold 7/10 - accuracies train/val: (0.90125507567368035, 0.84385382059800662)
+	Classifying fold 8/10 - accuracies train/val: (0.90254706533776297, 0.84385382059800662)
+	Classifying fold 9/10 - accuracies train/val: (0.90199335548172754, 0.84053156146179397)
+	Classifying fold 10/10 - accuracies train/val: (0.90494647471391654, 0.85382059800664456)
+Done in: 00:07:452:676
 
 Trying strategy: scaling
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
-	Classifying fold 2/10 - accuracies train/val: (0.1328125, 0.109375)
-	Classifying fold 3/10 - accuracies train/val: (0.2126736111111111, 0.125)
-	Classifying fold 4/10 - accuracies train/val: (0.24913194444444445, 0.171875)
-	Classifying fold 5/10 - accuracies train/val: (0.25260416666666669, 0.1328125)
-	Classifying fold 6/10 - accuracies train/val: (0.2560763888888889, 0.1484375)
-	Classifying fold 7/10 - accuracies train/val: (0.25086805555555558, 0.171875)
-	Classifying fold 8/10 - accuracies train/val: (0.25868055555555558, 0.1484375)
-	Classifying fold 9/10 - accuracies train/val: (0.26475694444444442, 0.171875)
-	Classifying fold 10/10 - accuracies train/val: (0.27690972222222221, 0.1328125)
-Done in: 00:00:20:190
+	Classifying fold 1/10 - accuracies train/val: (0.28774455518641567, 0.36544850498338871)
+	Classifying fold 2/10 - accuracies train/val: (0.89811738648947947, 0.86212624584717612)
+	Classifying fold 3/10 - accuracies train/val: (0.91805094130675524, 0.87707641196013286)
+	Classifying fold 4/10 - accuracies train/val: (0.93189368770764125, 0.89534883720930236)
+	Classifying fold 5/10 - accuracies train/val: (0.94075304540420823, 0.87043189368770768)
+	Classifying fold 6/10 - accuracies train/val: (0.943890734588409, 0.86046511627906974)
+	Classifying fold 7/10 - accuracies train/val: (0.94370616463639723, 0.89368770764119598)
+	Classifying fold 8/10 - accuracies train/val: (0.94407530454042077, 0.90697674418604646)
+	Classifying fold 9/10 - accuracies train/val: (0.94536729420450349, 0.90697674418604646)
+	Classifying fold 10/10 - accuracies train/val: (0.94998154300479887, 0.88538205980066442)
+Done in: 00:58:3486:398
 
 Trying strategy: C_0.200
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
-	Classifying fold 2/10 - accuracies train/val: (0.13194444444444445, 0.09375)
-	Classifying fold 3/10 - accuracies train/val: (0.23177083333333334, 0.1796875)
-	Classifying fold 4/10 - accuracies train/val: (0.25434027777777779, 0.1484375)
-	Classifying fold 5/10 - accuracies train/val: (0.2717013888888889, 0.1484375)
-	Classifying fold 6/10 - accuracies train/val: (0.28211805555555558, 0.15625)
-	Classifying fold 7/10 - accuracies train/val: (0.28559027777777779, 0.2109375)
-	Classifying fold 8/10 - accuracies train/val: (0.27430555555555558, 0.1796875)
-	Classifying fold 9/10 - accuracies train/val: (0.29774305555555558, 0.1875)
-	Classifying fold 10/10 - accuracies train/val: (0.29253472222222221, 0.1953125)
-Done in: 00:00:18:357
+	Classifying fold 1/10 - accuracies train/val: (0.28645256552233295, 0.36710963455149503)
+	Classifying fold 2/10 - accuracies train/val: (0.89442598744924329, 0.86710963455149503)
+	Classifying fold 3/10 - accuracies train/val: (0.91232927279438902, 0.88205980066445178)
+	Classifying fold 4/10 - accuracies train/val: (0.92561830933923961, 0.89368770764119598)
+	Classifying fold 5/10 - accuracies train/val: (0.93318567737172387, 0.87375415282392022)
+	Classifying fold 6/10 - accuracies train/val: (0.93484680693983024, 0.85382059800664456)
+	Classifying fold 7/10 - accuracies train/val: (0.93540051679586567, 0.90033222591362128)
+	Classifying fold 8/10 - accuracies train/val: (0.93558508674787744, 0.90863787375415284)
+	Classifying fold 9/10 - accuracies train/val: (0.93540051679586567, 0.90199335548172754)
+	Classifying fold 10/10 - accuracies train/val: (0.93835363602805466, 0.89368770764119598)
+Done in: 00:12:777:515
 
 Trying strategy: C_0.500
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
-	Classifying fold 2/10 - accuracies train/val: (0.14149305555555555, 0.109375)
-	Classifying fold 3/10 - accuracies train/val: (0.25347222222222221, 0.1953125)
-	Classifying fold 4/10 - accuracies train/val: (0.27256944444444442, 0.1484375)
-	Classifying fold 5/10 - accuracies train/val: (0.2907986111111111, 0.15625)
-	Classifying fold 6/10 - accuracies train/val: (0.29427083333333331, 0.1640625)
-	Classifying fold 7/10 - accuracies train/val: (0.30902777777777779, 0.21875)
-	Classifying fold 8/10 - accuracies train/val: (0.30381944444444442, 0.203125)
-	Classifying fold 9/10 - accuracies train/val: (0.32118055555555558, 0.1953125)
-	Classifying fold 10/10 - accuracies train/val: (0.3203125, 0.1796875)
-Done in: 00:00:19:484
+	Classifying fold 1/10 - accuracies train/val: (0.28774455518641567, 0.3687707641196013)
+	Classifying fold 2/10 - accuracies train/val: (0.8979328165374677, 0.86212624584717612)
+	Classifying fold 3/10 - accuracies train/val: (0.91731266149870805, 0.87873754152823924)
+	Classifying fold 4/10 - accuracies train/val: (0.92986341823551122, 0.89534883720930236)
+	Classifying fold 5/10 - accuracies train/val: (0.93927648578811374, 0.87043189368770768)
+	Classifying fold 6/10 - accuracies train/val: (0.94333702473237357, 0.8571428571428571)
+	Classifying fold 7/10 - accuracies train/val: (0.9446290143964563, 0.8986710963455149)
+	Classifying fold 8/10 - accuracies train/val: (0.943890734588409, 0.90697674418604646)
+	Classifying fold 9/10 - accuracies train/val: (0.94536729420450349, 0.90365448504983392)
+	Classifying fold 10/10 - accuracies train/val: (0.94739756367663341, 0.8870431893687708)
+Done in: 00:14:862:683
 
 Trying strategy: C_1.500
 Testing classifier [logreg]
-  np.exp(prob, prob)
-	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
-	Classifying fold 2/10 - accuracies train/val: (0.16145833333333334, 0.1171875)
-	Classifying fold 3/10 - accuracies train/val: (0.2734375, 0.1953125)
-	Classifying fold 4/10 - accuracies train/val: (0.30034722222222221, 0.203125)
-	Classifying fold 5/10 - accuracies train/val: (0.3203125, 0.171875)
-	Classifying fold 6/10 - accuracies train/val: (0.328125, 0.203125)
-	Classifying fold 7/10 - accuracies train/val: (0.34027777777777779, 0.2265625)
-	Classifying fold 8/10 - accuracies train/val: (0.35243055555555558, 0.2265625)
-	Classifying fold 9/10 - accuracies train/val: (0.35503472222222221, 0.2109375)
-	Classifying fold 10/10 - accuracies train/val: (0.34809027777777779, 0.1953125)
-Done in: 00:00:21:200
+	Classifying fold 1/10 - accuracies train/val: (0.2882982650424511, 0.36378737541528239)
+	Classifying fold 2/10 - accuracies train/val: (0.90291620524178662, 0.8571428571428571)
+	Classifying fold 3/10 - accuracies train/val: (0.92303433001107416, 0.87707641196013286)
+	Classifying fold 4/10 - accuracies train/val: (0.9372462163159837, 0.89534883720930236)
+	Classifying fold 5/10 - accuracies train/val: (0.9461055740125508, 0.87375415282392022)
+	Classifying fold 6/10 - accuracies train/val: (0.94979697305278699, 0.86544850498338866)
+	Classifying fold 7/10 - accuracies train/val: (0.95311923218899963, 0.89700996677740863)
+	Classifying fold 8/10 - accuracies train/val: (0.95293466223698786, 0.90033222591362128)
+	Classifying fold 9/10 - accuracies train/val: (0.95422665190107048, 0.90365448504983392)
+	Classifying fold 10/10 - accuracies train/val: (0.95773348098929489, 0.87873754152823924)
+Done in: 00:15:903:947
 
 Trying strategy: C_2.000
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.0, 0.0)
-	Classifying fold 2/10 - accuracies train/val: (0.16493055555555555, 0.1171875)
-	Classifying fold 3/10 - accuracies train/val: (0.27777777777777779, 0.203125)
-	Classifying fold 4/10 - accuracies train/val: (0.3046875, 0.21875)
-	Classifying fold 5/10 - accuracies train/val: (0.328125, 0.1875)
-	Classifying fold 6/10 - accuracies train/val: (0.3376736111111111, 0.1953125)
-	Classifying fold 7/10 - accuracies train/val: (0.34288194444444442, 0.234375)
-	Classifying fold 8/10 - accuracies train/val: (0.3654513888888889, 0.2265625)
-	Classifying fold 9/10 - accuracies train/val: (0.3654513888888889, 0.2109375)
-	Classifying fold 10/10 - accuracies train/val: (0.359375, 0.1953125)
-Done in: 00:00:21:528
-Computing VLAD encoding
-Done computing VLAD encoding
+	Classifying fold 1/10 - accuracies train/val: (0.2882982650424511, 0.36212624584717606)
+	Classifying fold 2/10 - accuracies train/val: (0.90439276485788112, 0.85880398671096347)
+	Classifying fold 3/10 - accuracies train/val: (0.92377260981912146, 0.87873754152823924)
+	Classifying fold 4/10 - accuracies train/val: (0.93835363602805466, 0.89700996677740863)
+	Classifying fold 5/10 - accuracies train/val: (0.94813584348468072, 0.87209302325581395)
+	Classifying fold 6/10 - accuracies train/val: (0.95201181247692879, 0.86710963455149503)
+	Classifying fold 7/10 - accuracies train/val: (0.95514950166112955, 0.89534883720930236)
+	Classifying fold 8/10 - accuracies train/val: (0.95514950166112955, 0.90033222591362128)
+	Classifying fold 9/10 - accuracies train/val: (0.95717977113325947, 0.90365448504983392)
+	Classifying fold 10/10 - accuracies train/val: (0.96013289036544847, 0.87707641196013286)
+Done in: 00:15:925:917
+Preprocessing training data
+10 Jids with most data:
+0 : ('046A1001', 103)
+1 : ('046A0001', 97)
+2 : ('039A1001', 88)
+3 : ('01301001', 83)
+4 : ('01231001', 82)
+5 : ('01230001', 82)
+6 : ('00150001', 80)
+7 : ('039A0001', 78)
+8 : ('00151001', 77)
+9 : ('01300001', 77)
+Done preprocessing data
 
+Trying strategy: estimator_5
 Testing classifier [logreg]
-	Classifying fold 1/10 - accuracies train/val: (0.0026041666666666665, 0.0)
-	Classifying fold 2/10 - accuracies train/val: (0.029513888888888888, 0.0078125)
-	Classifying fold 3/10 - accuracies train/val: (0.045138888888888888, 0.0)
-	Classifying fold 4/10 - accuracies train/val: (0.040798611111111112, 0.0)
-	Classifying fold 5/10 - accuracies train/val: (0.039930555555555552, 0.0078125)
-	Classifying fold 6/10 - accuracies train/val: (0.033854166666666664, 0.0078125)
-	Classifying fold 7/10 - accuracies train/val: (0.045138888888888888, 0.0)
-	Classifying fold 8/10 - accuracies train/val: (0.043402777777777776, 0.0)
-	Classifying fold 9/10 - accuracies train/val: (0.043402777777777776, 0.0)
-	Classifying fold 10/10 - accuracies train/val: (0.042534722222222224, 0.015625)
-Done in: 00:00:53:081
+	Classifying fold 1/10 - accuracies train/val: (0.29254337393872276, 0.36544850498338871)
+	Classifying fold 2/10 - accuracies train/val: (0.92561830933923961, 0.83554817275747506)
+	Classifying fold 3/10 - accuracies train/val: (0.94536729420450349, 0.86710963455149503)
+	Classifying fold 4/10 - accuracies train/val: (0.96160944998154296, 0.87375415282392022)
+	Classifying fold 5/10 - accuracies train/val: (0.97176079734219267, 0.86212624584717612)
+	Classifying fold 6/10 - accuracies train/val: (0.97858988556662974, 0.86710963455149503)
+	Classifying fold 7/10 - accuracies train/val: (0.98191214470284238, 0.87541528239202659)
+	Classifying fold 8/10 - accuracies train/val: (0.98025101513473611, 0.88538205980066442)
+	Classifying fold 9/10 - accuracies train/val: (0.98634182355112587, 0.89534883720930236)
+	Classifying fold 10/10 - accuracies train/val: (0.99058693244739759, 0.87541528239202659)
+Done in: 00:00:04:494
+
+Trying strategy: max_feature_strategy_sqrt
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29401993355481726, 0.37043189368770763)
+	Classifying fold 2/10 - accuracies train/val: (0.92949427833148768, 0.85382059800664456)
+	Classifying fold 3/10 - accuracies train/val: (0.95385751199704694, 0.88538205980066442)
+	Classifying fold 4/10 - accuracies train/val: (0.9708379475821336, 0.88039867109634551)
+	Classifying fold 5/10 - accuracies train/val: (0.98191214470284238, 0.88039867109634551)
+	Classifying fold 6/10 - accuracies train/val: (0.98578811369509045, 0.87707641196013286)
+	Classifying fold 7/10 - accuracies train/val: (0.99003322259136217, 0.89036544850498334)
+	Classifying fold 8/10 - accuracies train/val: (0.99114064230343302, 0.90033222591362128)
+	Classifying fold 9/10 - accuracies train/val: (0.99224806201550386, 0.90365448504983392)
+	Classifying fold 10/10 - accuracies train/val: (0.99575489110372828, 0.88372093023255816)
+Done in: 00:00:08:114
+
+Trying strategy: max_feature_strategy_log2
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29401993355481726, 0.37375415282392027)
+	Classifying fold 2/10 - accuracies train/val: (0.92894056847545214, 0.85215946843853818)
+	Classifying fold 3/10 - accuracies train/val: (0.95367294204503505, 0.88205980066445178)
+	Classifying fold 4/10 - accuracies train/val: (0.97120708748615725, 0.88538205980066442)
+	Classifying fold 5/10 - accuracies train/val: (0.98080472499077154, 0.87873754152823924)
+	Classifying fold 6/10 - accuracies train/val: (0.98578811369509045, 0.86544850498338866)
+	Classifying fold 7/10 - accuracies train/val: (0.98837209302325579, 0.89202657807308972)
+	Classifying fold 8/10 - accuracies train/val: (0.98984865263935029, 0.90531561461794019)
+	Classifying fold 9/10 - accuracies train/val: (0.99187892211148021, 0.89700996677740863)
+	Classifying fold 10/10 - accuracies train/val: (0.9963086009597637, 0.87873754152823924)
+Done in: 00:00:05:750
+
+Trying strategy: max_feature_strategy_None
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29401993355481726, 0.37043189368770763)
+	Classifying fold 2/10 - accuracies train/val: (0.92838685861941672, 0.85382059800664456)
+	Classifying fold 3/10 - accuracies train/val: (0.95348837209302328, 0.88039867109634551)
+	Classifying fold 4/10 - accuracies train/val: (0.97065337763012183, 0.88870431893687707)
+	Classifying fold 5/10 - accuracies train/val: (0.98117386489479508, 0.88870431893687707)
+	Classifying fold 6/10 - accuracies train/val: (0.98504983388704315, 0.87873754152823924)
+	Classifying fold 7/10 - accuracies train/val: (0.98726467331118495, 0.90033222591362128)
+	Classifying fold 8/10 - accuracies train/val: (0.99021779254337394, 0.90863787375415284)
+	Classifying fold 9/10 - accuracies train/val: (0.99095607235142114, 0.90531561461794019)
+	Classifying fold 10/10 - accuracies train/val: (0.99390919158361024, 0.88039867109634551)
+Done in: 00:02:146:457
+
+Trying strategy: max_depth_strategy_10
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.20782576596530086, 0.23421926910299004)
+	Classifying fold 2/10 - accuracies train/val: (0.64544112218530825, 0.55647840531561465)
+	Classifying fold 3/10 - accuracies train/val: (0.61720191952750092, 0.59634551495016608)
+	Classifying fold 4/10 - accuracies train/val: (0.63953488372093026, 0.61129568106312293)
+	Classifying fold 5/10 - accuracies train/val: (0.62458471760797341, 0.59302325581395354)
+	Classifying fold 6/10 - accuracies train/val: (0.63768918420081211, 0.56976744186046513)
+	Classifying fold 7/10 - accuracies train/val: (0.60944998154300478, 0.59800664451827246)
+	Classifying fold 8/10 - accuracies train/val: (0.64894795127353266, 0.60299003322259137)
+	Classifying fold 9/10 - accuracies train/val: (0.63953488372093026, 0.59800664451827246)
+	Classifying fold 10/10 - accuracies train/val: (0.64101144333702476, 0.59800664451827246)
+Done in: 00:00:04:423
+
+Trying strategy: max_depth_strategy_50
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29328165374677001, 0.36212624584717606)
+	Classifying fold 2/10 - accuracies train/val: (0.9102990033222591, 0.82392026578073085)
+	Classifying fold 3/10 - accuracies train/val: (0.93318567737172387, 0.87541528239202659)
+	Classifying fold 4/10 - accuracies train/val: (0.95459579180509413, 0.88538205980066442)
+	Classifying fold 5/10 - accuracies train/val: (0.96271686969361392, 0.88372093023255816)
+	Classifying fold 6/10 - accuracies train/val: (0.96363971945367299, 0.83388704318936879)
+	Classifying fold 7/10 - accuracies train/val: (0.96917681801402733, 0.87707641196013286)
+	Classifying fold 8/10 - accuracies train/val: (0.97046880767811006, 0.91196013289036548)
+	Classifying fold 9/10 - accuracies train/val: (0.96068660022148389, 0.88205980066445178)
+	Classifying fold 10/10 - accuracies train/val: (0.9700996677740864, 0.87043189368770768)
+Done in: 00:00:07:432
+
+Trying strategy: max_depth_strategy_100
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29383536360280549, 0.37043189368770763)
+	Classifying fold 2/10 - accuracies train/val: (0.92654115909929868, 0.8571428571428571)
+	Classifying fold 3/10 - accuracies train/val: (0.94998154300479887, 0.87209302325581395)
+	Classifying fold 4/10 - accuracies train/val: (0.96862310815799191, 0.87873754152823924)
+	Classifying fold 5/10 - accuracies train/val: (0.97914359542266516, 0.89036544850498334)
+	Classifying fold 6/10 - accuracies train/val: (0.9854189737910668, 0.87043189368770768)
+	Classifying fold 7/10 - accuracies train/val: (0.98578811369509045, 0.8986710963455149)
+	Classifying fold 8/10 - accuracies train/val: (0.99114064230343302, 0.91362126245847175)
+	Classifying fold 9/10 - accuracies train/val: (0.99187892211148021, 0.89700996677740863)
+	Classifying fold 10/10 - accuracies train/val: (0.99354005167958659, 0.89202657807308972)
+Done in: 00:00:07:958
+
+Trying strategy: estimator_20
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29401993355481726, 0.37209302325581395)
+	Classifying fold 2/10 - accuracies train/val: (0.93060169804355852, 0.84883720930232553)
+	Classifying fold 3/10 - accuracies train/val: (0.95570321151716497, 0.8870431893687708)
+	Classifying fold 4/10 - accuracies train/val: (0.97416020671834624, 0.89036544850498334)
+	Classifying fold 5/10 - accuracies train/val: (0.98431155407899595, 0.87375415282392022)
+	Classifying fold 6/10 - accuracies train/val: (0.98855666297526767, 0.86710963455149503)
+	Classifying fold 7/10 - accuracies train/val: (0.99298634182355117, 0.89036544850498334)
+	Classifying fold 8/10 - accuracies train/val: (0.99372462163159836, 0.91196013289036548)
+	Classifying fold 9/10 - accuracies train/val: (0.99557032115171651, 0.90531561461794019)
+	Classifying fold 10/10 - accuracies train/val: (0.99889258028792915, 0.88538205980066442)
+Done in: 00:00:15:404
+
+Trying strategy: max_feature_strategy_sqrt
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29383536360280549, 0.37541528239202659)
+	Classifying fold 2/10 - accuracies train/val: (0.92912513842746403, 0.84219269102990035)
+	Classifying fold 3/10 - accuracies train/val: (0.95275009228497598, 0.87873754152823924)
+	Classifying fold 4/10 - accuracies train/val: (0.97139165743816902, 0.89036544850498334)
+	Classifying fold 5/10 - accuracies train/val: (0.98025101513473611, 0.87209302325581395)
+	Classifying fold 6/10 - accuracies train/val: (0.98431155407899595, 0.87043189368770768)
+	Classifying fold 7/10 - accuracies train/val: (0.98929494278331487, 0.88205980066445178)
+	Classifying fold 8/10 - accuracies train/val: (0.99150978220745667, 0.91196013289036548)
+	Classifying fold 9/10 - accuracies train/val: (0.99317091177556294, 0.90033222591362128)
+	Classifying fold 10/10 - accuracies train/val: (0.99557032115171651, 0.89368770764119598)
+Done in: 00:00:08:088
+
+Trying strategy: max_feature_strategy_log2
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29383536360280549, 0.3687707641196013)
+	Classifying fold 2/10 - accuracies train/val: (0.92912513842746403, 0.85880398671096347)
+	Classifying fold 3/10 - accuracies train/val: (0.95201181247692879, 0.88205980066445178)
+	Classifying fold 4/10 - accuracies train/val: (0.97139165743816902, 0.89036544850498334)
+	Classifying fold 5/10 - accuracies train/val: (0.98135843484680696, 0.89036544850498334)
+	Classifying fold 6/10 - accuracies train/val: (0.98449612403100772, 0.87541528239202659)
+	Classifying fold 7/10 - accuracies train/val: (0.98947951273532664, 0.89036544850498334)
+	Classifying fold 8/10 - accuracies train/val: (0.99077150239940937, 0.90199335548172754)
+	Classifying fold 9/10 - accuracies train/val: (0.99058693244739759, 0.89202657807308972)
+	Classifying fold 10/10 - accuracies train/val: (0.99520118124769286, 0.88205980066445178)
+Done in: 00:00:05:679
+
+Trying strategy: max_feature_strategy_None
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29383536360280549, 0.36544850498338871)
+	Classifying fold 2/10 - accuracies train/val: (0.9293097083794758, 0.845514950166113)
+	Classifying fold 3/10 - accuracies train/val: (0.95385751199704694, 0.87375415282392022)
+	Classifying fold 4/10 - accuracies train/val: (0.97194536729420455, 0.88538205980066442)
+	Classifying fold 5/10 - accuracies train/val: (0.98080472499077154, 0.90199335548172754)
+	Classifying fold 6/10 - accuracies train/val: (0.98449612403100772, 0.87873754152823924)
+	Classifying fold 7/10 - accuracies train/val: (0.98837209302325579, 0.89202657807308972)
+	Classifying fold 8/10 - accuracies train/val: (0.98966408268733852, 0.9102990033222591)
+	Classifying fold 9/10 - accuracies train/val: (0.99095607235142114, 0.90531561461794019)
+	Classifying fold 10/10 - accuracies train/val: (0.99520118124769286, 0.88205980066445178)
+Done in: 00:02:145:186
+
+Trying strategy: max_depth_strategy_10
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.22849760059062385, 0.26744186046511625)
+	Classifying fold 2/10 - accuracies train/val: (0.59579180509413066, 0.5299003322259136)
+	Classifying fold 3/10 - accuracies train/val: (0.62236987818383172, 0.58637873754152825)
+	Classifying fold 4/10 - accuracies train/val: (0.63159837578442235, 0.57973421926910296)
+	Classifying fold 5/10 - accuracies train/val: (0.65005537098560351, 0.62292358803986714)
+	Classifying fold 6/10 - accuracies train/val: (0.57788851974898492, 0.49501661129568109)
+	Classifying fold 7/10 - accuracies train/val: (0.60834256183093394, 0.58637873754152825)
+	Classifying fold 8/10 - accuracies train/val: (0.62273901808785526, 0.60797342192691028)
+	Classifying fold 9/10 - accuracies train/val: (0.58933185677371724, 0.55813953488372092)
+	Classifying fold 10/10 - accuracies train/val: (0.63695090439276481, 0.55481727574750828)
+Done in: 00:00:04:411
+
+Trying strategy: max_depth_strategy_50
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29217423403469917, 0.36378737541528239)
+	Classifying fold 2/10 - accuracies train/val: (0.91620524178663709, 0.84717607973421927)
+	Classifying fold 3/10 - accuracies train/val: (0.94093761535622, 0.87873754152823924)
+	Classifying fold 4/10 - accuracies train/val: (0.9555186415651532, 0.87043189368770768)
+	Classifying fold 5/10 - accuracies train/val: (0.95607235142118863, 0.85880398671096347)
+	Classifying fold 6/10 - accuracies train/val: (0.95865633074935397, 0.85049833887043191)
+	Classifying fold 7/10 - accuracies train/val: (0.97342192691029905, 0.87375415282392022)
+	Classifying fold 8/10 - accuracies train/val: (0.96991509782207452, 0.89368770764119598)
+	Classifying fold 9/10 - accuracies train/val: (0.96437799926172019, 0.88372093023255816)
+	Classifying fold 10/10 - accuracies train/val: (0.9708379475821336, 0.87707641196013286)
+Done in: 00:00:07:241
+
+Trying strategy: max_depth_strategy_100
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29309708379475824, 0.37375415282392027)
+	Classifying fold 2/10 - accuracies train/val: (0.92894056847545214, 0.845514950166113)
+	Classifying fold 3/10 - accuracies train/val: (0.95145810262089336, 0.88039867109634551)
+	Classifying fold 4/10 - accuracies train/val: (0.96862310815799191, 0.88538205980066442)
+	Classifying fold 5/10 - accuracies train/val: (0.97711332595053524, 0.87209302325581395)
+	Classifying fold 6/10 - accuracies train/val: (0.98320413436692511, 0.87541528239202659)
+	Classifying fold 7/10 - accuracies train/val: (0.98708010335917318, 0.88870431893687707)
+	Classifying fold 8/10 - accuracies train/val: (0.99021779254337394, 0.90863787375415284)
+	Classifying fold 9/10 - accuracies train/val: (0.99040236249538571, 0.88538205980066442)
+	Classifying fold 10/10 - accuracies train/val: (0.99132521225544479, 0.8870431893687708)
+Done in: 00:00:07:753
+
+Trying strategy: estimator_25
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29383536360280549, 0.3687707641196013)
+	Classifying fold 2/10 - accuracies train/val: (0.93078626799557029, 0.85548172757475083)
+	Classifying fold 3/10 - accuracies train/val: (0.95570321151716497, 0.88372093023255816)
+	Classifying fold 4/10 - accuracies train/val: (0.97434477667035801, 0.88372093023255816)
+	Classifying fold 5/10 - accuracies train/val: (0.98449612403100772, 0.87873754152823924)
+	Classifying fold 6/10 - accuracies train/val: (0.98892580287929122, 0.88205980066445178)
+	Classifying fold 7/10 - accuracies train/val: (0.99354005167958659, 0.89700996677740863)
+	Classifying fold 8/10 - accuracies train/val: (0.99464747139165743, 0.92026578073089704)
+	Classifying fold 9/10 - accuracies train/val: (0.9963086009597637, 0.8986710963455149)
+	Classifying fold 10/10 - accuracies train/val: (0.9992617201919527, 0.89700996677740863)
+Done in: 00:00:18:952
+
+Trying strategy: max_feature_strategy_sqrt
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29401993355481726, 0.3687707641196013)
+	Classifying fold 2/10 - accuracies train/val: (0.9285714285714286, 0.84717607973421927)
+	Classifying fold 3/10 - accuracies train/val: (0.95441122185308236, 0.87375415282392022)
+	Classifying fold 4/10 - accuracies train/val: (0.9693613879660391, 0.89202657807308972)
+	Classifying fold 5/10 - accuracies train/val: (0.98117386489479508, 0.88039867109634551)
+	Classifying fold 6/10 - accuracies train/val: (0.98449612403100772, 0.87375415282392022)
+	Classifying fold 7/10 - accuracies train/val: (0.98874123292727945, 0.89368770764119598)
+	Classifying fold 8/10 - accuracies train/val: (0.99003322259136217, 0.90697674418604646)
+	Classifying fold 9/10 - accuracies train/val: (0.99224806201550386, 0.88039867109634551)
+	Classifying fold 10/10 - accuracies train/val: (0.99538575119970474, 0.87209302325581395)
+Done in: 00:00:08:102
+
+Trying strategy: max_feature_strategy_log2
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29401993355481726, 0.36710963455149503)
+	Classifying fold 2/10 - accuracies train/val: (0.9293097083794758, 0.86212624584717612)
+	Classifying fold 3/10 - accuracies train/val: (0.95385751199704694, 0.87209302325581395)
+	Classifying fold 4/10 - accuracies train/val: (0.96973052787006275, 0.89036544850498334)
+	Classifying fold 5/10 - accuracies train/val: (0.98191214470284238, 0.88205980066445178)
+	Classifying fold 6/10 - accuracies train/val: (0.9854189737910668, 0.87043189368770768)
+	Classifying fold 7/10 - accuracies train/val: (0.98818752307124402, 0.88538205980066442)
+	Classifying fold 8/10 - accuracies train/val: (0.9891103728313031, 0.90365448504983392)
+	Classifying fold 9/10 - accuracies train/val: (0.99243263196751574, 0.88538205980066442)
+	Classifying fold 10/10 - accuracies train/val: (0.99520118124769286, 0.88538205980066442)
+Done in: 00:00:05:534
+
+Trying strategy: max_feature_strategy_None
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29346622369878184, 0.36046511627906974)
+	Classifying fold 2/10 - accuracies train/val: (0.92875599852344037, 0.85215946843853818)
+	Classifying fold 3/10 - accuracies train/val: (0.9533038021410114, 0.88205980066445178)
+	Classifying fold 4/10 - accuracies train/val: (0.96917681801402733, 0.89202657807308972)
+	Classifying fold 5/10 - accuracies train/val: (0.97951273532668881, 0.8870431893687708)
+	Classifying fold 6/10 - accuracies train/val: (0.9839424141749723, 0.88039867109634551)
+	Classifying fold 7/10 - accuracies train/val: (0.98578811369509045, 0.8986710963455149)
+	Classifying fold 8/10 - accuracies train/val: (0.98929494278331487, 0.90531561461794019)
+	Classifying fold 9/10 - accuracies train/val: (0.99058693244739759, 0.90199335548172754)
+	Classifying fold 10/10 - accuracies train/val: (0.99501661129568109, 0.88205980066445178)
+Done in: 00:02:145:836
+
+Trying strategy: max_depth_strategy_10
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.20284237726098192, 0.2292358803986711)
+	Classifying fold 2/10 - accuracies train/val: (0.5976375046142488, 0.50166112956810627)
+	Classifying fold 3/10 - accuracies train/val: (0.62550756736803248, 0.61627906976744184)
+	Classifying fold 4/10 - accuracies train/val: (0.63325950535252862, 0.59302325581395354)
+	Classifying fold 5/10 - accuracies train/val: (0.65743816906607599, 0.62956810631229232)
+	Classifying fold 6/10 - accuracies train/val: (0.64193429309708383, 0.53820598006644516)
+	Classifying fold 7/10 - accuracies train/val: (0.66519010705057213, 0.63787375415282388)
+	Classifying fold 8/10 - accuracies train/val: (0.60815799187892217, 0.60963455149501666)
+	Classifying fold 9/10 - accuracies train/val: (0.66112956810631229, 0.63455149501661134)
+	Classifying fold 10/10 - accuracies train/val: (0.60852713178294571, 0.55813953488372092)
+Done in: 00:00:04:416
+
+Trying strategy: max_depth_strategy_50
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29180509413067551, 0.36046511627906974)
+	Classifying fold 2/10 - accuracies train/val: (0.91214470284237725, 0.83388704318936879)
+	Classifying fold 3/10 - accuracies train/val: (0.93595422665190109, 0.86046511627906974)
+	Classifying fold 4/10 - accuracies train/val: (0.95219638242894056, 0.87043189368770768)
+	Classifying fold 5/10 - accuracies train/val: (0.9555186415651532, 0.86710963455149503)
+	Classifying fold 6/10 - accuracies train/val: (0.96677740863787376, 0.86212624584717612)
+	Classifying fold 7/10 - accuracies train/val: (0.96290143964562569, 0.87873754152823924)
+	Classifying fold 8/10 - accuracies train/val: (0.97194536729420455, 0.90033222591362128)
+	Classifying fold 9/10 - accuracies train/val: (0.96548541897379103, 0.87043189368770768)
+	Classifying fold 10/10 - accuracies train/val: (0.97729789590254712, 0.87375415282392022)
+Done in: 00:00:07:107
+
+Trying strategy: max_depth_strategy_100
+Testing classifier [logreg]
+	Classifying fold 1/10 - accuracies train/val: (0.29309708379475824, 0.35880398671096347)
+	Classifying fold 2/10 - accuracies train/val: (0.92838685861941672, 0.83720930232558144)
+	Classifying fold 3/10 - accuracies train/val: (0.95145810262089336, 0.87873754152823924)
+	Classifying fold 4/10 - accuracies train/val: (0.96825396825396826, 0.89036544850498334)
+	Classifying fold 5/10 - accuracies train/val: (0.98062015503875966, 0.88538205980066442)
+	Classifying fold 6/10 - accuracies train/val: (0.98468069398301961, 0.88205980066445178)
+	Classifying fold 7/10 - accuracies train/val: (0.98486526393503138, 0.8870431893687708)
+	Classifying fold 8/10 - accuracies train/val: (0.98837209302325579, 0.91196013289036548)
+	Classifying fold 9/10 - accuracies train/val: (0.99187892211148021, 0.89202657807308972)
+	Classifying fold 10/10 - accuracies train/val: (0.99335548172757471, 0.88039867109634551)
+Done in: 00:00:07:964
 
 Performance comparison:
-logreg , technique norm_l2 , validation accuracy : 0.06328125 change over baseline: -62.84%
-logreg , technique norm_l1 , validation accuracy : 0.0484375 change over baseline: -71.56%
-logreg , technique norm_max , validation accuracy : 0.07265625 change over baseline: -57.34%
-logreg , technique scaling , validation accuracy : 0.13125 change over baseline: -22.94%
-logreg , technique C_0.200 , validation accuracy : 0.15 change over baseline: -11.93%
-logreg , technique C_0.500 , validation accuracy : 0.15703125 change over baseline: -7.80%
-logreg , technique C_1.500 , validation accuracy : 0.175 change over baseline: 2.75%
-logreg , technique C_2.000 , validation accuracy : 0.17890625 change over baseline: 5.05%
-logreg , technique vlad , validation accuracy : 0.00390625 change over baseline: -97.71%
+logreg , technique norm_l2 , validation accuracy : 0.793521594684 change over baseline: -4.56%
+logreg , technique norm_l1 , validation accuracy : 0.615780730897 change over baseline: -25.93%
+logreg , technique norm_max , validation accuracy : 0.790033222591 change over baseline: -4.98%
+logreg , technique scaling , validation accuracy : 0.832392026578 change over baseline: 0.12%
+logreg , technique C_0.200 , validation accuracy : 0.834219269103 change over baseline: 0.34%
+logreg , technique C_0.500 , validation accuracy : 0.832890365449 change over baseline: 0.18%
+logreg , technique C_1.500 , validation accuracy : 0.83122923588 change over baseline: -0.02%
+logreg , technique C_2.000 , validation accuracy : 0.83122923588 change over baseline: -0.02%
+
 Reading test data...
 Transforming test data to features...
 Running test on logreg - vlad

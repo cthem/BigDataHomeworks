@@ -2,6 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import utils
 import numpy as np
+from itertools import combinations
 import math
 from collections import OrderedDict
 
@@ -67,6 +68,115 @@ def create_cell_names(number_of_cells):
     return cell_names
 
 
+def map_to_features(data_df, grid, output_file):
+    rows, columns, cell_names = grid
+    raw_features, timestamps = map_to_features_pointwise(data_df, grid)
+    headername = "points" if "points" in data_df else "Trajectory"
+    maxlen = -1
+    for i,(featlist,ts) in enumerate(zip(raw_features,timestamps)):
+        # squeeze duplicate points
+        sq_feats = []
+        for f,t in zip(featlist,ts):
+            if (not sq_feats) or (f not in [ v[-1] for v in sq_feats]): # alternate check
+            # if (not sq_feats) or (f != sq_feats[-1][-1]): # alternate check
+                sq_feats.append([t, f])
+        if len(sq_feats) > maxlen:
+            maxlen = len(sq_feats)
+        data_df.at[i,headername] = sq_feats
+    print("Max squeezed feature length:",maxlen)
+    if output_file is not None:
+        data_df.to_csv(output_file)
+    else:
+        return data_df
+
+
+def map_to_features_pointwise(data_df, grid):
+    rows, columns, cell_names = grid
+    # measure some statistics
+    grid_hist = {}
+    total_points = 0
+    numcells = (len(rows) + 1) * (len(columns) + 1)
+    for cc in cell_names:
+        for c in cc:
+            grid_hist['C' + str(c)] = 0
+
+    points_header = "points" if "points" in data_df else "Trajectory"
+    features, timestamps = [], []
+    for index,row in data_df.iterrows():
+        train_points = row[points_header]
+        train_points = eval(train_points)
+
+        ts = [p[0] for p in train_points]
+        timestamps.append(ts)
+        train_lonlats = utils.idx_to_lonlat(train_points, format="tuples")
+        feature_list = []
+        for i,lonlat in enumerate(train_lonlats):
+            lon = lonlat[0]  # for columns
+            lat = lonlat[1]  # for rows
+            row_idx = find_cell_index(rows, lat)
+            col_idx = find_cell_index(columns, lon)
+            cell_name = 'C'+cell_names[row_idx][col_idx]
+            # visualize_grid(rows,columns,None,None,[[lon],[lat]])
+            grid_hist[cell_name] += 1
+            total_points += 1
+
+            feature_list.append(cell_name)
+        features.append(feature_list)
+    # show stats
+    print()
+    print("Grid assignment frequencies of the total of %d points:" % total_points)
+    ssum = 0
+    for i, name in enumerate(grid_hist):
+        print(i,"/", numcells, name, grid_hist[name])
+        ssum += grid_hist[name]
+    return features, timestamps
+
+
+def map_to_features_bow_bigrams(data_df, grid, output_file):
+    rows, columns, cell_names = grid
+
+    points_header = "points" if "points" in data_df else "Trajectory"
+
+    features = []
+    num_cells = len([0 for cc in cell_names for c in cc])
+    # vector order: for N cells: bigrams of (cell1, cell2), cell1,cell3
+    cell_pairs = list(combinations(list(range(num_cells)), 2))
+    for n in range(num_cells):
+        cell_pairs.append((n,n))
+    pairs_to_idxs = {}
+    # map each cell pair to a vector index
+    for pair in cell_pairs:
+        pairs_to_idxs[pair] = len(pairs_to_idxs)
+
+    bigram_dim = len(pairs_to_idxs)
+
+    for index,row in data_df.iterrows():
+        bow_vector = [0 for _ in range(bigram_dim)]
+        train_points = row[points_header]
+        train_points = eval(train_points)
+
+        train_lonlats = utils.idx_to_lonlat(train_points, format="tuples")
+        # loop into bigrams
+        for i in range(len(train_lonlats)-1):
+            lon1, lat1 = tuple(train_lonlats[i][0:2])
+            lon2, lat2 = tuple(train_lonlats[i+1][0:2])
+            r1, c1 = find_cell_index(rows, lat1), find_cell_index(rows, lon1)
+            r2, c2 = find_cell_index(rows, lat2), find_cell_index(rows, lon2)
+
+            linear_idx1 = r1 * len(columns) + c1
+            linear_idx2 = r2 * len(columns) + c2
+            stuple = tuple(sorted((linear_idx1, linear_idx2)))
+            vec_idx = pairs_to_idxs[stuple]
+            bow_vector[vec_idx] += 1
+        features.append(bow_vector)
+
+    for i,feats in enumerate(features):
+        data_df.at[i,points_header] = feats
+    if output_file is not None:
+        data_df.to_csv(output_file)
+    else:
+        return features
+
 def map_to_features_vlad(data_df, grid, output_file):
     print("Computing VLAD encoding")
     rows, columns, cell_names = grid
@@ -116,6 +226,7 @@ def map_to_features_vlad(data_df, grid, output_file):
     else:
         return features
 
+
 def map_to_features_bow(data_df, grid, output_file):
     rows, columns, cell_names = grid
 
@@ -135,7 +246,10 @@ def map_to_features_bow(data_df, grid, output_file):
             col_idx = find_cell_index(columns, lon)
             linear_idx = row_idx * len(columns) + col_idx
             bow_vector[linear_idx] += 1
-
+        bus_direction = find_trip_direction(train_lonlats)
+        bow_vector = [bus_direction*x for x in bow_vector]
+        #if(bus_direction<0):
+            #bow_vector = list(reversed(bow_vector))
         features.append(bow_vector)
 
     for i,feats in enumerate(features):
@@ -146,68 +260,14 @@ def map_to_features_bow(data_df, grid, output_file):
         return features
 
 
-
-def map_to_features(data_df, grid, output_file):
-    rows, columns, cell_names = grid
-    raw_features, timestamps = map_to_features_pointwise(data_df, grid)
-    headername = "points" if "points" in data_df else "Trajectory"
-    maxlen = -1
-    for i,(featlist,ts) in enumerate(zip(raw_features,timestamps)):
-        # squeeze duplicate points
-        sq_feats = []
-        for f,t in zip(featlist,ts):
-            if (not sq_feats) or (f not in [ v[-1] for v in sq_feats]): # alternate check
-            # if (not sq_feats) or (f != sq_feats[-1][-1]): # alternate check
-                sq_feats.append([t, f])
-        if len(sq_feats) > maxlen:
-            maxlen = len(sq_feats)
-        data_df.at[i,headername] = sq_feats
-    print("Max squeezed feature length:",maxlen)
-    if output_file is not None:
-        data_df.to_csv(output_file)
+def find_trip_direction(train_lonlats):
+    first_point = train_lonlats[0]
+    last_point = train_lonlats[-1]
+    max_point = max(first_point,last_point)
+    if(first_point == max_point):
+        return -1
     else:
-        return data_df
-
-def map_to_features_pointwise(data_df, grid):
-    rows, columns, cell_names = grid
-    # measure some statistics
-    grid_hist = {}
-    total_points = 0
-    numcells = (len(rows) + 1) * (len(columns) + 1)
-    for cc in cell_names:
-        for c in cc:
-            grid_hist['C' + str(c)] = 0
-
-    points_header = "points" if "points" in data_df else "Trajectory"
-    features, timestamps = [], []
-    for index,row in data_df.iterrows():
-        train_points = row[points_header]
-        train_points = eval(train_points)
-
-        ts = [p[0] for p in train_points]
-        timestamps.append(ts)
-        train_lonlats = utils.idx_to_lonlat(train_points, format="tuples")
-        feature_list = []
-        for i,lonlat in enumerate(train_lonlats):
-            lon = lonlat[0]  # for columns
-            lat = lonlat[1]  # for rows
-            row_idx = find_cell_index(rows, lat)
-            col_idx = find_cell_index(columns, lon)
-            cell_name = 'C'+cell_names[row_idx][col_idx]
-            # visualize_grid(rows,columns,None,None,[[lon],[lat]])
-            grid_hist[cell_name] += 1
-            total_points += 1
-
-            feature_list.append(cell_name)
-        features.append(feature_list)
-    # show stats
-    print()
-    print("Grid assignment frequencies of the total of %d points:" % total_points)
-    ssum = 0
-    for i, name in enumerate(grid_hist):
-        print(i,"/", numcells, name, grid_hist[name])
-        ssum += grid_hist[name]
-    return features, timestamps
+        return 1
 
 def find_cell_index(points_list, point):
     count = 0

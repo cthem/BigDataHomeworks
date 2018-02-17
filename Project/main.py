@@ -2,7 +2,6 @@ import sys, os, pkgutil
 from os.path import join, abspath
 import question1 as qp1
 import question2 as qp2
-import question1trial as qp1t
 import random
 import numpy as np
 
@@ -12,10 +11,9 @@ def question_1(opts):
     print("\nRunning question #1")
     print("=====================")
     print("\n>>> Running question 1a - parsing the training data")
-    # trips_list, df = qp1.create_trips_file(opts["trainfile"], opts["tripsfile"])
-    trips_list, df = qp1t.read_file(opts["trainfile"], opts["tripsfile"])
+    df = qp1.create_trips_file(opts["trainfile"], opts["tripsfile"])
     print("\n>>> Running question 1b - cleaning the training data")
-    trips_list, df = qp1.filter_trips(opts["cleanfile"], df)
+    df = qp1.filter_trips(opts["cleanfile"], df)
     print("\n>>> Running question 1c - visualizing the training data")
     qp1.visualize_trips(opts["mapsdir"], df)
     print("\nFinished question1!")
@@ -29,9 +27,8 @@ def question_2(opts):
     # qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"], options["unique_subroute_jids"])
     # qp2.question_a1(opts["mapsdir"], opts["cleanfile"], opts["testfiles"][0], opts["paropts"], opts["k"], False)
     print("\n>>> Running question 2a2 - Nearest subroutes computation")
-    qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],\
-                    opts["conseq_lcss"], opts["k"], opts["paropts"], opts["verbosity"], options["unique_subroute_jids"])
-
+    # qp2.question_a2(opts["mapsdir"], opts["testfiles"][1], opts["cleanfile"],\
+                   # opts["conseq_lcss"], opts["k"], opts["paropts"], opts["verbosity"], options["unique_subroute_jids"])
     print("\n>>> Running question 2b - Cell grid quantization")
     cellgrid = opts["grid"]
     print("Using cell grid with dimensions", cellgrid)
@@ -87,7 +84,7 @@ if __name__ == '__main__':
     options["classifdir"] = join(options["outdir"], "classification_charts")
     options["classiffile"] = join(options["outdir"],"​testSet_JourneyPatternIDs.csv")
     options["folds"] = 10
-    options["grid"] = (10,10)
+    options["grid"] = (30,30)
 
     os.makedirs(options["outdir"], exist_ok=True)
     os.makedirs(options["mapsdir"], exist_ok=True)
