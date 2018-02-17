@@ -84,7 +84,7 @@ if __name__ == '__main__':
     options["classifdir"] = join(options["outdir"], "classification_charts")
     options["classiffile"] = join(options["outdir"],"​testSet_JourneyPatternIDs.csv")
     options["folds"] = 10
-    options["grid"] = (15,15)
+    options["grid"] = (20,20)
 
     os.makedirs(options["outdir"], exist_ok=True)
     os.makedirs(options["mapsdir"], exist_ok=True)

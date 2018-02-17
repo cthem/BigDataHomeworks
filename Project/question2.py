@@ -64,7 +64,7 @@ def question_c(features_file, grid_file, test_file, output_folder, seed, classif
     df_features = pd.read_csv(features_file)
     features, jid_mapping, targets = jcp.preprocess_train_data(df_features, seed)
     classifiers = ["knn", "logreg","randfor"]
-    classifiers = ["randfor"]
+    # classifiers = ["randfor"]
     mean_accuracies = jcp.train(features, targets, num_folds, classifiers, output_folder, seed=seed)
 
     # print mean accuracy per classifier

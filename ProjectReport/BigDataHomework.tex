@@ -457,15 +457,18 @@ figures below.
 	\begin{tabular}{|c|c|c|}
 		\hline
 		\textbf{Strategy} & \textbf{Validation Accuracy} & \textbf{Change} \\ \hline
-		Estimator=5       & 0.886                        & 0.40\%          \\ \hline
-		Estimator=20      & 0.887                        & 0.45\%          \\ \hline
-		Estimator = 25    & 0.886                        & 0.36\%          \\ \hline
-		Max feature sqrt  & 0.887                        & 0.47\%          \\ \hline
-		Max feature log2  & 0.887                        & 0.49\%          \\ \hline
-		Max feature None  & 0.891                        & 0.92\%          \\ \hline
-		Max depth=10      & 0.887                        & 0.45\%          \\ \hline
-		Max depth=50      & 0.888                        & 0.56\%          \\ \hline
-		Max depth=100     & 0.888                        & 0.60\%          \\ \hline
+		Estimator=5       & 0.865                        & -1.92\%         \\ \hline
+		Estimator=20      & 0.893                        & 1.19\%          \\ \hline
+		Estimator = 25    & 0.894                        & 1.30\%          \\ \hline
+		Max feature sqrt  & 0.882                        & 0.00\%          \\ \hline
+		Max feature log2  & 0.884                        & 0.23\%          \\ \hline
+		Max feature None  & 0.882                        & 0.00\%          \\ \hline
+		Max depth=10      & 0.661                        & -25.04\%        \\ \hline
+		Max depth=50      & 0.879                        & -0.34\%         \\ \hline
+		Max depth=100     & 0.885                        & 0.34\%          \\ \hline
+		Min samples=4     & 0.883                        & 0.08\%          \\ \hline
+		Min samples=6     & 0.888                        & 0.58\%          \\ \hline
+		Min samples=10    & 0.884                        & 0.21\%          \\ \hline
 	\end{tabular}
 	\label{impr1}
 	\caption{Classification improvements using random forest}
@@ -510,7 +513,7 @@ Below we show the results from the techniques used for the Logistic Regression c
 	\caption{Classification improvements using logistic regression}
 \end{table}
 
-All above techniques were implemented using a 30x30 grid. We have also tried to increase the size of grid to 50x50 but with no improvement to the baseline. Finally, we have also tried to decrease the size of the grid to 20x20 and we observed that the results were slightly worse, therefore we have decided to keep the grid of 30x30. All these results are included in the runlog file.
+All above techniques were implemented using a 20x20 grid. We have also tried to increase the size of grid to 50x50 and 30x30 but the results were worse. Therefore we have decided to keep the 20x20 grid. All the results are included in the runlog file. In addition, in the folder classification\_charts, we have included all the histograms  showing the performance of all tested classifiers.
 
 	\subsection{Test improved classifier}
 	

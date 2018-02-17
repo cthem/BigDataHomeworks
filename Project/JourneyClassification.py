@@ -47,7 +47,7 @@ def preprocess_train_data(feature_df, seed):
 
 
 def train(features, targets, num_folds, classifiers, output_folder, seed=None, filename_tag ="", classifier_obj = None):
-    kf = KFold(n_splits = num_folds)
+    kf = KFold(n_splits = num_folds, random_state=seed)
     folds_idxs = list(kf.split(features))
     trips_array = np.asarray(features)
     targets = np.asarray(targets)
@@ -148,7 +148,7 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
         tag = "estimator_%s" % estimator
         print("\nTrying strategy: %s" % tag, end='')
         classifier_obj = RandomForestClassifier(n_estimators=estimator, random_state=seed)
-        mean_acc = train(features, targets, num_folds, classifier, output_folder, tag,
+        mean_acc = train(features, targets, num_folds, classifier, output_folder, seed=seed, filename_tag=tag,
                          classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
 
@@ -158,7 +158,7 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
         tag = "max_feature_strategy_%s" % max
         print("\nTrying strategy: %s" % tag, end='')
         classifier_obj = RandomForestClassifier(max_features=max, random_state=seed)
-        mean_acc = train(features, targets, num_folds, classifier, output_folder, tag,
+        mean_acc = train(features, targets, num_folds, classifier, output_folder, seed=seed, filename_tag=tag,
                             classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
     # test max depth strategy
@@ -167,7 +167,7 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
         tag = "max_depth_strategy_%s" % max
         print("\nTrying strategy: %s" % tag, end='')
         classifier_obj = RandomForestClassifier(max_depth=max, random_state=seed)
-        mean_acc = train(features, targets, num_folds, classifier, output_folder, tag,
+        mean_acc = train(features, targets, num_folds, classifier, output_folder, seed=seed, filename_tag=tag,
                             classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
     min_samples = [4,6,10]
@@ -175,7 +175,7 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
         tag = "min_samples_strategy_%s" % min
         print("\nTrying strategy: %s" % tag, end='')
         classifier_obj = RandomForestClassifier(min_samples_split=min, random_state=seed)
-        mean_acc = train(features, targets, num_folds, classifier, output_folder, tag,
+        mean_acc = train(features, targets, num_folds, classifier, output_folder, seed=seed, filename_tag=tag,
                          classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
 
@@ -198,7 +198,7 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
 def improve_logreg(clean_trips_file, grid_file, bow_features_file, num_folds, output_folder, classifier, seed):
 
     print()
-    #print("Reading features:",features_file)
+    # print("Reading features:",features_file)
     features = pd.read_csv(bow_features_file)
     features, jid_mapping, targets = preprocess_train_data(features, seed)
     # try various techniques for improvement
@@ -295,4 +295,3 @@ def test(classifier_obj, best_technique, test_file, grid_file, jid_mapping, outp
             jid = jids[numeric_ids.index(r)]
             lines.append("%d\t%s" % (i,jid))
         f.writelines(lines)
-
