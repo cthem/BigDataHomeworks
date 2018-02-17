@@ -44,7 +44,7 @@ def calculate_nns(test_points, train_df, paropts=None, k=5, unique_jids = False)
     # return the top 5
     nearest_neighbours = nearest_neighbours[:k]
     print("Neighbours:",[n[0] for n in nearest_neighbours])
-    print("Extracted %d nearest neighbours in: %s" % (k, utils.tictoc(timestart)))
+    print("Extracted %d nearest neighbours of a %d-long test trip in: %s" % (len(test_points), k, utils.tictoc(timestart)))
     return nearest_neighbours
 
 
@@ -91,7 +91,7 @@ def calculate_dists(test_lonlat, train_df, ret_container = None, paropts = None)
     if ret_container is not None:
         dists = ret_container
     else:
-        dists = []
+        dists = [-1 for _ in range(len(train_df))]
     for index, row in train_df.iterrows():
         train_points = row["points"]
         jid = row["journeyId"]
@@ -100,8 +100,10 @@ def calculate_dists(test_lonlat, train_df, ret_container = None, paropts = None)
         trip_lonlat = utils.idx_to_lonlat(train_points,format="tuples")
         # calculate distance
         distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat, paropts)
+        #distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat, paropts, impl = "libdtw")
         # print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, index+1, len(train_df.index), str(row["journeyId"])))
-        dists.append((int(row["tripId"]), distance, jid, train_points))
+        dists[index] = (int(row["tripId"]), distance, jid, train_points)
+        print("Computed distance for train trip %d/%d" % (index+1, len(train_df)))
     return dists
 
 
@@ -139,9 +141,15 @@ def calculate_dynamic_time_warping(latlons1, latlons2, paropts = None, impl = "d
     elif impl == "diy_initial":
         dtw = [[float('Inf') for _ in range(len(latlons2) + 1)] for _ in range(len(latlons1) + 1)]
         dtw[0][0] = 0
+        cache = {}
         for i in range(1, 1 + len(latlons1)):
             for j in range(1, 1 + len(latlons2)):
                 cost = qp1.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
+                # if (i-1,j-1) not in cache:
+                #     cost = qp1.calculate_lonlat_distance(latlons1[i-1], latlons2[j-1])
+                #     cache[(i-1,j-1)] = cost
+                # else:
+                #     cost = cache[(i-1, j-1)]
                 dtw[i][j] = cost + min(dtw[i - 1][j], dtw[i][j - 1], dtw[i - 1][j - 1])
         return dtw[-1][-1]
 

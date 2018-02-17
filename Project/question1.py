@@ -125,7 +125,6 @@ def calculate_lonlat_distance(point1, point2):
     # return to meters
     return d * 1000
 
-
 # Question 1c
 ###############
 
@@ -145,3 +144,5 @@ def visualize_trips(output_folder, df):
         points_lonlat = [utils.idx_to_lonlat(total_pts)]
         # produce output htmls
         utils.write_group_gml(points_lonlat, file_name)
+        # produce output jpg
+        utils.html_to_png(file_name, file_name + ".jpg")

@@ -2,6 +2,7 @@ import utils
 from multiprocessing.pool import ThreadPool
 import threading
 import question1 as qp1
+import pprint
 
 
 def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None, conseq_lcss = True, verbosity = False, unique_jids = True):
@@ -24,7 +25,7 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None,
         max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss, verbosity = verbosity, unique_jids = unique_jids)
     if len(max_subseqs) != k:
         print("WARNING: Specified %d subseqs!" % k)
-    print("Extracted %d nearest subsequences in: %s" % (k, utils.tictoc(timestart)))
+    print("Extracted %d nearest subsequences of a %d-long test tring in: %s" % (len(test_points), k, utils.tictoc(timestart)))
     return max_subseqs
 
 
@@ -41,6 +42,10 @@ def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_
         elapsed = utils.tictoc(timestart)
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
+        # keep k largest
+        subseqs_idx = subseqs_idx[:k]
+        if subseqs_idx:
+            print("Train trip #", 1+index,"/",len(df), "%d largest sub-routes:" % k, subseqs_idx)
         if unique_jids:
             # keep at most one (the longest) subroute for each training trip 
             subseqs_idx = subseqs_idx[0:1]
@@ -121,9 +126,9 @@ def calc_lcss_noconseq(t1, t2, subseqs=None, subseqs_idx=None):
     for i in range(1,len(t1) + 1):
         for j in range(1,len(t2) + 1):
             p1, p2 = t1[i-1], t2[j-1]
-            dist = qp1.calculate_lonlat_distance(t1[i],t2[j])
-            equal = dist < 200
-            # equal = p1 == p2
+            # dist = qp1.calculate_lonlat_distance(t1[i],t2[j])
+            # equal = dist < 200
+            equal = p1 == p2
             if equal:
                 L[i][j] =  L[i-1][j-1] + 1
             else:
@@ -171,14 +176,24 @@ def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = False):
 
     # initialize lcss matrix to 0
     L = [ [0 for _ in t2] for _ in t1]
+    # distance cache
+    dist_cache = {}
+    # dist matrix for debugging
+    D = [ [0 for _ in t2] for _ in t1]
 
     curr_len = 0
     for i, p1 in enumerate(t1):
         for j, p2 in enumerate(t2):
             # calculate the dist
-            dist = qp1.calculate_lonlat_distance(p1, p2)
-            equal = dist < 200
-            # equal = p1 == p2
+            # if (i,j) not in dist_cache:
+            #     dist = qp1.calculate_lonlat_distance(p1, p2)
+            #     dist_cache[(i,j)] = dist
+            #     dist_cache[(j,i)] = dist
+            # else:
+            #     dist = dist_cache[(i,j)]
+            # D[i][j] = dist
+            # equal = dist < 200
+            equal = p1 == p2
             if equal:
                 # the points are equal enough
                 if i == 0 or j == 0:
@@ -190,25 +205,59 @@ def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = False):
                 else:
                     # continue an existing sequence: current len is the previous plus one
                     L[i][j] =  L[i-1][j-1] + 1
-                    if L[i][j] > curr_len:
-                        curr_len = L[i][j]
-                        # append new longer sequence
-                        seqs.append(t2[j-curr_len+1:j+1])
-                        idxs.append(list(range(j-curr_len+1,j+1)))
+                    # if L[i][j] > curr_len:
+                    curr_len = L[i][j]
+                    # append new longer sequence
+                    new_seq = t2[j-curr_len+1:j+1]
+                    new_seq_idxs = list(range(j-curr_len+1,j+1))
+                    if new_seq not in seqs:
+                        seqs.append(new_seq)
+                        idxs.append(new_seq_idxs)
+                    # else:
+                    #     print("Curr len at",i,j,":",p1,p2,"not gr8r than curr_len:",curr_len," -> not adding to the seqs")
             else:
                 L[i][j] = 0
+
+    # if match_happened:
+    #     P1 = []
+    #     P2 = []
+    #     if type(t1[0]) == str:
+    #         P1.append(['/'] + list(t2))
+    #         for i,d in enumerate(D):
+    #             P1.append([t1[i]] + [str(dd) for dd in d])
+    #         for p in P1:
+    #             print(p)
+
+    #         print()
+
+
+    #         P2.append(['/'] + list(t2))
+    #         for i,l in enumerate(L):
+    #             P2.append([t1[i]] + [str(ll) for ll in l])
+    #         for p in P2:
+    #             print(p)
+    #     else:
+    #         for d in D:
+    #             print(d)
+    #         print()
+    #         for l in L:
+    #             print(l)
 
     return seqs, list(idxs)
 
 
 if __name__ == '__main__':
-    s1 = "datter"
-    s2 = "dogger"
+    s1 = "cardouker"
+    s2 = "carder"
     print(s1,"vs",s2)
     seqs, idxs = calc_lcss(list(s1), list(s2), conseq_lcss=True)
-    print(seqs, idxs)
+    print("Consequtive:")
+    for s,i in zip(seqs,idxs):
+        print(s,i)
     seqs, idxs = calc_lcss(list(s1), list(s2), conseq_lcss=False)
-    print(seqs, idxs)
+    print("Nonconsequtive:")
+    for s,i in zip(seqs,idxs):
+        print(s,i)
     utils.subsets([1,2,7,1,3,9])
 
 

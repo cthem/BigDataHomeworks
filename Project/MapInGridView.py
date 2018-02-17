@@ -118,7 +118,6 @@ def map_to_features_vlad(data_df, grid, output_file):
 
 def map_to_features_bow(data_df, grid, output_file):
     rows, columns, cell_names = grid
-
     points_header = "points" if "points" in data_df else "Trajectory"
 
     features = []
