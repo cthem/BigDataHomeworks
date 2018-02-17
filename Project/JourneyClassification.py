@@ -46,7 +46,7 @@ def preprocess_train_data(feature_df, seed):
     return data, num_ids, targets_nums
 
 
-def train(features, targets, num_folds, classifiers, output_folder, filename_tag ="", classifier_obj = None):
+def train(features, targets, num_folds, classifiers, output_folder, seed=None, filename_tag ="", classifier_obj = None):
     kf = KFold(n_splits = num_folds)
     folds_idxs = list(kf.split(features))
     trips_array = np.asarray(features)
@@ -74,7 +74,7 @@ def train(features, targets, num_folds, classifiers, output_folder, filename_tag
             elif classifier == "logreg":
                 accTrain, accVal = logreg_classification(train, val, classifier_obj=classifier_obj)
             elif classifier == "randfor":
-                accTrain, accVal = randfor_classification(train, val,  classifier_obj=classifier_obj)
+                accTrain, accVal = randfor_classification(train, val,  seed, classifier_obj=classifier_obj)
             accuracies[classifier].append((accTrain, accVal))
             print("- accuracies train/val:",accuracies[classifier][-1])
         elapsed = utils.tictoc(classif_start)
@@ -123,9 +123,9 @@ def logreg_classification(train, val, classifier_obj = None):
     return accTrain, accVal
 
 
-def randfor_classification(train, val, classifier_obj = None):
+def randfor_classification(train, val, seed=None, classifier_obj = None):
     if classifier_obj is None:
-        classifier_obj = RandomForestClassifier()
+        classifier_obj = RandomForestClassifier(random_state=seed)
     classifier_obj.fit(train[0], train[1])
 
     res = classifier_obj.predict(train[0])
@@ -144,7 +144,6 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
 
     # test different estimators
     estimators = [5,20,25]
-    estimators = [5]
     for estimator in estimators:
         tag = "estimator_%s" % estimator
         print("\nTrying strategy: %s" % tag, end='')
@@ -155,7 +154,6 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
 
         # test different max_features
     max_features = ["sqrt", "log2", None]
-    max_features = []
     for max in max_features:
         tag = "max_feature_strategy_%s" % max
         print("\nTrying strategy: %s" % tag, end='')
@@ -165,7 +163,6 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
         mean_accuracies[tag] = (mean_acc, classifier_obj)
     # test max depth strategy
     max_depth = [10,50,100]
-    max_depth = [ ]
     for max in max_depth:
         tag = "max_depth_strategy_%s" % max
         print("\nTrying strategy: %s" % tag, end='')
@@ -174,7 +171,6 @@ def improve_randfor(baseline_accuracy, bow_features_file, num_folds, output_fold
                             classifier_obj=classifier_obj)
         mean_accuracies[tag] = (mean_acc, classifier_obj)
     min_samples = [4,6,10]
-    min_samples = []
     for min in min_samples:
         tag = "min_samples_strategy_%s" % min
         print("\nTrying strategy: %s" % tag, end='')

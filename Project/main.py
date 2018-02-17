@@ -35,7 +35,7 @@ def question_2(opts):
     features_file, grid_file = qp2.question_b(opts["cleanfile"], cellgrid, opts["outdir"])
 
     print("\n>>> Running question 2c - Classification")
-    qp2.question_c(opts["cleanfile"],features_file, grid_file, opts["testfiles"][2], opts["classifdir"], opts["seed"], opts["classiffile"], opts["folds"])
+    qp2.question_c(features_file, grid_file, opts["testfiles"][2], opts["classifdir"], opts["seed"], opts["classiffile"], opts["folds"])
 
 
 def check_dependencies():
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     options["classifdir"] = join(options["outdir"], "classification_charts")
     options["classiffile"] = join(options["outdir"],"​testSet_JourneyPatternIDs.csv")
     options["folds"] = 10
-    options["grid"] = (30,30)
+    options["grid"] = (15,15)
 
     os.makedirs(options["outdir"], exist_ok=True)
     os.makedirs(options["mapsdir"], exist_ok=True)
