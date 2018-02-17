@@ -107,14 +107,9 @@
   \item all points and timestamps in the format: [[timestamp1, longitude1,
     latitude1], [timestamp2, longitude2, latitude2],...].
   \end{itemize}
-  The given csv file with the training data was transformed to a dataframe using
-  the pandas library. Data with null journey ids are removed from the dataframe,
-  therefore lines with NaN or "null" journey ids are discarded. All data is
-  subsequently grouped by the vehicleID and the journeyPatternId. The final dataframe contains five columns, where the three last columns contain a list of timestamps, a list of longitudes and a list of latitudes respectively.
-	
-	To produce the required final format [timestamp, longitude, latitude], we
-  iterate each row, producing a column with the appropriate list data. The total number of trips extracted to the trips.csv file is 6651.
-  % the three lists are now concatenated in one column and therefore the other two are dropped from the dataframe. Then, the column vehicleID is replaced by the tripId column which is the index of this dataframe, starting from 0 and incrementing by 1. Finally, the column points, which now contains the list of lists with the timestamps and the points, is sorted based on the timestamp of each list item. The final result is exported in a file with the requested format.
+  The given csv file with the training data was transformed to a dataframe using the pandas library. Data with null journey ids are removed from the dataframe, therefore lines with NaN or "null" journey ids are discarded. Then, we iterate in dataframes rows and we store the data into a dictionary having as key the vehicleId and as value the data in the requested format i.e. [journeyId, [timestamp, longitude, latitude]]. In each iteration we check if the vehicleId is in the dictionary (otherwise we add it) and if the current journeyId is the one stored in the dictionary for this vehicleId. If this is true, we append the data list otherwise we create a new trip in the trips list and we delete those data from the dictionary, starting a new trip for the specific vehicle.
+  
+  After having collected all the trips, we have created three different lists (tripIds, jids and points) storing the trip ids, the journey ids and the points respectively for each trip. Then we have creating three different dataframes from each list and by concatenating them the final dataframe was creating, which was exported in the file \texttt{trips.csv}.
 	
 	\subsection{Clean Data (question B)}
 	We clean the given data based on two criteria:
@@ -404,18 +399,14 @@ figures below.
 	\begin{figure} [H]
 		\begin{center}
 			\includegraphics [scale = 0.70] {grid.png}
-			\caption{Example rectangular quantization grid of 5 cells, resulting in 4
-        row and column lines.}
+			\caption{Example rectangular quantization grid of 30x30 cells}
 		\end{center}
 	\end{figure} 
-
-
 
   Feature construction uses the bag-of-words technique with the \texttt{map\_to\_features\_bow} function. A histogram vector is
   initialized to zeros for each trip, and each coordinate point in the trip is 
   mapped to a grid cell as a function of the grid rows, grid columns and the
-  point's coordinates (funtion \texttt{find\_cell\_index}). This assignment increases the accumulation on that
-  cell in the histogram vector. The resulting feature fectors are saved in a csv file.
+  point's coordinates (funtion \texttt{find\_cell\_index}). This assignment increases the accumulation on that cell in the histogram vector. In addition, in order to keep the direction as feature (to characterize trips with different journeyId and direction but with similar points) we check the first and last point of each trip. If the first point has greater longitude we store all features as negative numbers(in case that the longitude is the same, we check the latitude). The resulting feature fectors are saved in a csv file.
 
 	\subsection{Classification (question C)}
  All functions used in this question are in the file \texttt{JourneyClassification.py}. 
@@ -438,26 +429,14 @@ figures below.
   is collected per fold and classifier with the \texttt{accuracy\_score} function
   of scikit-learn, both illustrated in a barchart, constructed using
   pylab and matplotlib. The mean accuracies accross folds is returned and printed.
+  
+  For beating the benchmark we have selected the Random Forest classifier, and attempted to improve its performance by the following techniques:
+	\begin{itemize}
+		\item Experimenting with the number of trees in the forest by changing the estimator number(5,20,25) - the default number was 10.
+		\item Changing the max features number to be considered when looking for the best split. The tested stategies are: sqrt, log2, None while the default strategy tested in baseline was the auto strategy.
+		\item Experimenting with the max depth strategy of the tree, with values 10,50 and 100 while the default value was 2.
+	\end{itemize}
 
-  For beating the benchmark we have selected the Logistic Regression classifier,
-  and attempted to improve its performance by the following techniques:
-  \begin{itemize}
-    \item Feature normalization, where we reduce the variance in the data by
-      applying feature normalization techniques, using the $L_1, L_2$ and $max$ norms.
-      \item Feature scaling, where the features are scaled to zero mean and unit variance.
-    \item Varying the regularization term ($C$) in the Logistic Regression hyperplane
-      to attempt to find a better fit in the data. We tested values from $0.2$ to $2$.
-     \item Replace the bag-of-words feature with the VLAD (Vector of Locally
-       Aggregated Descriptors) feature. In VLAD,
-       instead of considering frequency histograms, we accumulate difference
-       from the representative elements in the quantization vector. For example,
-       if a point $p$ is assigned to cell $c_n$, in bag-of-words the $n$-th
-       coordinate in the quantization vector is incremented by $1$. In VLAD, the
-       increment equals $d(p,c_n)$, where $d(\cdot,\cdot)$ is a distance function.
-       We used the cell centroid as the cell representative point and the
-       harvesine distance. 
-     
-  \end{itemize}
   Results for all methods are in the table below.
  
  \begin{table}[H]
@@ -465,9 +444,9 @@ figures below.
  	\begin{tabular}{|c|c|c|}
  		\hline
  		\textbf{Strategy}            & \textbf{Train Accuracy} & \textbf{Validation Accuracy} \\ \hline
- 		\textbf{KNN}                 & 0.446                   & 0.221                        \\ \hline
- 		\textbf{Logistic Regression} & 0.269                   & 0.170                        \\ \hline
- 		\textbf{Random Forest}       & 0.969                   & 0.281                        \\ \hline
+ 		\textbf{KNN}                 & 0.904                   & 0.861                        \\ \hline
+ 		\textbf{Logistic Regression} & 0.874                   & 0.831                        \\ \hline
+ 		\textbf{Random Forest}       & 0.995                   & 0.883                        \\ \hline
  	\end{tabular}
  \caption{Classification using KNN, logreg and random forest}
  \label{class}
@@ -475,23 +454,66 @@ figures below.
 
 \begin{table}[H]
 	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Strategy} & \textbf{Validation Accuracy} & \textbf{Change} \\ \hline
+		Estimator=5       & 0.865                        & -1.92\%         \\ \hline
+		Estimator=20      & 0.893                        & 1.19\%          \\ \hline
+		Estimator = 25    & 0.894                        & 1.30\%          \\ \hline
+		Max feature sqrt  & 0.882                        & 0.00\%          \\ \hline
+		Max feature log2  & 0.884                        & 0.23\%          \\ \hline
+		Max feature None  & 0.882                        & 0.00\%          \\ \hline
+		Max depth=10      & 0.661                        & -25.04\%        \\ \hline
+		Max depth=50      & 0.879                        & -0.34\%         \\ \hline
+		Max depth=100     & 0.885                        & 0.34\%          \\ \hline
+		Min samples=4     & 0.883                        & 0.08\%          \\ \hline
+		Min samples=6     & 0.888                        & 0.58\%          \\ \hline
+		Min samples=10    & 0.884                        & 0.21\%          \\ \hline
+	\end{tabular}
+	\label{impr1}
+	\caption{Classification improvements using random forest}
+\end{table}
+
+Since we had small improvement with Random Forest classifier, we decided to improve also Logistic Regression classifier. In order to improve its performance we have used the following techniques:
+
+\begin{itemize}
+	\item Feature normalization, where we reduce the variance in the data by
+	applying feature normalization techniques, using the $L_1, L_2$ and $max$ norms.
+	\item Feature scaling, where the features are scaled to zero mean and unit variance.
+	\item Varying the regularization term ($C$) in the Logistic Regression hyperplane
+	to attempt to find a better fit in the data. We tested values from $0.2$ to $2$.
+	\item Replace the bag-of-words feature with the VLAD (Vector of Locally
+	Aggregated Descriptors) feature. In VLAD,
+	instead of considering frequency histograms, we accumulate difference
+	from the representative elements in the quantization vector. For example,
+	if a point $p$ is assigned to cell $c_n$, in bag-of-words the $n$-th
+	coordinate in the quantization vector is incremented by $1$. In VLAD, the
+	increment equals $d(p,c_n)$, where $d(\cdot,\cdot)$ is a distance function.
+	We used the cell centroid as the cell representative point and the
+	harvesine distance. 
+\end{itemize}
+
+Below we show the results from the techniques used for the Logistic Regression classifier:
+
+\begin{table}[H]
+	\centering
 	\begin{tabular}{|l|c|c|}
 		\hline
-		strategy & validaton accuracy & change  \\ \hline
-		norm\_l2 &  0.063  &  -62.84\%  \\ \hline
-		norm\_l1 &  0.048  &  -71.56\%  \\ \hline
-		norm\_max &  0.072  &  -57.34\%  \\ \hline
-		scaling &  0.131  &  -22.94\%  \\ \hline
-		C\_0.200 &  0.15  &  -11.93\%  \\ \hline
-		C\_0.500 &  0.157  &  -7.80\%  \\ \hline
-		C\_1.500 &  0.175  &  2.75\%  \\ \hline
-		C\_2.000 &  0.178  &  5.05\%  \\ \hline
-		vlad &  0.003  &  -97.71\%  \\ \hline
-		
+		\textbf{Strategy} & \textbf{Validation Accuracy} & \textbf{Change} \\ \hline
+		norm\_l2 &  0.794  &  -4.56\%  \\ \hline
+		norm\_l1 &  0.616  &  -25.93\%  \\ \hline
+		norm\_max &  0.790  &  -4.98\%  \\ \hline
+		scaling &  0.832  &  0.12\%  \\ \hline
+		C\_0.200 &  0.834  &  0.34\%  \\ \hline
+		C\_0.500 &  0.833  &  0.18\%  \\ \hline
+		C\_1.500 &  0.831  &  -0.02\%  \\ \hline
+		C\_2.000 &  0.831  &  -0.02\%  \\ \hline
 	\end{tabular}
-	\label{impr}
+	\label{impr2}
 	\caption{Classification improvements using logistic regression}
 \end{table}
+
+All above techniques were implemented using a 20x20 grid. We have also tried to increase the size of grid to 50x50 and 30x30 but the results were worse. Therefore we have decided to keep the 20x20 grid. All the results are included in the runlog file. In addition, in the folder classification\_charts, we have included all the histograms  showing the performance of all tested classifiers.
 
 	\subsection{Test improved classifier}
 	
