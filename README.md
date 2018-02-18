@@ -40,11 +40,11 @@ The resulting filtered trips are stored in the file trips\_clean.csv. The total 
 
 This trip visualization task is implemented in the function visualize\_trips and the created output is stored in the output folder in the gmplot directory. The trips list is shuffled in order to show random items, the first 5 of which are fetched for visualization. For each trip, we generate a tuple of longitudes and latitudes with the function utils.idx\_to\_lonlat which we pass on to the plotting function utils.write\_group\_gml. There, the longitude and latitude means are calculated as a visualization centroid for the produced map, and the gmplot library is used so as to visualize the respective point sequence. See the following figure for a visualization example. 
 
-![first](./images/questionC1.png)
-![second](./images/questionC2.png)
-![third](./images/questionC3.png)
-![fourth](./images/questionC4.png)
-![fifth](./images/questionC5.png)
+![first](./ProjectReport/images/questionC1.png)
+![second](./ProjectReport/images/questionC2.png)
+![third](./ProjectReport/images/questionC3.png)
+![fourth](./ProjectReport/images/questionC4.png)
+![fifth](./ProjectReport/images/questionC5.png)
 
 ## Exercise 2
 
@@ -78,11 +78,11 @@ In order to improve time performance, we have used a cache strategy exploiting t
 
 Below we present the results from this question in the requested format:
 
-![first](./images/nn1.png)
-![second](./images/nn2.png)
-![third](./images/nn3.png)
-![fourth](./images/nn4.png)
-![fifth](./images/nn5.png)
+![first](./ProjectReport/images/nn1.png)
+![second](./ProjectReport/images/nn2.png)
+![third](./ProjectReport/images/nn3.png)
+![fourth](./ProjectReport/images/nn4.png)
+![fifth](./ProjectReport/images/nn5.png)
 
 | Test id |    Time    |  id1 |  d1 |  id2 | d2  | id3  | d3  | id4  |  d4 |  id5 |  d5 |
 |---------|:----------:|:----:|:---:|:----:|-----|------|-----|------|:---:|:----:|:---:|
@@ -104,11 +104,11 @@ Finally, a similar data preparation is followed as with the nearest neighbour ca
 	
 Below, we present the nearest subroutes for each given test trip:
 
-![first](./images/subroutes1.png)
-![second](./images/subroutes2.png)
-![third](./images/subroutes3.png)
-![fourth](./images/subroutes4.png)
-![fifth](./images/subroutes5.png)
+![first](./ProjectReport/images/subroutes1.png)
+![second](./ProjectReport/images/subroutes2.png)
+![third](./ProjectReport/images/subroutes3.png)
+![fourth](./ProjectReport/images/subroutes4.png)
+![fifth](./ProjectReport/images/subroutes5.png)
 
 | Test id |    Time    |  id1 | d1 |  id2 | d2 | id3  | d3 | id4  | d4 |  id5 | d5 |
 |---------|:----------:|:----:|:--:|:----:|----|------|----|------|:--:|:----:|:--:|
@@ -125,8 +125,8 @@ The purpose of this task was to extract features for classification from the tra
 The grid is assumed to be rectangular, with dimensions specified in the options dictionary. In order to be able to draw the grid, we find the min and max
 longitudes and latitudes (function: find\_min\_max\_latlong, file: MapInGridView.py). The next function called is the create\_grid, parameterized with the discovered bounds and the grid dimensions. The next step is to create the lines of the rows and the columns and then to provide a name for each cell. The training points and grid structure is visualized with the visualize\_grid function, and illustrated in the figures below.
 
-![grid1](./images/data_minmax_grid_extent.png)
-![grid2](./images/grid.png)
+![grid1](./ProjectReport/images/data_minmax_grid_extent.png)
+![grid2](./ProjectReport/images/grid.png)
 
 Feature construction uses the bag-of-words technique with the map\_to\_features\_bow function. A histogram vector is initialized to zeros for each trip, and each coordinate point in the trip is mapped to a grid cell as a function of the grid rows, grid columns and the point's coordinates (funtion find\_cell\_index). This assignment increases the accumulation on that cell in the histogram vector. In addition, in order to keep the direction as feature (to characterize trips with different journeyId and direction but with similar points) we check the first and last point of each trip. If the first point has greater longitude we store all features as negative numbers(in case that the longitude is the same, we check the latitude). The resulting feature fectors are saved in a csv file.
 
