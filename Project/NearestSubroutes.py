@@ -18,9 +18,9 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None,
     if partype:
         # num threads or processes
         if partype == "processes":
-            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k, conseq_lcss, unique_trip)
+            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, unique_trip, k)
         elif partype == "threads":
-            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k, conseq_lcss, unique_trip)
+            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, unique_trip, k)
     else:
         max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss, verbosity = verbosity, unique_trip = unique_trip)
     if len(max_subseqs) != k:
@@ -303,7 +303,7 @@ def update_current_maxsubseq(current, new_seqs, k, elapsed, row, unique_trip = T
             # replace only if new sequence length is larger
             existing_item = [item for item in current if item[2]['tripId'] == new_trip]
             if len(existing_item) > 1:
-                print("Found more than one item with tripId",new_jid,"impossible!")
+                print("Found more than one item with tripId",new_trip,"impossible!")
                 exit(1)
             # get the item, its position and its sequence length
             existing_item = existing_item[0]

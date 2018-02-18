@@ -234,10 +234,9 @@
       function. Each html output map is converted to a png image using a conversion tool in the \texttt{html\_to\_png} function, in
 order to automate image creation from the generated maps (the tool is the
 \texttt{rasterize.js} utility from the \texttt{phantomjs} module).
-However we found the gml plot zoom difficult to automatically configure correctly so that
-all points are visible, and thus the images in the report were fetched with a printscreen.
-The converted images are used to create 6 subplots (1 test trip + k=5 nearest
-neighbours). All plotting is done with the pylab package.
+However we found the gml plot zoom difficult to automatically configure correctly so that all points are visible, and thus the images in the report were fetched with a printscreen. The converted images are used to create 6 subplots (1 test trip + k=5 nearest neighbours). All plotting is done with the pylab package.
+
+In order to improve time performance, we have used a cache strategy exploiting the commutative property of the distance between two points. Therefore, we have used a dictionary storing a mapping of the point pair indices $(i,j)$ as well as $(j,i)$.
 
 	Below we present the results from this question in the requested format:
 	

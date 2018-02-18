@@ -103,7 +103,7 @@ def calculate_dists(test_lonlat, train_df, ret_container = None, paropts = None)
         #distance = calculate_dynamic_time_warping(test_lonlat, trip_lonlat, paropts, impl = "libdtw")
         # print("Calculated distance: %.2f for trip: %d/%d : %s" % (distance, index+1, len(train_df.index), str(row["journeyId"])))
         dists[index] = (int(row["tripId"]), distance, jid, train_points)
-        print("Computed distance for train trip %d/%d" % (index+1, len(train_df)))
+        # print("Computed distance for train trip %d/%d" % (index+1, len(train_df)))
     return dists
 
 
