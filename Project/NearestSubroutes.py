@@ -38,7 +38,7 @@ def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_
         train_lonlat = utils.idx_to_lonlat(train_points, format="tuples")
         timestart = utils.tic()
         # compute common subsequences between the test trip and the current candidate
-        subseqs, subseqs_idx = calc_lcss(test_lonlat, train_lonlat, conseq_lcss= conseq_lcss)
+        _ , subseqs_idx = calc_lcss(test_lonlat, train_lonlat, conseq_lcss= conseq_lcss)
         elapsed = utils.tictoc(timestart)
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
@@ -51,17 +51,34 @@ def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_
             # keep at most one (the longest) subroute for each training trip 
             subseqs_idx = subseqs_idx[0:1]
         # update the list of the longest subsequences
-        if subseqs:
+        if subseqs_idx:
             max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_trip = unique_trip)
             #print("Updated max subseqs, lens now:",[len(x[0]) for x in max_subseqs])
     if verbosity:
         print("Got %d subseqs:" % len(max_subseqs), [ (x,y,z["tripId"]) for (x,y,z) in max_subseqs])
-    max_subseqs = check_reverse_lcss(max_subseqs, test_lonlat)
+
+    max_subseqs = check_reverse_lcss(max_subseqs, test_lonlat, unique_trip, k)
+    if verbosity:
+        print("Got %d reversed: subseqs:" % len(max_subseqs), [ (x,y,z["tripId"]) for (x,y,z) in max_subseqs])
+
     return max_subseqs
 
 
-def check_reverse_lcss(max_subseqs, test_lonlat):
-    pass
+def check_reverse_lcss(max_subseqs, test_lonlat, unique_trip, k):
+    new_subseqs = []
+    for i,mxs in enumerate(max_subseqs):
+        (seq_old, elapsed, row) = mxs
+        # get reversed points
+        train_pts = eval(row["points"])
+        train_lonlat = utils.idx_to_lonlat(train_pts, format="tuples")
+        _, seq_old_again = calc_lcss(test_lonlat, train_lonlat)
+        train_lonlat = train_lonlat[-1::-1]
+        _, idxs = calc_lcss(test_lonlat, train_lonlat)
+        # re-reverse
+        if idxs:
+            idxs = [ii[-1::-1] for ii in idxs]
+            max_subseqs = update_current_maxsubseq(max_subseqs, idxs, k, elapsed, row, unique_trip = unique_trip)
+    return max_subseqs
 
 def exec_with_processes(df, process_num, test_lonlat, k, unique_trip = True):
     max_subseqs = []
@@ -165,7 +182,7 @@ def calc_lcss_noconseq(t1, t2, subseqs=None, subseqs_idx=None):
     return seqs,list(idxs)
 
 
-def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = False):
+def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = True):
     '''
     :param t1: list of lonlat coordinate tuples
     :param t2: same
