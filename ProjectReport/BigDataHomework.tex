@@ -139,8 +139,7 @@
   with the function \texttt{utils.idx\_to\_lonlat} which we pass on to the
   plotting function \texttt{utils.write\_group\_gml}. There, the longitude and
   latitude means are calculated as a visualization centroid for the produced map, and the gmplot
-  library is used so as to visualize the respective point sequence. See the
-  following figure for a visualization example. 
+  library is used so as to visualize the respective point sequence. Below, we present the resulting plots for the five selected trips.
 	
 	\begin{figure} [H]
 		\begin{center}
@@ -225,7 +224,7 @@
       test trip and its neighbours
     \item a list with the journey labels and the nn computation data
       \item a list with the colors with which to draw (all blue in this
-        question).
+        question)
       \end{enumerate}
       All this data is provided to the
       \texttt{utils.visualize\_point\_sequences} function. This function is
@@ -234,10 +233,9 @@
       function. Each html output map is converted to a png image using a conversion tool in the \texttt{html\_to\_png} function, in
 order to automate image creation from the generated maps (the tool is the
 \texttt{rasterize.js} utility from the \texttt{phantomjs} module).
-However we found the gml plot zoom difficult to automatically configure correctly so that
-all points are visible, and thus the images in the report were fetched with a printscreen.
-The converted images are used to create 6 subplots (1 test trip + k=5 nearest
-neighbours). All plotting is done with the pylab package.
+However we found the gml plot zoom difficult to automatically configure correctly so that all points are visible, and thus the images in the report were fetched with a printscreen. The converted images are used to create 6 subplots (1 test trip + k=5 nearest neighbours). All plotting is done with the pylab package.
+
+In order to improve time performance, we have used a cache strategy exploiting the commutative property of the distance between two points. Therefore, we have used a dictionary storing a mapping of the point pair indices $(i,j)$ as well as $(j,i)$.
 
 	Below we present the results from this question in the requested format:
 	
@@ -443,7 +441,7 @@ figures below.
  	\centering
  	\begin{tabular}{|c|c|c|}
  		\hline
- 		\textbf{Strategy}            & \textbf{Train Accuracy} & \textbf{Validation Accuracy} \\ \hline
+ 		\textbf{Classifier}            & \textbf{Train Accuracy} & \textbf{Validation Accuracy} \\ \hline
  		\textbf{KNN}                 & 0.904                   & 0.861                        \\ \hline
  		\textbf{Logistic Regression} & 0.874                   & 0.831                        \\ \hline
  		\textbf{Random Forest}       & 0.995                   & 0.883                        \\ \hline

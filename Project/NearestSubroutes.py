@@ -188,31 +188,6 @@ def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None):
             else:
                 L[i][j] = 0
 
-    # if match_happened:
-    #     P1 = []
-    #     P2 = []
-    #     if type(t1[0]) == str:
-    #         P1.append(['/'] + list(t2))
-    #         for i,d in enumerate(D):
-    #             P1.append([t1[i]] + [str(dd) for dd in d])
-    #         for p in P1:
-    #             print(p)
-
-    #         print()
-
-
-    #         P2.append(['/'] + list(t2))
-    #         for i,l in enumerate(L):
-    #             P2.append([t1[i]] + [str(ll) for ll in l])
-    #         for p in P2:
-    #             print(p)
-    #     else:
-    #         for d in D:
-    #             print(d)
-    #         print()
-    #         for l in L:
-    #             print(l)
-
     return seqs, list(idxs)
 
 
@@ -240,7 +215,6 @@ def update_current_maxsubseq(current, new_seq, k, elapsed, row):
     :param k:
     :return:
     """
-
     should_sort = False
     if len(current) < k:
         # there's space to add a subsequence, add it
