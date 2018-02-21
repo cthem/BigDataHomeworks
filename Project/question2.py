@@ -27,16 +27,15 @@ def question_a1(output_folder, clean_file, test_file, paropts, k):
         nn.visualize_nns(test_points, nns_ids_distances, outfile_name, elapsed, index)
 
 
-def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, verbosity):
-    lcss_type = "consequtive" if conseq_lcss else "non-consequtive"
-    print("Extracting %d %s subroutes for each test trip" % (k, lcss_type))
+def question_a2(output_folder, test_file, train_file, k, paropts, verbosity):
+    print("Extracting %d subroutes for each test trip" % (k))
     test_df = pd.read_csv(test_file, delimiter="\n")
     train_df = pd.read_csv(train_file)
     for index, row in test_df.iterrows():
         print("Extracting subroutes for test trip %d/%d" % (index + 1, len(test_df)))
         file_name = os.path.join(output_folder, "subroutes_%d_" % (index + 1))
         test_points = eval(row["Trajectory"])
-        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, conseq_lcss, verbosity)
+        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, verbosity)
         # transform to list of consequtive points, for visualization
         conseq_sslist = []
         for m in range(len(max_subseqs)):

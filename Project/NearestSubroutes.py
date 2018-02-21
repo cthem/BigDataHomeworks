@@ -29,7 +29,7 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None,
     return max_subseqs
 
 
-def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False):
+def serial_execution(df, test_lonlat, k, verbosity = False):
     max_subseqs = []
     # for each trip in the training data
     for index, row in df.iterrows():
@@ -40,7 +40,7 @@ def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False):
         train_lonlat = utils.idx_to_lonlat(train_points, format="tuples")
         timestart = utils.tic()
         # compute common subsequences between the test trip and the current candidate
-        _ , subseqs_idx_list = calc_lcss(test_lonlat, train_lonlat, conseq_lcss= conseq_lcss)
+        _ , subseqs_idx_list = calc_lcss(test_lonlat, train_lonlat)
         # consider non-consequtive subroutes
         subseqs_idx = list(set([idx for seq in subseqs_idx_list for idx in seq]))
         elapsed = utils.tictoc(timestart)
