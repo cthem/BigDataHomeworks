@@ -110,6 +110,8 @@ Below, we present the nearest subroutes for each given test trip:
 ![fourth](./ProjectReport/images/subroutes4.png)
 ![fifth](./ProjectReport/images/subroutes5.png)
 
+As in the Nearest Neighbours case, we have also included the html files in the gmplot folder. The automated way with phantomjs does not work always correctly and in above images the red points are not included in the images. However, in html files, all the common points are presented. In the below table we show the total results for Nearest Subroutes.
+
 | Test id |    Time    |  id1 | d1 |  id2 | d2 | id3  | d3 | id4  | d4 |  id5 | d5 |
 |---------|:----------:|:----:|:--:|:----:|----|------|----|------|:--:|:----:|:--:|
 | 1       | 05:346:265 |  211 | 31 |  728 | 31 | 3590 | 22 | 4985 | 21 |  843 | 19 |
@@ -145,11 +147,13 @@ For beating the benchmark we have selected the Random Forest classifier, and att
 
   Results for all methods are in the table below.
   
+  
   | Classifier          | Train Accuracy | Validation Accuracy |
 |---------------------|:--------------:|:-------------------:|
 | knn                 |      0.904     |        0.861        |
 | Logistic Regression |      0.874     |        0.831        |
 | Random Forest       |      0.995     |        0.883        |
+
 
 
 |     Strategy     | Validation Accuracy |  Change |

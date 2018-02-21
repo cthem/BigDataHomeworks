@@ -33,8 +33,6 @@ def serial_execution(df, test_lonlat, k, verbosity = False):
     max_subseqs = []
     # for each trip in the training data
     for index, row in df.iterrows():
-        if index > 500:
-            break
         train_points = row["points"]
         train_points = eval(train_points)
         train_lonlat = utils.idx_to_lonlat(train_points, format="tuples")
@@ -49,9 +47,9 @@ def serial_execution(df, test_lonlat, k, verbosity = False):
         # update the list of the longest subsequences
         if subseqs_idx:
             max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
-            print("Max subseq length:",len(max_subseqs))
-            print([x[0] for x in max_subseqs])
-            print("Updated max subseqs, lens now:",[len(x[0]) for x in max_subseqs])
+            # print("Max subseq length:",len(max_subseqs))
+            #print([x[0] for x in max_subseqs])
+            # print("Updated max subseqs, lens now:",[len(x[0]) for x in max_subseqs])
     if verbosity:
         print("Got %d subseqs:" % len(max_subseqs), [ (x,y,z["tripId"]) for (x,y,z) in max_subseqs])
 
@@ -184,7 +182,7 @@ def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None):
                         seqs.append(new_seq)
                         idxs.append(new_seq_idxs)
                     # else:
-                    #     print("Curr len at",i,j,":",p1,p2,"not gr8r than curr_len:",curr_len," -> not adding to the seqs")
+                    # print("Curr len at",i,j,":",p1,p2,"not gr8r than curr_len:",curr_len," -> not adding to the seqs")
             else:
                 L[i][j] = 0
 
@@ -266,7 +264,7 @@ def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
         # label
         str = ["neighbour %d" % j, "jid: %s" % jid, "Matching pts: %d" % num_points, "Delta-t: %s " % sseq[1]]
         labels.append("\n".join(str))
-        print("seq first/last idxs:",[(s[0],s[-1]) for s in subseq_idxs])
+        # print("seq first/last idxs:",[(s[0],s[-1]) for s in subseq_idxs])
 
         # get the points data from the pandas dataframe to lonlat tuples
         train_points = sseq[2]["points"]
@@ -302,7 +300,7 @@ def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
         # append the points corresponding to the indexes
         for i,idx_list in enumerate(print_idxs):
             pts.append(utils.get_lonlat_tuple([train_points[i] for i in idx_list]))
-            print("Idx list:",idx_list[0],idx_list[-1],"col:",cols[i])
+            # print("Idx list:",idx_list[0],idx_list[-1],"col:",cols[i])
 
         # add to the list of points to draw
         points.append(pts)
