@@ -5,7 +5,7 @@ import question1 as qp1
 import pprint
 
 
-def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None, conseq_lcss = True, verbosity = False, unique_trip = True):
+def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None, verbosity = False):
     if paropts:
         print("Parallelizing with", paropts)
         partype, numpar = paropts
@@ -18,53 +18,51 @@ def find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts=None,
     if partype:
         # num threads or processes
         if partype == "processes":
-            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k, conseq_lcss, unique_trip)
+            max_subseqs = exec_with_processes(train_df, numpar, test_lonlat, k)
         elif partype == "threads":
-            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k, conseq_lcss, unique_trip)
+            max_subseqs = exec_with_threads(train_df, numpar, test_lonlat, k)
     else:
-        max_subseqs = serial_execution(train_df, test_lonlat, k, conseq_lcss, verbosity = verbosity, unique_trip = unique_trip)
+        max_subseqs = serial_execution(train_df, test_lonlat, k, verbosity = verbosity)
     if len(max_subseqs) != k:
         print("WARNING: Specified %d subseqs!" % k)
     print("Extracted %d nearest subsequences of a %d-long test tring in: %s" % (len(test_points), k, utils.tictoc(timestart)))
     return max_subseqs
 
 
-def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False, unique_trip = True):
+def serial_execution(df, test_lonlat, k, conseq_lcss, verbosity = False):
     max_subseqs = []
     # for each trip in the training data
     for index, row in df.iterrows():
+        if index > 500:
+            break
         train_points = row["points"]
         train_points = eval(train_points)
         train_lonlat = utils.idx_to_lonlat(train_points, format="tuples")
         timestart = utils.tic()
         # compute common subsequences between the test trip and the current candidate
-        _ , subseqs_idx = calc_lcss(test_lonlat, train_lonlat, conseq_lcss= conseq_lcss)
+        _ , subseqs_idx_list = calc_lcss(test_lonlat, train_lonlat, conseq_lcss= conseq_lcss)
+        # consider non-consequtive subroutes
+        subseqs_idx = list(set([idx for seq in subseqs_idx_list for idx in seq]))
         elapsed = utils.tictoc(timestart)
         # sort by decr. length
-        subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
-        # keep k largest
-        subseqs_idx = subseqs_idx[:k]
-        if subseqs_idx:
-            #print("Train trip #", 1+index,"/",len(df), " of length %d | %d largest sub-routes:" % (len(train_points),k), subseqs_idx)
-            pass
-        if unique_trip:
-            # keep at most one (the longest) subroute for each training trip 
-            subseqs_idx = subseqs_idx[0:1]
+        subseqs_idx.sort(reverse=True)
         # update the list of the longest subsequences
         if subseqs_idx:
-            max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_trip = unique_trip)
-            #print("Updated max subseqs, lens now:",[len(x[0]) for x in max_subseqs])
+            max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
+            print("Max subseq length:",len(max_subseqs))
+            print([x[0] for x in max_subseqs])
+            print("Updated max subseqs, lens now:",[len(x[0]) for x in max_subseqs])
     if verbosity:
         print("Got %d subseqs:" % len(max_subseqs), [ (x,y,z["tripId"]) for (x,y,z) in max_subseqs])
 
-    max_subseqs = check_reverse_lcss(max_subseqs, test_lonlat, unique_trip, k)
+    #max_subseqs = check_reverse_lcss(max_subseqs, test_lonlat, k)
     if verbosity:
         print("Got %d reversed: subseqs:" % len(max_subseqs), [ (x,y,z["tripId"]) for (x,y,z) in max_subseqs])
 
     return max_subseqs
 
 
-def check_reverse_lcss(max_subseqs, test_lonlat, unique_trip, k):
+def check_reverse_lcss(max_subseqs, test_lonlat, k):
     new_subseqs = []
     for i,mxs in enumerate(max_subseqs):
         (seq_old, elapsed, row) = mxs
@@ -77,10 +75,11 @@ def check_reverse_lcss(max_subseqs, test_lonlat, unique_trip, k):
         # re-reverse
         if idxs:
             idxs = [ii[-1::-1] for ii in idxs]
-            max_subseqs = update_current_maxsubseq(max_subseqs, idxs, k, elapsed, row, unique_trip = unique_trip)
+            idxs = list(set([idx for seq in idxs for idx in seq]))
+            max_subseqs = update_current_maxsubseq(max_subseqs, idxs, k, elapsed, row)
     return max_subseqs
 
-def exec_with_processes(df, process_num, test_lonlat, k, unique_trip = True):
+def exec_with_processes(df, process_num, test_lonlat, k):
     max_subseqs = []
     pool = ThreadPool(processes=process_num)
     for index, row in df.iterrows():
@@ -95,14 +94,14 @@ def exec_with_processes(df, process_num, test_lonlat, k, unique_trip = True):
         # sort by decr. length
         subseqs_idx = sorted(subseqs_idx, key=lambda x: len(x), reverse=True)
         # update the list of the longest subsequences
-        max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row, unique_trip = unique_trip)
+        max_subseqs = update_current_maxsubseq(max_subseqs, subseqs_idx, k, elapsed, row)
     print("Got %d common subsequences" % len(max_subseqs))
     pool.close()
     pool.join()
     return max_subseqs
 
 
-def exec_with_threads(df, numpar, test_lonlat, k, unique_trip = True):
+def exec_with_threads(df, numpar, test_lonlat, k):
     max_subseqs = []
     res1 = [[] for _ in range(numpar)]
     res2 = [[] for _ in range(numpar)]
@@ -131,66 +130,12 @@ def exec_with_threads(df, numpar, test_lonlat, k, unique_trip = True):
     return max_subseqs
 
 
-def calc_lcss_noconseq(t1, t2, subseqs=None, subseqs_idx=None):
-
-    if subseqs is not None:
-        seqs = subseqs
-    else:
-        seqs = []
-
-    if subseqs_idx is not None:
-        idxs = subseqs_idx
-    else:
-        idxs = []
-
-    curr_len = 0
-    cache = {}
-    L = [ [0 for _ in t2 + [0]] for _ in t1 + [0]]
-    for i in range(1,len(t1) + 1):
-        for j in range(1,len(t2) + 1):
-            if (i,j) not in cache:
-                p1, p2 = t1[i-1], t2[j-1]
-                dist = qp1.calculate_lonlat_distance(t1[i],t2[j])
-                cache[(i,j)] = dist
-                cache[(j,i)] = dist
-            else:
-                dist = cache[(i,j)]
-
-            equal = dist < 200
-            if equal:
-                L[i][j] =  L[i-1][j-1] + 1
-            else:
-                L[i][j] = max(L[i-1][j-1], L[i-1][j])
-
-    # read back result
-    i, j = len(t1), len(t2)
-    while i and j:
-        if L[i][j] == L[i - 1][j]:
-            i -= 1
-        elif L[i][j] == L[i][j - 1]:
-            j -= 1
-        else:
-            assert t1[i - 1] == t2[j - 1]
-            seqs += t1[i - 1]
-            idxs += [i-1]
-            i -= 1
-            j -= 1
-    seqs.reverse()
-    idxs.reverse()
-    seqs = utils.subsets(seqs)
-    idxs = utils.subsets(idxs)
-    return seqs,list(idxs)
-
-
-def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = True):
+def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None):
     '''
     :param t1: list of lonlat coordinate tuples
     :param t2: same
     :return:
     '''
-    if not conseq_lcss:
-        return calc_lcss_noconseq(t1, t2, subseqs, subseqs_idx)
-
     if subseqs is not None:
         seqs = subseqs
     else:
@@ -209,7 +154,6 @@ def calc_lcss(t1, t2, subseqs=None, subseqs_idx=None, conseq_lcss = True):
     # dist matrix for debugging
     D = [ [0 for _ in t2] for _ in t1]
 
-    curr_len = 0
     for i, p1 in enumerate(t1):
         for j, p2 in enumerate(t2):
             # calculate the dist
@@ -276,70 +220,61 @@ if __name__ == '__main__':
     s1 = "cardouker"
     s2 = "carder"
     print(s1,"vs",s2)
-    seqs, idxs = calc_lcss(list(s1), list(s2), conseq_lcss=True)
+    seqs, idxs = calc_lcss(list(s1), list(s2))
     print("Consequtive:")
     for s,i in zip(seqs,idxs):
         print(s,i)
-    seqs, idxs = calc_lcss(list(s1), list(s2), conseq_lcss=False)
+    seqs, idxs = calc_lcss(list(s1), list(s2))
     print("Nonconsequtive:")
     for s,i in zip(seqs,idxs):
         print(s,i)
     utils.subsets([1,2,7,1,3,9])
 
 
-def update_current_maxsubseq(current, new_seqs, k, elapsed, row, unique_trip = True):
+def update_current_maxsubseq(current, new_seq, k, elapsed, row):
     """
     Updates current sequence with longest elements of new_seq, if applicable, i.e. if there's space left or a longer subseq
     is available
     :param current:
-    :param new_seqs:
+    :param new_seq:
     :param k:
     :return:
     """
-    if unique_trip:
-        new_trip = row['tripId']
-        current_trip_ids = [r['tripId'] for (_,_,r) in current]
-        if new_trip in current_trip_ids:
-            # replace only if new sequence length is larger
-            existing_item = [item for item in current if item[2]['tripId'] == new_trip]
-            if len(existing_item) > 1:
-                print("Found more than one item with tripId",new_jid,"impossible!")
-                exit(1)
-            # get the item, its position and its sequence length
-            existing_item = existing_item[0]
-            existing_idx = current.index(existing_item)
-            old_len = len(existing_item[0])
-            if len(new_seqs[0]) > old_len:
-                current[existing_idx] = (new_seqs[0], elapsed, row)
-                current = sorted(current, key = lambda x : len(x[0]), reverse=True)
-            return current
 
-    count = 0
-    for seq in new_seqs:
-        # if the same seq is, for some reason, already in the list, continue
-        if seq in [x[0] for x in current]:
-            continue
-        should_sort = False
-        count += 1
-        if len(current) < k:
-            # there's space to add a subsequence, add it
-            current.append((seq, elapsed, row))
-            # altered the list, we should sort it
+    should_sort = False
+    if len(current) < k:
+        # there's space to add a subsequence, add it
+        current.append((new_seq, elapsed, row))
+        # altered the list, we should sort it
+        should_sort = True
+    else:
+        # no space - but check if the new guy is large enough - we just have to check if it's longer than the current shortest
+        # it is sorted in descending length, so we only have to check the last one.
+        if len(current[-1][0]) < len(new_seq):
+            # big enough, replace!
+            current[-1] = (new_seq, elapsed, row)
+            # changed the list, so we should sort it
             should_sort = True
-        else:
-            # no space - but check if the new guy is large enough - we just have to check if it's longer than the current shortest
-            # it is sorted in descending length, so we only have to check the last one.
-            if len(current[-1][0]) < len(seq):
-                # big enough, replace!
-                current[-1] = (seq, elapsed, row)
-                # changed the list, so we should sort it
-                should_sort = True
-        if should_sort:
-            current = sorted(current, key = lambda x : len(x[0]), reverse=True)
-        # the new_seqs sequence list is itself sorted, so no need to check more than k
-        if count > k:
-            break
+    if should_sort:
+        current = sorted(current, key = lambda x : len(x[0]), reverse=True)
+
     return current
+
+
+def make_consequtive(idxs):
+    """
+    Split a list of integers into list of sublists, s.t. each sublist contains consequtive integer lists
+    :param idxs: list of integers
+    :return: list of lists of integers
+    """
+    idxs.sort()
+    res = [[idxs[0]]]
+    for idx in idxs[1:]:
+        if idx - res[-1][-1] <= 1:
+            res[-1].append(idx)
+            continue
+        res.append([idx])
+    return [sorted(t) for t in res]
 
 
 def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
@@ -349,41 +284,54 @@ def preprocessing_for_visualisation(test_points, max_subseqs, file_name, index):
     colors = [['b']]
 
     for j, sseq in enumerate(max_subseqs):
-        cols, pts = [], []
+        cols, print_idxs, pts = [], [], []
         # trip jid
-        journey_id = sseq[2]["journeyId"]
+        jid = sseq[2]["journeyId"]
+        subseq_idxs = sseq[0]
+        num_points = sum([len(x) for x in subseq_idxs])
         # label
-        str = ["neighbour %d" % j, "jid: %s" % journey_id, "Matching pts: %d" % len(sseq[0]), "Delta-t: %s " % sseq[1]]
+        str = ["neighbour %d" % j, "jid: %s" % jid, "Matching pts: %d" % num_points, "Delta-t: %s " % sseq[1]]
         labels.append("\n".join(str))
+        print("seq first/last idxs:",[(s[0],s[-1]) for s in subseq_idxs])
 
-        # get the indexes of common points
-        point_idxs = sseq[0]
-        # get the points data from the pandas dataframe
+        # get the points data from the pandas dataframe to lonlat tuples
         train_points = sseq[2]["points"]
         train_points = utils.idx_to_lonlat(eval(train_points), format='tuples')
-        # color matching points in red. Remaining points are drawn in blue.
-        # get the points from the beginning up to the match
-        b1 = train_points[0:point_idxs[0]+1]
-        b1 = utils.get_lonlat_tuple(b1)
-        if b1[0]:
-            pts.append(b1)
+
+        # prepend blue, if list is not starting at first point
+        if subseq_idxs[0][0] > 0:
+            idxs = list(range(subseq_idxs[0][0]+2))
+            print_idxs.append(list(range(idxs[0],idxs[-1])))
             cols.append('b')
-        # get the matching points
-        r = train_points[point_idxs[0]:point_idxs[-1]+1]
-        r = utils.get_lonlat_tuple(r)
-        if r[0]:
-            pts.append(r)
-            cols.append('r')
-        # get the points from the last matching point, to the end of the points
-        b2 = train_points[point_idxs[-1]:]
-        b2 = utils.get_lonlat_tuple(b2)
-        if b2[0]:
-            pts.append(b2)
-            cols.append('b')
+
+        # for each sequence, make the matching red and the following blue, if any
+        for seq_idx, idxs in enumerate(subseq_idxs):
+            # the match
+            if idxs:
+                print_idxs.append(idxs)
+                cols.append('r')
+
+            # check for a following blue portion: not existent iff last seq idx is last idx of the trip
+            if idxs[-1] == len(train_points) -1:
+                continue
+            # else, either up to first point of next subsequence, or last point in row
+            if seq_idx == len(subseq_idxs) -1:
+                next_seq_first_pt = len(train_points) -1
+            else:
+                next_seq_first_pt = subseq_idxs[seq_idx+1][0]
+            # blue it up
+            b = list(range(idxs[-1],next_seq_first_pt+1))
+            if b[0]:
+                print_idxs.append(b)
+                cols.append('b')
+
+        # append the points corresponding to the indexes
+        for i,idx_list in enumerate(print_idxs):
+            pts.append(utils.get_lonlat_tuple([train_points[i] for i in idx_list]))
+            print("Idx list:",idx_list[0],idx_list[-1],"col:",cols[i])
 
         # add to the list of points to draw
         points.append(pts)
-        # as said above, the color sequence is blue, red, blue
         colors.append(cols)
         # print("Added pts:", pts)
         # print("Added cols:", cols)

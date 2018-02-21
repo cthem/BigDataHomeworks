@@ -198,7 +198,9 @@ def visualize_point_sequences(all_pts, colors, labels, file_name):
             # delete the image
             os.remove(img_names[imgidx])
             imgidx += 1
-    pylab.savefig(base_file_name + ".nnplot.jpg", dpi=300)
+    plotfile = base_file_name + ".nnplot.jpg"
+    print("Rroducing plot:" + plotfile)
+    pylab.savefig(plotfile, dpi=300)
     plt.close()
 
 

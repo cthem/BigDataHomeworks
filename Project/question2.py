@@ -8,7 +8,7 @@ import os
 import pickle
 
 
-def question_a1(output_folder, clean_file, test_file, paropts, k, unique_jids = False):
+def question_a1(output_folder, clean_file, test_file, paropts, k):
     test_df = pd.read_csv(test_file, delimiter="\n")
     train_df = pd.read_csv(clean_file)
     print("Extracting %d nearest neighbours out of %d cleaned train data, for each test trip" % (k,len(train_df)))
@@ -20,14 +20,14 @@ def question_a1(output_folder, clean_file, test_file, paropts, k, unique_jids = 
         millis_start = utils.tic()
         # compute nearest neighbours
         test_points = eval(row["Trajectory"])
-        nns_ids_distances = nn.calculate_nns(test_points, train_df, paropts=paropts, unique_jids = unique_jids)
+        nns_ids_distances = nn.calculate_nns(test_points, train_df, paropts=paropts)
         # get time elapsed
         elapsed = utils.tictoc(millis_start)
         # visualize
         nn.visualize_nns(test_points, nns_ids_distances, outfile_name, elapsed, index)
 
 
-def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, verbosity, unique_trip = True):
+def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, verbosity):
     lcss_type = "consequtive" if conseq_lcss else "non-consequtive"
     print("Extracting %d %s subroutes for each test trip" % (k, lcss_type))
     test_df = pd.read_csv(test_file, delimiter="\n")
@@ -36,8 +36,12 @@ def question_a2(output_folder, test_file, train_file, conseq_lcss, k, paropts, v
         print("Extracting subroutes for test trip %d/%d" % (index + 1, len(test_df)))
         file_name = os.path.join(output_folder, "subroutes_%d_" % (index + 1))
         test_points = eval(row["Trajectory"])
-        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, conseq_lcss, verbosity, unique_trip)
-        ns.preprocessing_for_visualisation(test_points, max_subseqs, file_name, index)
+        max_subseqs = ns.find_similar_subroutes_per_test_trip(test_points, train_df, k, paropts, conseq_lcss, verbosity)
+        # transform to list of consequtive points, for visualization
+        conseq_sslist = []
+        for m in range(len(max_subseqs)):
+            conseq_sslist.append((ns.make_consequtive(max_subseqs[m][0]), max_subseqs[m][1], max_subseqs[m][2]))
+        ns.preprocessing_for_visualisation(test_points, conseq_sslist, file_name, index)
 
 
 def question_b(train_file, number_of_cells, output_folder):
